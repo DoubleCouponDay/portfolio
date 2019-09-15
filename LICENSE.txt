@@ -1,8 +1,7 @@
 You may copy this software.
 
-You cannot host the website contained in this repository.
+Only the Entity "samuel peter jenks" can perform actions which result in the website, in this software, being hosted.
 
 Distributions of the software must abide by this license.
 
 Distributions can only be github forks.
-
