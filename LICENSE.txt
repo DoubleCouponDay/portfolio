@@ -2,6 +2,7 @@ You may copy this software.
 
 Only the Entity "samuel peter jenks" can perform actions which result in the website, in this software, being hosted.
 
-Distributions of the software must abide by this license.
-
-Distributions can only be github forks.
+Distributions that are not the repository https://github.com/DoubleCouponDay/portfolio...
+	they can only be public github forks.
+	
+	they must abide by this very license.
