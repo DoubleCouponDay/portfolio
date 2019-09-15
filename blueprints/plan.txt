@@ -1,0 +1,35 @@
+architecture
+    angular client, fsharp core server
+
+    server will serve multiple cdn clients as the subdomains for the samueljenks.me domain.
+
+    cut paste the dragon track server as a template
+
+    use areas to segregate mvc groups per sub domain
+
+design
+    vectors
+        vector sand dunes
+
+        vector stones which are clickable. transition between clicked and non clicked
+
+        vector sun
+
+        lottie vector animation 
+
+    bitmaps
+        my face in the sun with opacity
+    
+        sky bitmap photo
+
+    sound
+
+    grated stone sound effect
+
+    all objects will be parallaxed by mouse movement
+
+interactions
+	wait for media to finish loading before displaying page. show a loading screen
+	
+	at initial page load, smooth scroll from top of image to bottom
+		change background-position-y from 0% to 16%

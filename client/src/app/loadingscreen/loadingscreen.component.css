@@ -1,0 +1,19 @@
+.loading-message {
+    font-size: 20px;
+    font-family: monospace;
+    position: absolute;
+    bottom: 20%;
+    text-align: left;
+    left: calc(50% - 40px);    
+}
+
+.bouncing-ball {
+    width: 100px;
+    height: 100px;
+}
+
+.ball-container {
+    width: 100%;
+    height: var(--window-height);
+    background-color: white;
+}

@@ -1,0 +1,11 @@
+.loading-page {
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    height: var(--window-height);
+    background-color: white;
+}
+
+.home-page {
+    z-index: 1;    
+}

@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+    --window-height: 758px;    
+    --window-width: 1349px;
+}
+
+body {
+    filter: hue-rotate(-365deg) brightness(1.1);
+}
+
+body, html {
+    margin: 0px;    
+    width: 100%;
+    padding: 0px;    
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'zcool';
+    src: url('./assets/zcool.ttf');
+}

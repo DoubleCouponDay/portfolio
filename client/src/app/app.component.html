@@ -1,0 +1,11 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<router-outlet></router-outlet>
+
+<div *ngIf="loadingcomplete === false" @fadeout>
+    <app-loadingscreen class="loading-page">
+    </app-loadingscreen>
+</div>
+
+<app-background (backgroundloaded)="onbackgroundloaded()"
+    class="home-page">    
+</app-background>
