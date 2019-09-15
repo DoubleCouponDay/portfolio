@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, Type } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { box1name, box2name, box3name, box4name, idlabel, nooccurrence, maxboxtranslation, minboxtranslation } from './constants';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
@@ -7,6 +7,11 @@ import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
 import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operators'
 import { Snap } from 'snapsvg'
 import { blockstate } from './blockstate';
+import { page } from '../pages/Page.interface';
+import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.component';
+import { SoftwarepageComponent } from '../pages/softwarepage/softwarepage.component';
+import { HardwarepageComponent } from '../pages/hardwarepage/hardwarepage.component';
+import { MusicpageComponent } from '../pages/musicpage/musicpage.component';
 
 @Component({
   selector: 'app-vectors',
@@ -14,6 +19,11 @@ import { blockstate } from './blockstate';
   styleUrls: ['./vectors.component.css']
 })
 export class vectorscomponent implements OnInit {
+
+  portfoliopage: Type<page> = PortfoliopageComponent
+  softwarepage: Type<page> = SoftwarepageComponent
+  hardwarepage: Type<page> = HardwarepageComponent
+  musicpage: Type<page> = MusicpageComponent
 
   //boxes
   @ViewChild(box1name, { static: true })

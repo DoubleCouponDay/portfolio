@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, Type } from '@angular/core';
 import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
+import { page } from 'src/app/pages/Page.interface';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -9,11 +10,14 @@ import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopag
 export class TabletComponent implements OnInit {
 
   @Input()
-  injectedcontent: PortfoliopageComponent
+  injectedcontent: Type<page>
 
-  constructor() { }
+  constructor() {
+    
+  }
 
   ngOnInit() {
+    console.log('')
   }
 
 }
