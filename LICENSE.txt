@@ -1,0 +1,8 @@
+You may copy this software.
+
+You cannot host the website contained in this repository.
+
+Distributions of the software must abide by this license.
+
+Distributions can only be github forks.
+
