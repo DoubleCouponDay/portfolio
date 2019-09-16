@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { box1name, box2name, box3name, box4name, idlabel, nooccurrence, maxboxtranslation, minboxtranslation } from './constants';
+import { box1name, box2name, box3name, box4name, idlabel, nooccurrence, maxboxtranslation, minboxtranslation } from './boxconstants';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
 import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -12,6 +12,9 @@ import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.com
 import { SoftwarepageComponent } from '../pages/softwarepage/softwarepage.component';
 import { HardwarepageComponent } from '../pages/hardwarepage/hardwarepage.component';
 import { MusicpageComponent } from '../pages/musicpage/musicpage.component';
+
+export const tablet1translationposition = [0, 0]
+export const tablet1initialrotation = 0
 
 @Component({
   selector: 'app-vectors',

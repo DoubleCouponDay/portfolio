@@ -1,5 +1,5 @@
 import { ElementRef, OnInit } from '@angular/core';
-import { minboxtranslation, maxboxtranslation, biggestshadow, smallestshadow, shadowname, nooccurrence } from './constants';
+import { minboxtranslation, maxboxtranslation, biggestshadow, smallestshadow, shadowname, nooccurrence } from './boxconstants';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 
 //should be constructed after views have initialized
