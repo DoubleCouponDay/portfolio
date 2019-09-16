@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import rotatetablet from '../animations/rotatetablet';
+import rotatetablet from '../../animations/rotatetablet';
 
 
 export class tabletstate {
