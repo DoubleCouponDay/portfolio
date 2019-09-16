@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild } from '@
 import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
 import { page } from 'src/app/pages/Page.interface';
 import { AnimationBuilder } from '@angular/animations';
-import { tabletstate } from '../tabletstate';
+import { tabletstate } from './tabletstate';
 
 @Component({
   selector: 'g[app-tablet]',

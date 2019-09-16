@@ -6,7 +6,7 @@ import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
 import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operators'
 import { Snap } from 'snapsvg'
-import { blockstate } from './blockstate';
+import { blockstate } from './blocks/blockstate';
 import { page } from '../pages/Page.interface';
 import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.component';
 import { SoftwarepageComponent } from '../pages/softwarepage/softwarepage.component';
