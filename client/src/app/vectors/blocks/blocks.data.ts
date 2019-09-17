@@ -17,7 +17,7 @@ export const boxgroup3name = `${boxgroupname}${thirdboxnumber}`
 export const boxgroup4name = `${boxgroupname}${fourthboxnumber}`
 
 export const minboxtranslation = 0
-export const maxboxtranslation = 150
+export const maxboxtranslation = 140
 export const shadowname = 'shadow'
 export const biggestshadow = 1
 export const smallestshadow = 4
