@@ -1,9 +1,10 @@
 import { animation, style, animate } from "@angular/animations";
 
+export const rotationtime = 5
 
 export const rotatetablet = animation(    
     animate(
-        "6s cubic-bezier(.2, .53, 0, -0.32)",
+        `${rotationtime}s cubic-bezier(.04,.18,0,-0.32)`,
         style({
             transform: '{{ inputtransform }}'
         }),

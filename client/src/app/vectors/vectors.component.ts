@@ -8,6 +8,7 @@ import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operator
 import { blockstate } from './blocks/blockstate';
 import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamount } from '../pages/pageconstants';
 import { nooccurrence } from '../global.data';
+import { rotationtime } from '../animations/rotatetablet';
 
 @Component({
   selector: 'app-vectors',
@@ -15,6 +16,7 @@ import { nooccurrence } from '../global.data';
   styleUrls: ['./vectors.component.css']
 })
 export class vectorscomponent implements OnInit {
+  tabletsmoving: boolean = false
 
   //boxes
   @ViewChild(box1name, { static: true })
@@ -106,7 +108,6 @@ export class vectorscomponent implements OnInit {
     this.currentposition = null
     this.resetcursor()
     this.blocksoundplayer.pause()
-    console.log('block released.')
   }
 
   onmousemovedonbox(event: MouseEvent) {
@@ -117,9 +118,10 @@ export class vectorscomponent implements OnInit {
     let pagetriggered = this.currentposition.addmovement(event.movementY)
     let inputtransformation = `translate(0px, ${this.currentposition.translationy}px)`
     let factory = this.animationbuilder.build(movetocursorhorizontally)
+    let elementreference = this.currentelement
 
     let animationplayer = factory.create(
-      this.currentelement.nativeElement,
+      elementreference.nativeElement,
       {
         params: {
           inputstyle: inputtransformation
@@ -129,8 +131,9 @@ export class vectorscomponent implements OnInit {
     animationplayer.play()
 
     animationplayer.onDone(() => {
-      if(pagetriggered === true) {
-        this.animatepagetransition()
+      if(pagetriggered === true &&
+        this.tabletsmoving === false) {
+        this.animatepagetransition(elementreference)
       }
     })
   }
@@ -145,8 +148,8 @@ export class vectorscomponent implements OnInit {
     entirepage.style.cursor = "default"
   }
 
-  private animatepagetransition() {
-    let pressedboxesid = (this.currentelement.nativeElement as HTMLElement).id
+  private animatepagetransition(element: ElementRef) {
+    let pressedboxesid = (element.nativeElement as HTMLElement).id
 
     switch(pressedboxesid) {
       case box1name:
@@ -164,6 +167,12 @@ export class vectorscomponent implements OnInit {
       case box4name: 
         this.chosenpage = totalpagesamount
         break
+
+      default:
+          throw new Error("pressed box could not be matched!")
     }
+    this.tabletsmoving = true
+
+    setTimeout(() => { this.tabletsmoving = false}, rotationtime)
   }
 }

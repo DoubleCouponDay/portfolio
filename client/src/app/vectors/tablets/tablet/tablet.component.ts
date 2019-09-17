@@ -15,6 +15,7 @@ import { nooccurrence } from 'src/app/global.data';
 })
 export class TabletComponent implements OnInit {
   private rotationfield: number = -1
+  private initialized: boolean = false
 
   @Input()
   public set currentrotation(input: number) {
@@ -26,7 +27,11 @@ export class TabletComponent implements OnInit {
           throw new Error('angle cannot be less than -360')
       }
       this.rotationfield = input
-      this.applyrotation(input)
+
+      if(this.initialized === true) {
+        this.applyrotation(input)
+      }
+      
   }
 
   translationposition: [number, number]
@@ -47,33 +52,39 @@ export class TabletComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initialized = true
     this.castelement = (this.tabletelement.nativeElement as SVGElement)
 
     this.castelement.style.transformOrigin = 
       `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
-      
+
     let initialrotation = `${rotatename}(${this.rotationfield}deg)` //there should be no animation to the initial position
     this.castelement.style.transform = initialrotation
     this.applycorrectvisibility()
   }
 
   applyrotation(angle: number) {    
-    let play = this.animation.create(this.tabletelement.nativeElement, {
+    let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
         params: {
-            inputtransform: `${rotatename}(${this.currentrotation})`
+            inputtransform: `${rotatename}(${this.rotationfield}deg)`
         }
+    })    
+    animationplayer.play()
+    let gearssound = new Audio('../../../../assets/drawbridge.mp3')
+    gearssound.play()
+
+    animationplayer.onStart(() => {
+      this.maketabletvisible()
     })
 
-    play.onStart(this.maketabletvisible)
-
-    play.onDone(this.applycorrectvisibility)
+    animationplayer.onDone(this.applycorrectvisibility)
   }
 
-  private maketabletvisible() {
+  private maketabletvisible = () => {
     this.replacetransformvalue(scalename, "1")
   }
 
-  private applycorrectvisibility() {
+  private applycorrectvisibility = () => {
     if(this.rotationfield === tablet3initialrotation) {
       this.replacetransformvalue(scalename, "0")
     }
