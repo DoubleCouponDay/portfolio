@@ -91,12 +91,15 @@ export class TabletComponent implements OnInit {
 
   private replacetransformvalue(key: string, value: string) {
     let newtransform = `${key}(${value})`
+
     if(this.castelement.style.transform.indexOf(key) !== nooccurrence) {
-      this.castelement.style.transform.replace(`${key}(*)`, newtransform)  
+      let anyvalueregex = new RegExp(`${key}\\(\\w+\\)`) //any value one or more times
+      let replacement = this.castelement.style.transform.replace(anyvalueregex, newtransform)  
+      this.castelement.style.transform = replacement
     }
 
     else {
       this.castelement.style.transform += newtransform
-    }   
+    }    
   }
 }

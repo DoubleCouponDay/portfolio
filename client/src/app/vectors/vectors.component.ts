@@ -26,16 +26,17 @@ export class vectorscomponent implements OnInit {
 
   @ViewChild(box2name, { static: true })
   box2: ElementRef
-  private box2position = new blockstate(box2name)
+
+  private box2position: blockstate
 
   @ViewChild(box3name, { static: true })
   box3: ElementRef
-  private box3position = new blockstate(box3name)
+  private box3position: blockstate
 
 
   @ViewChild(box4name, { static: true })
   box4: ElementRef
-  private box4position = new blockstate(box4name)
+  private box4position: blockstate
 
   currentelement: ElementRef  
   currentposition: blockstate
