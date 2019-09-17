@@ -81,30 +81,9 @@
                 <path d=" M 962.016 1609.031 L 931.5 1669.711 L 845.25 1756.125 L 579.667 1755.333 L 605.803 1704.367 L 707.755 1704.406 Q 717.365 1699.643 723.833 1699.514 Q 730.302 1699.385 743.755 1704.449 L 863.349 1704.367 L 962.016 1609.031 Z " id="shadow2" fill="rgb(96,74,42)" />
                 <path d=" M 962.086 1608.891 L 927.848 1677.018 L 827.8 1772.616 L 570.646 1771.829 L 605.428 1704.556 L 707.38 1704.599 Q 716.99 1699.396 723.458 1699.255 Q 729.927 1699.115 743.38 1704.646 L 862.974 1704.556 L 962.086 1608.891 Z " id="shadow1" fill="rgb(96,74,42)" />
             </g>
-            <g app-tablet 
-                #page1 
-                [injectedcontent]="portfoliopage"
-                [startingrotation]="tablet1initialrotation"
-                [translationposition]="tablet1translationposition">
-            </g>
-            
-            <g app-tablet 
-                #page2 
-                [injectedcontent]="softwarepage"
-                [startingrotation]="90">
-            </g>
 
-            <g app-tablet 
-                #page3 
-                [injectedcontent]="hardwarepage"
-                [startingrotation]="180">
-            </g>
+            <g app-tablets [inputcurrentpage]="chosenpage"></g>
 
-            <g app-tablet 
-                #page4
-                [injectedcontent]="musicpage"
-                [startingrotation]='270'>
-            </g>
             <path d=" M 3874.5 1332 L 3873 2178 L 0.333 2177.667 L -0.667 1991 Q 454 1998 1086 2094 C 1718 2190 2052.206 1610.928 2544.75 1437.75 Q 3037.5 1264.5 3874.5 1332 Z " id="front-dune" fill="rgb(206,161,94)" />
             <linearGradient id="_lgradient_4" x1="0.48180348848217297" y1="-0.023842715965553457" x2="1.5281029007572293" y2="1.3471134520537718" gradientTransform="matrix(2369.522487,0,0,662.395874,167.810765,1442.666626)" gradientUnits="userSpaceOnUse">
                 <stop offset="1.7391304347826086%" stop-opacity="1" style="stop-color:rgb(213,168,102)" />

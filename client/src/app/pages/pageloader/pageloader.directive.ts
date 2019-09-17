@@ -3,7 +3,7 @@ import { page } from '../Page.interface';
 import { PortfoliopageComponent } from '../portfoliopage/portfoliopage.component';
 
 @Directive({
-  selector: '[pageloader]'
+  selector: '[app-pageloader]'
 })
 export class PageloaderDirective implements OnInit, OnDestroy {
 

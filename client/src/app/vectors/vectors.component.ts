@@ -1,20 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { box1name, box2name, box3name, box4name, idlabel, nooccurrence, maxboxtranslation, minboxtranslation } from './boxconstants';
+import { box1name, box2name, box3name, box4name, idlabel, maxboxtranslation, minboxtranslation } from './blocks/blocks.data';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
 import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
 import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operators'
-import { Snap } from 'snapsvg'
 import { blockstate } from './blocks/blockstate';
-import { page } from '../pages/Page.interface';
-import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.component';
-import { SoftwarepageComponent } from '../pages/softwarepage/softwarepage.component';
-import { HardwarepageComponent } from '../pages/hardwarepage/hardwarepage.component';
-import { MusicpageComponent } from '../pages/musicpage/musicpage.component';
-
-export const tablet1translationposition = [0, 0]
-export const tablet1initialrotation = 0
+import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamount } from '../pages/pageconstants';
+import { nooccurrence } from '../global.data';
 
 @Component({
   selector: 'app-vectors',
@@ -22,11 +15,6 @@ export const tablet1initialrotation = 0
   styleUrls: ['./vectors.component.css']
 })
 export class vectorscomponent implements OnInit {
-
-  portfoliopage: Type<page> = PortfoliopageComponent
-  softwarepage: Type<page> = SoftwarepageComponent
-  hardwarepage: Type<page> = HardwarepageComponent
-  musicpage: Type<page> = MusicpageComponent
 
   //boxes
   @ViewChild(box1name, { static: true })
@@ -55,7 +43,8 @@ export class vectorscomponent implements OnInit {
 
   blocksoundplayer = new Audio('../../assets/stone-grinding.mp3')
 
-  //tablet
+  //tablets
+  chosenpage: number = firstpagenumber
 
   constructor(private animationbuilder: AnimationBuilder) {
     this.boxmovefactory = this.animationbuilder.build(movetocursorhorizontally)   
@@ -139,7 +128,7 @@ export class vectorscomponent implements OnInit {
     )
     animationplayer.play()
 
-    if(pagetriggered) {
+    if(pagetriggered === true) {
       this.animatepagetransition()
     }
   }
@@ -155,6 +144,24 @@ export class vectorscomponent implements OnInit {
   }
 
   private animatepagetransition() {
+    let pressedboxesid = (this.currentelement.nativeElement as HTMLElement).id
 
+    switch(pressedboxesid) {
+      case box1name:
+        this.chosenpage = firstpagenumber
+        break
+
+      case box2name:
+        this.chosenpage = softwarepagenumber
+        break
+
+      case box3name:
+        this.chosenpage = hardwarepagenumber
+        break
+
+      case box4name: 
+        this.chosenpage = totalpagesamount
+        break
+    }
   }
 }

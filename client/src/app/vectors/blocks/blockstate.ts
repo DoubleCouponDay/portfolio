@@ -1,6 +1,8 @@
 import { ElementRef, OnInit } from '@angular/core';
-import { minboxtranslation, maxboxtranslation, biggestshadow, smallestshadow, shadowname, nooccurrence } from '../boxconstants';
+import { minboxtranslation, maxboxtranslation, biggestshadow, smallestshadow, shadowname } from './blocks.data';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
+import { scalename } from 'src/app/animations/styleconstants';
+import { nooccurrence } from 'src/app/global.data';
 
 //should be constructed after views have initialized
 export class blockstate {
@@ -49,13 +51,13 @@ export class blockstate {
         if(chosenshadow === null) {
             throw new Error('shadow is null')
         }
-        chosenshadow.style.transform = 'scale(1)'         
+        chosenshadow.style.transform = `${scalename}(1)`        
 
         boxespaths.forEach((currentelement) => {
             if(currentelement.id.indexOf(shadowname) !== nooccurrence &&
                 currentelement.id !== `${shadowname}${shadownumber}`) { //assuming the shadows are in order
                 let htmlelement = currentelement as SVGElement
-                htmlelement.style.transform = 'scale(0)'
+                htmlelement.style.transform = `${scalename}(0)`
             }
         })
     }
