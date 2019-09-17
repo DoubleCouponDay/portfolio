@@ -14,7 +14,7 @@ import { nooccurrence } from 'src/app/global.data';
   styleUrls: ['./tablet.component.css']
 })
 export class TabletComponent implements OnInit {
-  private rotationfield: number = -1
+  private rotationfield: number = 0
   private initialized: boolean = false
 
   @Input()
@@ -69,9 +69,7 @@ export class TabletComponent implements OnInit {
             inputtransform: `${rotatename}(${this.rotationfield}deg)`
         }
     })    
-    animationplayer.play()
-    let gearssound = new Audio('../../../../assets/drawbridge.mp3')
-    gearssound.play()
+    animationplayer.play()    
 
     animationplayer.onStart(() => {
       this.maketabletvisible()

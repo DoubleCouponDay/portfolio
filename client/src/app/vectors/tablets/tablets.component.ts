@@ -14,6 +14,7 @@ import { tabletdata, currentpagerotation, tablettranslationposition, tablet2init
 })
 export class TabletsComponent implements OnInit {
   private currentpagefield = 0
+  private initialized = false
 
   @Input()
   set inputcurrentpage(input: number) {
@@ -24,7 +25,11 @@ export class TabletsComponent implements OnInit {
     }
 
     if(input !== this.currentpagefield) {
-      this.choosenewrotations(input)
+      this.choosenewrotations(input)      
+    }
+
+    if(this.initialized === true) {
+      this.playgearsaudio()
     }
     this.currentpagefield = input
   }
@@ -65,6 +70,7 @@ export class TabletsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initialized = true
   }
 
   private choosenewrotations(newpagenumber: number) {
@@ -113,5 +119,10 @@ export class TabletsComponent implements OnInit {
     this.tablet2rotation = tablet3initialrotation
     this.tablet3rotation = tablet4initialrotation
     this.tablet4rotation = currentpagerotation
+  }
+
+  private playgearsaudio() {
+    let gearssound = new Audio('../../../../assets/drawbridge.mp3')
+    gearssound.play()
   }
 }
