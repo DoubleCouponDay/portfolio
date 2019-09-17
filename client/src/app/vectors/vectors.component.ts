@@ -107,7 +107,6 @@ export class vectorscomponent implements OnInit {
     this.currentelement = null
     this.currentposition = null
     this.resetcursor()
-    this.blocksoundplayer.pause()
   }
 
   onmousemovedonbox(event: MouseEvent) {
