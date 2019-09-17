@@ -1,6 +1,6 @@
 import { animation, style, animate } from "@angular/animations";
 
-export const rotationtime = 5
+export const rotationtime = 6.5
 
 export const rotatetablet = animation(    
     animate(
