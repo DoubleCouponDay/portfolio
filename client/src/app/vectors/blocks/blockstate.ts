@@ -13,8 +13,8 @@ export class blockstate {
     }
 
     /**boxname must be in the format "box-group1", "box-group2" */
-    constructor(private boxgroupname: string) {
-        
+    constructor(private boxgroupname: string, initialy: number) {
+        this.translationyfield = initialy
     }
 
     /** returns whether the block is at the threshold of activating a page transition */

@@ -3,7 +3,7 @@ import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopag
 import { page } from 'src/app/pages/Page.interface';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
-import { rotatename, scalename } from 'src/app/animations/styleconstants';
+import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet } from 'src/app/animations/rotatetablet';
 import * as Snap from 'snapsvg'
 import { nooccurrence } from 'src/app/global.data';
@@ -26,16 +26,14 @@ export class TabletComponent implements OnInit {
       else if(input < 0) {
           throw new Error('angle cannot be less than -360')
       }
-      this.rotationfield = input
 
       if(this.initialized === true) {
+        let flipprotection = this.rotationfield + 0.1
+        this.replacetransformvalue(rotatename, `${flipprotection}${degreesunit}`)        
         this.applyrotation(input)
-      }
-      
+      }      
+      this.rotationfield = input
   }
-
-  translationposition: [number, number]
-  page: Type<page>  
 
   @ViewChild(tabletname, {static: true})
   private tabletelement: ElementRef
@@ -53,20 +51,19 @@ export class TabletComponent implements OnInit {
 
   ngOnInit() {
     this.initialized = true
-    this.castelement = (this.tabletelement.nativeElement as SVGElement)
+    this.castelement = this.tabletelement.nativeElement as SVGElement
 
     this.castelement.style.transformOrigin = 
       `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
 
-    let initialrotation = `${rotatename}(${this.rotationfield}deg)` //there should be no animation to the initial position
-    this.castelement.style.transform = initialrotation
+    this.replacetransformvalue(rotatename, `${this.rotationfield}${degreesunit}`)//there should be no animation to the initial position
     this.applycorrectvisibility()
   }
 
   applyrotation(angle: number) {    
     let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
         params: {
-            inputtransform: `${rotatename}(${this.rotationfield}deg)`
+            inputtransform: `${rotatename}(${angle}${degreesunit})`
         }
     })    
     animationplayer.play()    

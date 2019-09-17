@@ -9,6 +9,7 @@ import { blockstate } from './blocks/blockstate';
 import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamount } from '../pages/pageconstants';
 import { nooccurrence } from '../global.data';
 import { rotationtime } from '../animations/rotatetablet';
+import { translatename, pixelunit } from '../animations/styleconstants';
 
 @Component({
   selector: 'app-vectors',
@@ -68,10 +69,11 @@ export class vectorscomponent implements OnInit {
   }
 
   ngOnInit() {
-    this.box1position = new blockstate(boxgroup1name)
-    this.box2position = new blockstate(boxgroup2name)
-    this.box3position = new blockstate(boxgroup3name)
-    this.box4position = new blockstate(boxgroup4name)
+    this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
+
+    this.box2position = new blockstate(boxgroup2name, minboxtranslation)
+    this.box3position = new blockstate(boxgroup3name, minboxtranslation)
+    this.box4position = new blockstate(boxgroup4name, minboxtranslation)
   }
 
   onmousepressedbox(event: MouseEvent) {    
@@ -115,7 +117,7 @@ export class vectorscomponent implements OnInit {
 
   private animatebox = (event: MouseEvent) => {
     let pagetriggered = this.currentposition.addmovement(event.movementY)
-    let inputtransformation = `translate(0px, ${this.currentposition.translationy}px)`
+    let inputtransformation = `${translatename}(0${pixelunit}, ${this.currentposition.translationy}${pixelunit})`
     let factory = this.animationbuilder.build(movetocursorhorizontally)
     let elementreference = this.currentelement
 
