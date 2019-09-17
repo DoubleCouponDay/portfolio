@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { box1name, box2name, box3name, box4name, idlabel, maxboxtranslation, minboxtranslation } from './blocks/blocks.data';
+import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, fourthboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
 import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -66,10 +66,10 @@ export class vectorscomponent implements OnInit {
   }
 
   ngOnInit() {
-    this.box1position = new blockstate(box1name)
-    this.box2position = new blockstate(box2name)
-    this.box3position = new blockstate(box3name)
-    this.box4position = new blockstate(box4name)
+    this.box1position = new blockstate(boxgroup1name)
+    this.box2position = new blockstate(boxgroup2name)
+    this.box3position = new blockstate(boxgroup3name)
+    this.box4position = new blockstate(boxgroup4name)
   }
 
   onmousepressedbox(event: MouseEvent) {    
@@ -128,9 +128,11 @@ export class vectorscomponent implements OnInit {
     )
     animationplayer.play()
 
-    if(pagetriggered === true) {
-      this.animatepagetransition()
-    }
+    animationplayer.onDone(() => {
+      if(pagetriggered === true) {
+        this.animatepagetransition()
+      }
+    })
   }
 
   private makecursorslideicon() {

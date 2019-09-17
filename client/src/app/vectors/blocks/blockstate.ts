@@ -12,31 +12,31 @@ export class blockstate {
         return this.translationyfield
     }
 
-    /**boxname must be in the format "box1", "box2" */
-    constructor(private boxname: string) {
+    /**boxname must be in the format "box-group1", "box-group2" */
+    constructor(private boxgroupname: string) {
         
     }
 
     /** returns whether the block is at the threshold of activating a page transition */
     addmovement(value: number): boolean {
-        let possiblesum = this.translationyfield + value
+        this.translationyfield += value
+        
+        if(value === 0) {
+            return false
+        }
 
-        if(possiblesum < minboxtranslation) {
+        else if(this.translationyfield < minboxtranslation) {
             this.translationyfield = minboxtranslation
             this.setshadow(biggestshadow)
+            return false
         }
     
-        else if(possiblesum > maxboxtranslation) {
+        else if(this.translationyfield > maxboxtranslation) {
             this.translationyfield = maxboxtranslation
             this.setshadow(smallestshadow)
             return true
         }
-
-        else {
-            this.translationyfield = possiblesum
-            this.chooseshadow()
-        }
-        return false
+        this.chooseshadow()
     }
 
     private chooseshadow() {
@@ -45,8 +45,8 @@ export class blockstate {
     }
 
     private setshadow(shadownumber: number) {
-        let boxespaths = document.querySelectorAll(`#${this.boxname} path`)  
-        let chosenshadow = document.querySelector(`#${this.boxname} #${shadowname}${shadownumber}`) as SVGElement
+        let boxespaths = document.querySelectorAll(`#${this.boxgroupname} path`)  
+        let chosenshadow = document.querySelector(`#${this.boxgroupname} #${shadowname}${shadownumber}`) as SVGElement
 
         if(chosenshadow === null) {
             throw new Error('shadow is null')

@@ -1,9 +1,20 @@
 
 export const idlabel = 'id'
-export const box1name = 'box1'
-export const box2name = 'box2'
-export const box3name = 'box3'
-export const box4name = 'box4'
+export const boxname = 'box'
+export const boxgroupname = 'box-group'
+export const firstboxnumber = 1
+export const secondboxnumber = 2
+export const thirdboxnumber = 3
+export const fourthboxnumber = 4
+
+export const box1name = `${boxname}${firstboxnumber}`
+export const box2name = `${boxname}${secondboxnumber}`
+export const box3name = `${boxname}${thirdboxnumber}`
+export const box4name = `${boxname}${fourthboxnumber}`
+export const boxgroup1name = `${boxgroupname}${firstboxnumber}`
+export const boxgroup2name = `${boxgroupname}${secondboxnumber}`
+export const boxgroup3name = `${boxgroupname}${thirdboxnumber}`
+export const boxgroup4name = `${boxgroupname}${fourthboxnumber}`
 
 export const minboxtranslation = 0
 export const maxboxtranslation = 100
