@@ -56,19 +56,23 @@ export class vectorscomponent implements OnInit, OnDestroy {
   constructor(private animationbuilder: AnimationBuilder) {
     this.boxmovefactory = this.animationbuilder.build(movetocursorhorizontally)   
 
+    let sub1 = this.aboxismoving.subscribe((event) => {
+      this.animatebox(event.movementY)            
+    })
+
     this.sink.add(
-      this.aboxismoving.subscribe((event) => {
-        this.animatebox(event.movementY)            
-      })
+      sub1
     )
+
+    let sub2 = this.aboxismoving.pipe(        
+      throttleTime(3000)
+    )
+    .subscribe(() => {
+      this.blocksoundplayer.play()        
+    })
     
     this.sink.add(
-      this.aboxismoving.pipe(        
-        throttleTime(3000)
-      )
-      .subscribe(() => {
-        this.blocksoundplayer.play()        
-      })
+      sub2
     )    
   }
 
@@ -118,8 +122,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
   }
 
   onmousemovedonbox(event: MouseEvent) {
-    if(isNullOrUndefined(this.currentbox) !== false &&
-      this.tabletsmoving !== false) {
+    if(isNullOrUndefined(this.currentbox) === true ||
+      this.tabletsmoving === true) {
       return
     }    
     this.boxmovingsubject.next(event)
@@ -141,8 +145,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
     animationplayer.play()
 
     animationplayer.onDone(() => {
-      if(pagetriggered !== true &&
-        this.tabletsmoving !== false) {
+      if(pagetriggered === false ||
+        this.tabletsmoving === true) {
         return
       }
       this.animatepagetransition(elementreference)
@@ -183,6 +187,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
           throw new Error("pressed box could not be matched!")
     }
     this.tabletsmoving = true
+    this.resetnonactivateblockpositions()
 
     setTimeout(() => { 
       this.tabletsmoving = false
