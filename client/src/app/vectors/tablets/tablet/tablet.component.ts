@@ -56,7 +56,7 @@ export class TabletComponent implements OnInit {
     this.castelement.style.transformOrigin = 
       `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
 
-    this.replacetransformvalue(rotatename, `${this.rotationfield}${degreesunit}`)//there should be no animation to the initial position
+    this.replacetransformvalue(rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
     this.applycorrectvisibility()
   }
 

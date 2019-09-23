@@ -71,6 +71,8 @@ export class vectorscomponent implements OnInit {
 
   ngOnInit() {
     this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
+    let box1element = (this.box1.nativeElement as HTMLElement)
+    box1element.style.transform = `translate(0px, ${this.box1position.translationy}px)`
 
     this.box2position = new blockstate(boxgroup2name, minboxtranslation)
     this.box3position = new blockstate(boxgroup3name, minboxtranslation)

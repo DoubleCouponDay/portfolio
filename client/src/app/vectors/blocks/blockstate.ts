@@ -15,6 +15,7 @@ export class blockstate {
     /**boxname must be in the format "box-group1", "box-group2" */
     constructor(private boxgroupname: string, initialy: number) {
         this.translationyfield = initialy
+        this.chooseshadow()
     }
 
     /** returns whether the block is at the threshold of activating a page transition */
