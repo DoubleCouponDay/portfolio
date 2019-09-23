@@ -118,19 +118,19 @@ export class vectorscomponent implements OnInit, OnDestroy {
   }
 
   onmousemovedonbox(event: MouseEvent) {
-    if(isNullOrUndefined(this.currentbox) === false &&
-      this.tabletsmoving === false) {
-      this.boxmovingsubject.next(event)
+    if(isNullOrUndefined(this.currentbox) !== false &&
+      this.tabletsmoving !== false) {
+      return
     }    
+    this.boxmovingsubject.next(event)
   }
 
   private animatebox = (movementy: number) => {
     let pagetriggered = this.currentposition.addmovement(movementy)
     let inputtransformation = `${translatename}(0${pixelunit}, ${this.currentposition.translationy}${pixelunit})`
-    let factory = this.animationbuilder.build(movetocursorhorizontally)
     let elementreference = this.currentbox
 
-    let animationplayer = factory.create(
+    let animationplayer = this.boxmovefactory.create(
       elementreference.nativeElement,
       {
         params: {
@@ -141,10 +141,11 @@ export class vectorscomponent implements OnInit, OnDestroy {
     animationplayer.play()
 
     animationplayer.onDone(() => {
-      if(pagetriggered === true &&
-        this.tabletsmoving === false) {
-        this.animatepagetransition(elementreference)
+      if(pagetriggered !== true &&
+        this.tabletsmoving !== false) {
+        return
       }
+      this.animatepagetransition(elementreference)
     })
   }
 
