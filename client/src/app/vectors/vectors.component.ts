@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
 import { isNullOrUndefined } from 'util';
-import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, fourthboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
+import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
 import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -39,7 +39,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   box4: ElementRef
   private box4position: blockstate
 
-  currentelement: ElementRef  
+  currentbox: ElementRef  
   currentposition: blockstate
   boxmovefactory: AnimationFactory
 
@@ -58,7 +58,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
     this.sink.add(
       this.aboxismoving.subscribe((event) => {
-        this.animatebox(event)            
+        this.animatebox(event.movementY)            
       })
     )
     
@@ -86,49 +86,49 @@ export class vectorscomponent implements OnInit, OnDestroy {
     let elementsid = event.currentTarget[idlabel] as string
     
     if(elementsid.indexOf(box1name) !== nooccurrence) {
-      this.currentelement = this.box1
+      this.currentbox = this.box1
       this.currentposition = this.box1position
     }
 
     else if(elementsid.indexOf(box2name) !== nooccurrence){
-      this.currentelement = this.box2
+      this.currentbox = this.box2
       this.currentposition = this.box2position
     }
 
     else if(elementsid.indexOf(box3name) !== nooccurrence){
-      this.currentelement = this.box3
+      this.currentbox = this.box3
       this.currentposition = this.box3position
     }
 
     else if(elementsid.indexOf(box4name) !== nooccurrence){
-      this.currentelement = this.box4
+      this.currentbox = this.box4
       this.currentposition = this.box4position
     }
 
-    if(isNullOrUndefined(this.currentelement) === false) {
+    if(isNullOrUndefined(this.currentbox) === false) {
       this.makecursorslideicon()
       
     }
   }
 
   onmousereleasedbox(event: MouseEvent) {
-    this.currentelement = null
+    this.currentbox = null
     this.currentposition = null
     this.resetcursor()
   }
 
   onmousemovedonbox(event: MouseEvent) {
-    if(isNullOrUndefined(this.currentelement) === false &&
+    if(isNullOrUndefined(this.currentbox) === false &&
       this.tabletsmoving === false) {
       this.boxmovingsubject.next(event)
     }    
   }
 
-  private animatebox = (event: MouseEvent) => {
-    let pagetriggered = this.currentposition.addmovement(event.movementY)
+  private animatebox = (movementy: number) => {
+    let pagetriggered = this.currentposition.addmovement(movementy)
     let inputtransformation = `${translatename}(0${pixelunit}, ${this.currentposition.translationy}${pixelunit})`
     let factory = this.animationbuilder.build(movetocursorhorizontally)
-    let elementreference = this.currentelement
+    let elementreference = this.currentbox
 
     let animationplayer = factory.create(
       elementreference.nativeElement,
@@ -191,5 +191,36 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sink.unsubscribe()
+  }
+
+  private resetnonactivateblockpositions() {
+    let savedplace = this.currentbox
+    
+    for(let i = firstboxnumber; i < lastboxnumber; i++) {
+      let iterationbox: ElementRef
+
+      switch(i) {
+        case firstboxnumber:
+          iterationbox = this.box1
+          break
+
+        case secondboxnumber:
+          iterationbox = this.box2
+          break
+
+        case thirdboxnumber:
+          iterationbox = this.box3
+          break
+
+        case lastboxnumber:
+          iterationbox = this.box4
+      }
+      if(savedplace === iterationbox) {
+        return
+      }
+      this.currentbox = iterationbox
+      this.animatebox(-100)
+    }    
+    this.currentbox = savedplace
   }
 }
