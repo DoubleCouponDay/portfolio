@@ -122,7 +122,7 @@ export class TabletsComponent implements OnInit {
   }
 
   private playgearsaudio() {
-    let gearssound = new Audio('../../../../assets/drawbridge.mp3')
+    let gearssound = new Audio('assets/drawbridge.mp3')
     gearssound.play()
   }
 }

@@ -46,7 +46,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   boxmovingsubject = new Subject<MouseEvent>()
   aboxismoving = this.boxmovingsubject.asObservable()
 
-  blocksoundplayer = new Audio('../../assets/stone-grinding.mp3')
+  blocksoundplayer = new Audio('assets/stone-grinding.mp3')
 
   entirepage: HTMLElement = document.documentElement
 
@@ -112,13 +112,13 @@ export class vectorscomponent implements OnInit, OnDestroy {
       this.currentposition = this.box4position
     }
 
-    if(isnullorundefined(this.currentbox) === false &&
-      this.tabletsmoving === false) {
-      this.makecursorslideicon()      
+    if(this.tabletsmoving === true) {
+      this.makecursorstopsign()
+      
     }
 
-    else if(this.tabletsmoving === true) {
-      this.makecursorstopsign()
+    else {
+      this.makecursorslideicon()      
     }
   }
 
