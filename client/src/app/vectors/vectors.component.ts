@@ -57,18 +57,14 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.boxmovefactory = this.animationbuilder.build(movetocursorhorizontally)   
 
     this.sink.add(
-      this.aboxismoving.pipe(     
-        filter(() => isNullOrUndefined(this.currentelement) === false),
-      )
-      .subscribe((event) => {
+      this.aboxismoving.subscribe((event) => {
         this.animatebox(event)            
       })
     )
     
     this.sink.add(
       this.aboxismoving.pipe(        
-        filter(() => isNullOrUndefined(this.currentelement) === false),
-        throttleTime(3000),   
+        throttleTime(3000)
       )
       .subscribe(() => {
         this.blocksoundplayer.play()        
@@ -122,7 +118,10 @@ export class vectorscomponent implements OnInit, OnDestroy {
   }
 
   onmousemovedonbox(event: MouseEvent) {
-    this.boxmovingsubject.next(event)
+    if(isNullOrUndefined(this.currentelement) === false &&
+      this.tabletsmoving === false) {
+      this.boxmovingsubject.next(event)
+    }    
   }
 
   private animatebox = (event: MouseEvent) => {
@@ -184,7 +183,10 @@ export class vectorscomponent implements OnInit, OnDestroy {
     }
     this.tabletsmoving = true
 
-    setTimeout(() => { this.tabletsmoving = false}, rotationtime)
+    setTimeout(() => { 
+      this.tabletsmoving = false
+    }, 
+    rotationtime)
   }
 
   ngOnDestroy() {
