@@ -22,7 +22,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   //boxes
   @ViewChild(box1name, { static: true })
-  box1: ElementRef  
+  box1: ElementRef = null
   private box1position: blockstate
 
   @ViewChild(box2name, { static: true })
@@ -86,8 +86,9 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.box4position = new blockstate(boxgroup4name, minboxtranslation)
   }
 
-  onmousepressedbox(event: MouseEvent) {    
-    let elementsid = event.currentTarget[idlabel] as string
+  onmousepressedbox(event: MouseEvent) {  
+    let eventelement = <HTMLElement> event.target
+    let elementsid = eventelement.id
     
     if(elementsid.indexOf(box1name) !== nooccurrence) {
       this.currentbox = this.box1
@@ -201,32 +202,45 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   private resetnonactivateblockpositions() {
     let savedplace = this.currentbox
+    let savedposition = this.currentposition
     
-    for(let i = firstboxnumber; i < lastboxnumber; i++) {
+    for(let i = firstboxnumber; i <= lastboxnumber; i++) {
       let iterationbox: ElementRef
+      let iterationposition: blockstate
 
       switch(i) {
         case firstboxnumber:
           iterationbox = this.box1
+          iterationposition = this.box1position
           break
 
         case secondboxnumber:
           iterationbox = this.box2
+          iterationposition = this.box2position
           break
 
         case thirdboxnumber:
           iterationbox = this.box3
+          iterationposition = this.box3position
           break
 
         case lastboxnumber:
           iterationbox = this.box4
+          iterationposition = this.box4position
+          break
+
+        default:
+          throw new Error('could not match a box with an index.')
       }
-      if(savedplace === iterationbox) {
-        return
+      if(savedplace === iterationbox ||
+        iterationposition.translationy === minboxtranslation) {
+        continue
       }
       this.currentbox = iterationbox
-      this.animatebox(-100)
+      this.currentposition = iterationposition
+      this.animatebox(-maxboxtranslation)
     }    
     this.currentbox = savedplace
+    this.currentposition = savedposition
   }
 }
