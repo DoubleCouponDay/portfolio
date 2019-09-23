@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { page } from '../Page.interface';
 
 @Component({
-  selector: 'app-hardwarepage',
+  selector: 'g[app-hardwarepage]',
   templateUrl: './hardwarepage.component.html',
   styleUrls: ['./hardwarepage.component.css']
 })

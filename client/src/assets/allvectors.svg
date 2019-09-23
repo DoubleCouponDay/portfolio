@@ -2,11 +2,11 @@
 <!-- Generator: Gravit.io -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 3872.126 2177.008" width="3872.126pt" height="2177.008pt">
     <defs>
-        <clipPath id="_clipPath_PWNUmYMQ5KWIYN5ARBnmrsD0BH90UfH4">
+        <clipPath id="_clipPath_WZDqwbADduI6uW1GExpt3GWpcOxZ4R62">
             <rect width="3872.126" height="2177.008" />
         </clipPath>
     </defs>
-    <g clip-path="url(#_clipPath_PWNUmYMQ5KWIYN5ARBnmrsD0BH90UfH4)">
+    <g clip-path="url(#_clipPath_WZDqwbADduI6uW1GExpt3GWpcOxZ4R62)">
         <g style="isolation:isolate">
             <g>
                 <path d=" M 498.545 1193.621 C 504.869 1193.709 113.318 1310.667 -89.5 1365.667 Q -96.46 1367.554 -93.5 1191.348 Q 66.545 1187.621 498.545 1193.621 Z " fill="rgb(198,159,97)" />
@@ -55,17 +55,17 @@
                     <text transform="matrix(4.549,-0.011,-3.997,4.086,724.995,1408.826)" style="font-family:'ZCOOL KuaiLe';font-weight:400;font-size:12px;font-style:normal;fill:#888881;stroke:none;">Portfolio</text>
                 </g>
                 <defs>
-                    <mask id="_mask_JEjcy0M5Wd08FvEm16tHTcIiByodEXzq">
+                    <mask id="_mask_Xzd7dXwNxPEvXGi5Ccll0jqaM638mA6d">
                         <path d="M 584 1593.071 L 989.563 1593.071 L 989.563 1983.865 L 584 1983.865 L 584 1593.071 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
                     </mask>
-                    <mask id="_mask_LX0zymw0qNwaiE1OVaaF031COFj80Ubj">
+                    <mask id="_mask_0N80fXGlOrg834hWDSaQtCVeQ36PK0Sy">
                         <path d="M 584 1593.071 L 989.563 1593.071 L 989.563 1983.865 L 584 1983.865 L 584 1593.071 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
                     </mask>
                 </defs>
-                <g mask="url(#_mask_LX0zymw0qNwaiE1OVaaF031COFj80Ubj)">
-                    <g mask="url(#_mask_JEjcy0M5Wd08FvEm16tHTcIiByodEXzq)" />
+                <g mask="url(#_mask_0N80fXGlOrg834hWDSaQtCVeQ36PK0Sy)">
+                    <g mask="url(#_mask_Xzd7dXwNxPEvXGi5Ccll0jqaM638mA6d)" />
                 </g>
-                <g mask="url(#_mask_JEjcy0M5Wd08FvEm16tHTcIiByodEXzq)">
+                <g mask="url(#_mask_Xzd7dXwNxPEvXGi5Ccll0jqaM638mA6d)">
                     <use xlink:href="#img_X5xmIoujHGUURXS8j7pEhTuyPgN6gtmq" transform="matrix(1.136,0,0,1.136,584,1593.071)" preserveAspectRatio="none" style="" />
                 </g>
                 <path d=" M 962.016 1608.891 L 950 1633 L 876 1717 L 599.125 1716.625 L 606.437 1703.438 L 707.255 1703.573 Q 717.646 1698.788 724.115 1698.684 Q 730.583 1698.579 743.661 1703.524 L 862.849 1703.541 L 962.016 1608.891 Z " fill="rgb(96,74,42)" />
@@ -75,26 +75,26 @@
                 <path d=" M 962.086 1608.891 L 927.848 1677.018 L 827.8 1772.616 L 570.646 1771.829 L 605.428 1704.556 L 707.38 1704.599 Q 716.99 1699.396 723.458 1699.255 Q 729.927 1699.115 743.38 1704.646 L 862.974 1704.556 L 962.086 1608.891 Z " fill="rgb(96,74,42)" />
             </g>
             <g style="isolation:isolate">
-                <rect x="1306.262" y="628.15" width="904.487" height="1406.639" transform="matrix(1,0,-0.008,1,10.765,0)" fill="rgb(204,195,184)" />
-                <path d=" M 1312.156 627.778 L 1306.94 1732.533 Q 1425.034 1470.509 1493.632 1003.399 Q 1545.927 769.291 1703.234 627.359 L 1312.156 627.778 Z " fill="rgb(213,206,198)" />
-                <path d=" M 2213.25 1204.25 L 2217.687 626.656 L 1703.375 627.312 Q 1524.035 784.23 1480.211 1082.922 Q 1436.387 1381.614 1306.956 1734.679 L 1305.618 2031.405 L 2205.646 2031.363 L 2213.25 1204.25 Z " fill="rgb(213,209,206)" />
-                <path d=" M 2205.399 2031.767 L 1924.14 2031.713 Q 2076 1874.704 2119.168 1623.235 Q 2162.337 1371.765 2212.79 1205.01 L 2205.399 2031.767 Z " fill="rgb(213,206,198)" />
-                <path d=" M 2217.594 626.656 L 2320.125 556.18 L 2330.102 1925.121 L 2205.774 2031.764 L 2217.594 626.656 Z " fill="rgb(221,216,213)" />
-                <path d=" M 1312.031 628.031 L 2217.907 627.57 L 2319.938 556.406 L 1419.369 557.008 L 1312.031 628.031 Z " fill="rgb(227,223,220)" />
-                <text transform="matrix(1,0,0,1,1477.183,781.33)" style="font-family:'ZCOOL KuaiLe';font-weight:400;font-size:74px;font-style:normal;fill:#888881;stroke:none;">hello</text>
+                <rect x="1306.262" y="631.324" width="904.487" height="1468.676" transform="matrix(1,0,-0.008,1,10.575,0)" fill="rgb(204,195,184)" />
+                <path d=" M 1312.156 630.936 L 1306.94 1784.414 Q 1425.034 1510.833 1493.632 1023.123 Q 1545.927 778.69 1703.234 630.499 L 1312.156 630.936 Z " fill="rgb(213,206,198)" />
+                <path d=" M 2213.25 1232.832 L 2217.687 629.764 L 1703.375 630.45 Q 1524.035 794.288 1480.211 1106.153 Q 1436.387 1418.018 1306.956 1786.655 L 1305.618 2096.467 L 2205.646 2096.423 L 2213.25 1232.832 Z " fill="rgb(213,209,206)" />
+                <path d=" M 2205.399 2096.846 L 1924.14 2096.789 Q 2076 1932.855 2119.168 1670.295 Q 2162.337 1407.735 2212.79 1233.626 L 2205.399 2096.846 Z " fill="rgb(213,206,198)" />
+                <path d=" M 2217.594 629.765 L 2320.125 556.18 L 2330.102 1985.496 L 2205.774 2096.842 L 2217.594 629.765 Z " fill="rgb(221,216,213)" />
+                <path d=" M 1312.031 631.2 L 2217.907 630.718 L 2319.938 556.416 L 1419.369 557.044 L 1312.031 631.2 Z " fill="rgb(227,223,220)" />
+                <text transform="matrix(1,0,0,1,1477.183,788.388)" style="font-family:'ZCOOL KuaiLe';font-weight:400;font-size:74px;font-style:normal;fill:#888881;stroke:none;">hello</text>
                 <defs>
-                    <mask id="_mask_N86BUxpx8yHJsNybuxnBj4s21aqZ9YR1">
-                        <path d="M 1417.247 831.03 L 2007.247 831.03 L 2007.247 1336.03 L 1417.247 1336.03 L 1417.247 831.03 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
+                    <mask id="_mask_6LyWH55iVw2Gn2yBwa4T5cwGXS4jbRgO">
+                        <path d="M 1417.247 843.152 L 2007.247 843.152 L 2007.247 1370.424 L 1417.247 1370.424 L 1417.247 843.152 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
                     </mask>
-                    <mask id="_mask_RvE7oV5VmjMrhqUGnQWGXmDv4fcMx9jF">
-                        <path d="M 1417.247 831.03 L 2007.247 831.03 L 2007.247 1336.03 L 1417.247 1336.03 L 1417.247 831.03 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
+                    <mask id="_mask_Wzpt7uDV6FcvseCDP82VHahUvJLcOA9T">
+                        <path d="M 1417.247 843.152 L 2007.247 843.152 L 2007.247 1370.424 L 1417.247 1370.424 L 1417.247 843.152 Z" style="stroke:black;fill:white;stroke-miterlimit:10;" />
                     </mask>
                 </defs>
-                <g mask="url(#_mask_RvE7oV5VmjMrhqUGnQWGXmDv4fcMx9jF)">
-                    <g mask="url(#_mask_N86BUxpx8yHJsNybuxnBj4s21aqZ9YR1)" />
+                <g mask="url(#_mask_Wzpt7uDV6FcvseCDP82VHahUvJLcOA9T)">
+                    <g mask="url(#_mask_6LyWH55iVw2Gn2yBwa4T5cwGXS4jbRgO)" />
                 </g>
-                <g mask="url(#_mask_N86BUxpx8yHJsNybuxnBj4s21aqZ9YR1)">
-                    <use xlink:href="#img_nAf86mgdNKOoeEztFh2Uzn1OMsZ0GPIP" transform="matrix(1,0,0,1,1417.247,831.03)" preserveAspectRatio="none" style="" />
+                <g mask="url(#_mask_6LyWH55iVw2Gn2yBwa4T5cwGXS4jbRgO)">
+                    <use xlink:href="#img_nAf86mgdNKOoeEztFh2Uzn1OMsZ0GPIP" transform="matrix(1,0,0,1.044,1417.247,843.152)" preserveAspectRatio="none" style="" />
                 </g>
             </g>
             <path d=" M 3874.5 1332 L 3873 2178 L 0.333 2177.667 L -0.667 1991 Q 454 1998 1086 2094 C 1718 2190 2052.206 1610.928 2544.75 1437.75 Q 3037.5 1264.5 3874.5 1332 Z " fill="rgb(206,161,94)" />

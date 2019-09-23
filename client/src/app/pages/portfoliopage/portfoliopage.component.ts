@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { page } from '../Page.interface';
 
 @Component({
-  selector: 'app-portfoliopage',
+  selector: 'g[app-portfoliopage]',
   templateUrl: './portfoliopage.component.html',
   styleUrls: ['./portfoliopage.component.css']
 })
