@@ -38,6 +38,7 @@ export class blockstate {
             return true
         }
         this.chooseshadow()
+        return false
     }
 
     private chooseshadow() {
