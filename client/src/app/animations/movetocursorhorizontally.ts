@@ -2,7 +2,7 @@ import { animation, animate, state, trigger, style, query, AnimationStyleMetadat
 
 const movetocursorhorizontally = animation(
     animate(
-        "0.2s",
+        "0.3s ease-out",
         style({
             transform: "{{ inputstyle }}"
         })
