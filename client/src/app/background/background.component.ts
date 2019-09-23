@@ -19,7 +19,7 @@ export class backgroundcomponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    let time = environment.production ? 4000 : 0
+    let time = environment.production ? 3000 : 0
           
     setTimeout(() => {
       this.backgroundloaded.emit(0)
