@@ -23,6 +23,7 @@
     "@types/snapsvg": "^0.5.0",
     "rxjs": "~6.4.0",
     "snapsvg": "^0.5.1",
+    "subsink": "^1.0.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, Type } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, fourthboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
@@ -10,13 +10,14 @@ import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamou
 import { nooccurrence } from '../global.data';
 import { rotationtime } from '../animations/rotatetablet';
 import { translatename, pixelunit } from '../animations/styleconstants';
+import { SubSink } from 'subsink'
 
 @Component({
   selector: 'app-vectors',
   templateUrl: './vectors.component.html',
   styleUrls: ['./vectors.component.css']
 })
-export class vectorscomponent implements OnInit {
+export class vectorscomponent implements OnInit, OnDestroy {
   tabletsmoving: boolean = false
 
   //boxes
@@ -50,23 +51,29 @@ export class vectorscomponent implements OnInit {
   //tablets
   chosenpage: number = firstpagenumber
 
+  private sink = new SubSink()
+
   constructor(private animationbuilder: AnimationBuilder) {
     this.boxmovefactory = this.animationbuilder.build(movetocursorhorizontally)   
 
-    this.aboxismoving.pipe(     
-      filter(() => isNullOrUndefined(this.currentelement) === false),
+    this.sink.add(
+      this.aboxismoving.pipe(     
+        filter(() => isNullOrUndefined(this.currentelement) === false),
+      )
+      .subscribe((event) => {
+        this.animatebox(event)            
+      })
     )
-    .subscribe((event) => {
-      this.animatebox(event)            
-    })
-
-    this.aboxismoving.pipe(        
-      filter(() => isNullOrUndefined(this.currentelement) === false),
-      throttleTime(3000),   
-    )
-    .subscribe(() => {
-      this.blocksoundplayer.play()        
-    })
+    
+    this.sink.add(
+      this.aboxismoving.pipe(        
+        filter(() => isNullOrUndefined(this.currentelement) === false),
+        throttleTime(3000),   
+      )
+      .subscribe(() => {
+        this.blocksoundplayer.play()        
+      })
+    )    
   }
 
   ngOnInit() {
@@ -178,5 +185,9 @@ export class vectorscomponent implements OnInit {
     this.tabletsmoving = true
 
     setTimeout(() => { this.tabletsmoving = false}, rotationtime)
+  }
+
+  ngOnDestroy() {
+    this.sink.unsubscribe()
   }
 }
