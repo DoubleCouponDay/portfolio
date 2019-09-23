@@ -2,7 +2,3 @@
     width: var(--window-width);
     height: var(--window-height);    
 }
-
-.drag-button {
-    cursor: ns-resize;
-}

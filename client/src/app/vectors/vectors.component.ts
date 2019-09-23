@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
-import { isNullOrUndefined } from 'util';
 import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
 import movetocursorhorizontally from '../animations/movetocursorhorizontally';
 import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
@@ -11,6 +10,7 @@ import { nooccurrence } from '../global.data';
 import { rotationtime } from '../animations/rotatetablet';
 import { translatename, pixelunit } from '../animations/styleconstants';
 import { SubSink } from 'subsink'
+import { isnullorundefined } from '../utilities';
 
 @Component({
   selector: 'app-vectors',
@@ -48,6 +48,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   blocksoundplayer = new Audio('../../assets/stone-grinding.mp3')
 
+  entirepage: HTMLElement = document.documentElement
+
   //tablets
   chosenpage: number = firstpagenumber
 
@@ -79,7 +81,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
     let box1element = (this.box1.nativeElement as HTMLElement)
-    box1element.style.transform = `translate(0px, ${this.box1position.translationy}px)`
+    box1element.style.transform = `translate(0${pixelunit}, ${this.box1position.translationy}${pixelunit})`
 
     this.box2position = new blockstate(boxgroup2name, minboxtranslation)
     this.box3position = new blockstate(boxgroup3name, minboxtranslation)
@@ -110,9 +112,13 @@ export class vectorscomponent implements OnInit, OnDestroy {
       this.currentposition = this.box4position
     }
 
-    if(isNullOrUndefined(this.currentbox) === false) {
-      this.makecursorslideicon()
-      
+    if(isnullorundefined(this.currentbox) === false &&
+      this.tabletsmoving === false) {
+      this.makecursorslideicon()      
+    }
+
+    else if(this.tabletsmoving === true) {
+      this.makecursorstopsign()
     }
   }
 
@@ -123,7 +129,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   }
 
   onmousemovedonbox(event: MouseEvent) {
-    if(isNullOrUndefined(this.currentbox) === true ||
+    if(isnullorundefined(this.currentbox) === true ||
       this.tabletsmoving === true) {
       return
     }    
@@ -155,13 +161,15 @@ export class vectorscomponent implements OnInit, OnDestroy {
   }
 
   private makecursorslideicon() {
-    let entirepage = document.documentElement
-    entirepage.style.cursor = "ns-resize"
+    this.entirepage.style.cursor = "ns-resize"
   }
 
   private resetcursor() {
-    let entirepage = document.documentElement
-    entirepage.style.cursor = "default"
+    this.entirepage.style.cursor = "default"
+  }
+
+  private makecursorstopsign() {
+    this.entirepage.style.cursor = 'not-allowed'
   }
 
   private animatepagetransition(element: ElementRef) {

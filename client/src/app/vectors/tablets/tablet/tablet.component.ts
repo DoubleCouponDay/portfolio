@@ -27,12 +27,12 @@ export class TabletComponent implements OnInit {
           throw new Error('angle cannot be less than -360')
       }
 
-      if(this.initialized === true) {
-        let flipprotection = this.rotationfield + 0.1
-        this.replacetransformvalue(rotatename, `${flipprotection}${degreesunit}`)        
-        this.applyrotation(input)
-      }      
       this.rotationfield = input
+
+      if(this.initialized === false) {
+        return
+      }
+      this.applyrotation(input)          
   }
 
   @ViewChild(tabletname, {static: true})
