@@ -213,6 +213,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
     setTimeout(() => { 
       this.tabletsmoving = false
+      this.choosecursor()
     }, 
     rotationtime)
   }
