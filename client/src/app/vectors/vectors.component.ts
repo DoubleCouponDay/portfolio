@@ -111,15 +111,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
       this.currentbox = this.box4
       this.currentposition = this.box4position
     }
-
-    if(this.tabletsmoving === true) {
-      this.makecursorstopsign()
-      
-    }
-
-    else {
-      this.makecursorslideicon()      
-    }
+    this.choosecursor()
   }
 
   onmousereleasedbox(event: MouseEvent) {
@@ -128,12 +120,27 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.resetcursor()
   }
 
-  onmousemovedonbox(event: MouseEvent) {
+  onmousemoved(event: MouseEvent) {
     if(isnullorundefined(this.currentbox) === true ||
       this.tabletsmoving === true) {
       return
     }    
     this.boxmovingsubject.next(event)
+  }
+
+  onmouseoverbox(event: MouseEvent) {
+    this.choosecursor()
+  }
+
+  private choosecursor() {    
+    if(this.tabletsmoving === true) {
+      this.makecursorstopsign()
+      
+    }
+
+    else {
+      this.makecursorslideicon()      
+    }
   }
 
   private animatebox = (movementy: number) => {
@@ -164,8 +171,10 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.entirepage.style.cursor = "ns-resize"
   }
 
-  private resetcursor() {
-    this.entirepage.style.cursor = "default"
+  resetcursor() {
+    if(isnullorundefined(this.currentbox) === true) {
+      this.entirepage.style.cursor = "default"
+    }
   }
 
   private makecursorstopsign() {
