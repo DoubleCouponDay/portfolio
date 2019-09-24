@@ -12,3 +12,10 @@
 .scroll-item {
     margin: 10px;
 }
+
+.contentpage {
+    font-family: 'zcool';
+    width: 904px;
+    height: 904px;
+    font-size: 20px;
+}

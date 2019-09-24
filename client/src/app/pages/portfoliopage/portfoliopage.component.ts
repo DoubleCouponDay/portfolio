@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgModule } from '@angular/core';
 import { page } from '../Page.interface';
 
 @Component({
-  selector: 'g[app-portfoliopage]',
+  selector: 'svg:svg[app-portfoliopage]',
   templateUrl: './portfoliopage.component.html',
   styleUrls: ['./portfoliopage.component.css']
 })
