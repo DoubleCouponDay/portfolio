@@ -183,6 +183,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   private animatepagetransition(element: ElementRef) {
     let pressedboxesid = (element.nativeElement as HTMLElement).id
+    let previouspage = this.chosenpage
 
     switch(pressedboxesid) {
       case box1name:
@@ -203,6 +204,9 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
       default:
           throw new Error("pressed box could not be matched!")
+    }
+    if(this.chosenpage === previouspage) {
+      return
     }
     this.tabletsmoving = true
     this.resetnonactivateblockpositions()
