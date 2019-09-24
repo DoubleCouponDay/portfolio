@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { page } from '../Page.interface';
 
 @Component({
-  selector: 'svg:g[app-softwarepage]',
+  selector: 'svg:svg[app-softwarepage]',
   templateUrl: './softwarepage.component.html',
   styleUrls: ['./softwarepage.component.css']
 })
