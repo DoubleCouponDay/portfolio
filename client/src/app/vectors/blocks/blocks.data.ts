@@ -21,3 +21,5 @@ export const maxboxtranslation = 140
 export const shadowname = 'shadow'
 export const biggestshadow = 1
 export const smallestshadow = 4
+
+export const soundinteractioncooldown = 3000

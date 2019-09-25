@@ -48,7 +48,7 @@ export class blockstate {
 
     private setshadow(shadownumber: number) {
         let boxespaths = document.querySelectorAll(`#${this.boxgroupname} path`)  
-        let chosenshadow = document.querySelector(`#${this.boxgroupname} #${shadowname}${shadownumber}`) as SVGElement
+        let chosenshadow = <SVGElement>document.querySelector(`#${this.boxgroupname} #${shadowname}${shadownumber}`)
 
         if(chosenshadow === null) {
             throw new Error('shadow is null')
@@ -58,7 +58,7 @@ export class blockstate {
         boxespaths.forEach((currentelement) => {
             if(currentelement.id.indexOf(shadowname) !== nooccurrence &&
                 currentelement.id !== `${shadowname}${shadownumber}`) { //assuming the shadows are in order
-                let htmlelement = currentelement as SVGElement
+                let htmlelement = <SVGElement>currentelement
                 htmlelement.style.transform = `${scalename}(0)`
             }
         })

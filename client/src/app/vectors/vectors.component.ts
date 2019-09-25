@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
-import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
+import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name, soundinteractioncooldown } from './blocks/blocks.data';
 import movetocursorvertically, { resetposition } from '../animations/movetocursorvertically';
 import { AnimationBuilder, AnimationFactory, animation, animate, style, AnimationReferenceMetadata } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -44,8 +44,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
   private boxmovefactory: AnimationFactory
   private boxresetfactory: AnimationFactory
 
-  boxmovingsubject = new Subject<MouseEvent>()
-  aboxismoving = this.boxmovingsubject.asObservable()
+  aboxismoving = new Subject<MouseEvent>()
+  onboxmoving = this.aboxismoving.asObservable()
 
   blocksoundplayer = new Audio('assets/stone-grinding.mp3')
 
@@ -60,29 +60,19 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.boxmovefactory = this.animationbuilder.build(movetocursorvertically)   
     this.boxresetfactory = this.animationbuilder.build(resetposition)
 
-    let sub1 = this.aboxismoving.subscribe((event) => {
-      this.animatebox(event.movementY)            
-    })
-
-    this.sink.add(
-      sub1
-    )
-
-    let sub2 = this.aboxismoving.pipe(        
-      throttleTime(3000)
+    let sub = this.onboxmoving.pipe(        
+      throttleTime(soundinteractioncooldown)
     )
     .subscribe(() => {
       this.blocksoundplayer.play()        
     })
     
-    this.sink.add(
-      sub2
-    )    
+    this.sink.add(sub)    
   }
 
   ngOnInit() {
     this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
-    let box1element = (this.box1.nativeElement as HTMLElement)
+    let box1element = <SVGElement>this.box1.nativeElement
     box1element.style.transform = `translate(0${pixelunit}, ${this.box1position.translationy}${pixelunit})`
 
     this.box2position = new blockstate(boxgroup2name, minboxtranslation)
@@ -127,7 +117,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
       this.tabletsmoving === true) {
       return
     }    
-    this.boxmovingsubject.next(event)
+    this.animatebox(event.movementY)    
+    this.aboxismoving.next(event)
   }
 
   onmouseoverbox(event: MouseEvent) {

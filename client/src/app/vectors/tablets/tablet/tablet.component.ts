@@ -4,6 +4,7 @@ import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
+import { translateelement } from 'src/app/elementtranslator';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -48,12 +49,12 @@ export class TabletComponent implements OnInit {
 
   ngOnInit() {
     this.initialized = true
-    this.castelement = this.tabletelement.nativeElement as SVGElement
+    this.castelement = <SVGElement>this.tabletelement.nativeElement
 
     this.castelement.style.transformOrigin = 
       `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
 
-    this.replacetransformvalue(rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
+    translateelement(this.castelement, rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
     this.applycorrectvisibility()
   }
 
@@ -73,31 +74,18 @@ export class TabletComponent implements OnInit {
   }
 
   private maketabletvisible = () => {
-    this.replacetransformvalue(scalename, "1")
+    this.translateelement(scalename, "1")
   }
 
   private applycorrectvisibility = () => {
     if(this.rotationfield === tablet3initialrotation) {
-      this.replacetransformvalue(scalename, "0")
+      this.translateelement(scalename, "0")
     }
 
     else {
-      this.replacetransformvalue(scalename, "1")
+      this.translateelement(scalename, "1")
     }
   }
 
-  private replacetransformvalue(key: string, value: string) {
-    let newtransform = `${key}(${value})`
 
-    if(this.castelement.style.transform.indexOf(key) !== nooccurrence) {
-      let anyvalueregex = new RegExp(`${key}\\(.+\\)`) //any value one or more times
-      let replacement = this.castelement.style.transform.replace(anyvalueregex, newtransform)  
-      this.castelement.style.transform = replacement
-    }
-
-    else {
-      this.castelement.style.transform += newtransform
-    }    
-    this.changer.detectChanges()
-  }
 }
