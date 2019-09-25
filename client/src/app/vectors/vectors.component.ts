@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
 import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name } from './blocks/blocks.data';
-import movetocursorhorizontally from '../animations/movetocursorhorizontally';
-import { AnimationBuilder, AnimationFactory, animation, animate, style } from '@angular/animations';
+import movetocursorvertically, { resetposition } from '../animations/movetocursorvertically';
+import { AnimationBuilder, AnimationFactory, animation, animate, style, AnimationReferenceMetadata } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
 import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operators'
 import { blockstate } from './blocks/blockstate';
@@ -41,7 +41,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   currentbox: ElementRef  
   currentposition: blockstate
-  boxmovefactory: AnimationFactory
+  private boxmovefactory: AnimationFactory
+  private boxresetfactory: AnimationFactory
 
   boxmovingsubject = new Subject<MouseEvent>()
   aboxismoving = this.boxmovingsubject.asObservable()
@@ -56,7 +57,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
   private sink = new SubSink()
 
   constructor(private animationbuilder: AnimationBuilder) {
-    this.boxmovefactory = this.animationbuilder.build(movetocursorhorizontally)   
+    this.boxmovefactory = this.animationbuilder.build(movetocursorvertically)   
+    this.boxresetfactory = this.animationbuilder.build(resetposition)
 
     let sub1 = this.aboxismoving.subscribe((event) => {
       this.animatebox(event.movementY)            
@@ -143,12 +145,14 @@ export class vectorscomponent implements OnInit, OnDestroy {
     }
   }
 
-  private animatebox = (movementy: number) => {
+  private animatebox = (movementy: number, useresetanimation: boolean = false) => {
     let pagetriggered = this.currentposition.addmovement(movementy)
     let inputtransformation = `${translatename}(0${pixelunit}, ${this.currentposition.translationy}${pixelunit})`
     let elementreference = this.currentbox
 
-    let animationplayer = this.boxmovefactory.create(
+    let chosenfactory = useresetanimation === true ? this.boxresetfactory : this.boxmovefactory
+
+    let animationplayer = chosenfactory.create(
       elementreference.nativeElement,
       {
         params: {
@@ -209,7 +213,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
       return
     }
     this.tabletsmoving = true
-    this.resetnonactivateblockpositions()
+    this.resetnonactivatedblockpositions()
 
     setTimeout(() => { 
       this.tabletsmoving = false
@@ -222,7 +226,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.sink.unsubscribe()
   }
 
-  private resetnonactivateblockpositions() {
+  private resetnonactivatedblockpositions() {
     let savedplace = this.currentbox
     let savedposition = this.currentposition
     
@@ -260,7 +264,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
       }
       this.currentbox = iterationbox
       this.currentposition = iterationposition
-      this.animatebox(-maxboxtranslation)
+      this.animatebox(-maxboxtranslation, true)
     }    
     this.currentbox = savedplace
     this.currentposition = savedposition
