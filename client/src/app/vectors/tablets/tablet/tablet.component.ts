@@ -1,11 +1,8 @@
 import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild } from '@angular/core';
-import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
-import { page } from 'src/app/pages/Page.interface';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet } from 'src/app/animations/rotatetablet';
-import * as Snap from 'snapsvg'
 import { nooccurrence } from 'src/app/global.data';
 
 @Component({

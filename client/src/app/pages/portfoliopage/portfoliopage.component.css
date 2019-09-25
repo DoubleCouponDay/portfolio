@@ -1,5 +1,5 @@
 .content-page {
-    transform: translate(1350px, 700px);
+    transform: translate(1330px, 700px);
     width: 904px;
 }
 
@@ -21,4 +21,15 @@
     stroke: none;    
     display: block;
     user-select: none;
+}
+
+.scroll-box {
+    width: 300px;
+    height:  500px;
+    overflow: scroll;
+}
+
+
+.scroll-item {
+    margin: 10px;
 }

@@ -258,6 +258,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
         default:
           throw new Error('could not match a box with an index.')
       }
+      
       if(savedplace === iterationbox ||
         iterationposition.translationy === minboxtranslation) {
         continue
