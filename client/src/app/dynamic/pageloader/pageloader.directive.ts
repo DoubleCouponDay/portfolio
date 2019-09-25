@@ -1,6 +1,6 @@
 import { Directive, ViewContainerRef, Input, ComponentFactoryResolver, OnInit, Type, OnDestroy, ComponentRef, ChangeDetectorRef } from '@angular/core';
-import { page } from '../Page.interface';
-import { PortfoliopageComponent } from '../portfoliopage/portfoliopage.component';
+import { page } from '../../pages/Page.interface';
+import { PortfoliopageComponent } from '../../pages/portfoliopage/portfoliopage.component';
 
 @Directive({
   selector: '[app-pageloader]'
