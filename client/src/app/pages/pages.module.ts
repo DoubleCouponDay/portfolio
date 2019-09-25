@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PortfoliopageComponent } from './portfoliopage/portfoliopage.component';
-import { SoftwarepageComponent } from './softwarepage/softwarepage.component';
-import { HardwarepageComponent } from './hardwarepage/hardwarepage.component';
+import { websitespageComponent } from './websitespage/websitespage.component';
 import { MusicpageComponent } from './musicpage/musicpage.component';
 import { PageloaderDirective } from './pageloader/pageloader.directive';
+import { softwarepageComponent } from './softwarepage/softwarepage.component';
 
 @NgModule({
   declarations: [
-    PortfoliopageComponent, SoftwarepageComponent, HardwarepageComponent, MusicpageComponent, PageloaderDirective
+    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective
   ],
   imports: [
     CommonModule
@@ -17,6 +17,6 @@ import { PageloaderDirective } from './pageloader/pageloader.directive';
     PortfoliopageComponent,
     PageloaderDirective
   ],
-  entryComponents: [PortfoliopageComponent, SoftwarepageComponent, HardwarepageComponent, MusicpageComponent]
+  entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent]
 })
 export class PagesModule { }

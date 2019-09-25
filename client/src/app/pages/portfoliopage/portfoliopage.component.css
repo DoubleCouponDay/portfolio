@@ -1,15 +1,17 @@
 .contentpage {
-    transform: translate(1400px, 700px);
+    transform: translate(1350px, 700px);
     width: 904px;
 }
 
 .small-image {
     width:300px;    
+    x: 250px;
+    y: 300px;
 }
 
 .content-text {
     font-family: 'zcool';
-    font-size: 36px;
+    font-size: 40px;
     font-weight: 400;
     font-style: normal;
     fill: #888881;

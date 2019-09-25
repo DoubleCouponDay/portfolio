@@ -1,0 +1,21 @@
+.scroll-box {
+    width: 300px;
+    height:  500px;
+    overflow: scroll;
+}
+
+.small-image {
+    width:50px;
+    height: 50px;
+}
+
+.scroll-item {
+    margin: 10px;
+}
+
+.contentpage {
+    font-family: 'zcool';
+    width: 904px;
+    height: 904px;
+    font-size: 20px;
+}

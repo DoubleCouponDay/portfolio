@@ -6,8 +6,6 @@ import { vectorscomponent } from './vectors.component';
 import { PagesModule } from '../pages/pages.module';
 import { PageloaderDirective } from '../pages/pageloader/pageloader.directive';
 import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.component';
-import { SoftwarepageComponent } from '../pages/softwarepage/softwarepage.component';
-import { HardwarepageComponent } from '../pages/hardwarepage/hardwarepage.component';
 import { MusicpageComponent } from '../pages/musicpage/musicpage.component';
 import { TabletsComponent } from './tablets/tablets.component';
 

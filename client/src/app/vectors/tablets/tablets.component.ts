@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Type } from '@angular/core';
 import { page } from 'src/app/pages/Page.interface';
 import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
-import { SoftwarepageComponent } from 'src/app/pages/softwarepage/softwarepage.component';
-import { HardwarepageComponent } from 'src/app/pages/hardwarepage/hardwarepage.component';
 import { MusicpageComponent } from 'src/app/pages/musicpage/musicpage.component';
 import { totalpagesamount, firstpagenumber, softwarepagenumber, hardwarepagenumber } from 'src/app/pages/pageconstants';
 import { tabletdata, currentpagerotation, tablettranslationposition, tablet2initialrotation,  tablet3initialrotation, tablet4initialrotation} from './tablet/tablet.data';
+import { softwarepageComponent } from 'src/app/pages/softwarepage/softwarepage.component';
+import { websitespageComponent } from 'src/app/pages/websitespage/websitespage.component';
 
 @Component({
   selector: 'g[app-tablets]',
@@ -53,12 +53,12 @@ export class TabletsComponent implements OnInit {
     }
 
     this.tablet2data = {
-      page: SoftwarepageComponent,
+      page: websitespageComponent,
       translationposition: tablettranslationposition
     }
 
     this.tablet3data = {
-      page: HardwarepageComponent,
+      page: softwarepageComponent,
       translationposition: tablettranslationposition
     }
 
