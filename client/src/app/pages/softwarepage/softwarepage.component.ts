@@ -4,7 +4,7 @@ import { page } from '../Page.interface';
 @Component({
   selector: 'g[app-softwarepage]',
   templateUrl: './softwarepage.component.html',
-  styleUrls: ['./softwarepage.component.css']
+  styleUrls: ['./softwarepage.component.css', '../portfoliopage/portfoliopage.component.css' ]
 })
 export class softwarepageComponent implements OnInit, page {
 

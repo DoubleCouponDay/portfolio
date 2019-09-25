@@ -1,10 +1,13 @@
-.contentpage {
+.content-page {
     transform: translate(1350px, 700px);
     width: 904px;
 }
 
 .small-image {
-    width:300px;    
+    width:300px;   
+}
+
+.portrait-image {     
     x: 250px;
     y: 300px;
 }
@@ -17,4 +20,5 @@
     fill: #888881;
     stroke: none;    
     display: block;
+    user-select: none;
 }

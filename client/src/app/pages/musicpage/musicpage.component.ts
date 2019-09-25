@@ -4,7 +4,7 @@ import { page } from '../Page.interface';
 @Component({
   selector: 'g[app-musicpage]',
   templateUrl: './musicpage.component.html',
-  styleUrls: ['./musicpage.component.css']
+  styleUrls: ['./musicpage.component.css', '../portfoliopage/portfoliopage.component.css']
 })
 export class MusicpageComponent implements OnInit, page {
 
