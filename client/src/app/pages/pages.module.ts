@@ -5,19 +5,17 @@ import { websitespageComponent } from './websitespage/websitespage.component';
 import { MusicpageComponent } from './musicpage/musicpage.component';
 import { PageloaderDirective } from '../dynamic/pageloader/pageloader.directive';
 import { softwarepageComponent } from './softwarepage/softwarepage.component';
-import { ScrollLoaderDirective } from '../dynamic/scrollLoader/scrollLoader.directive';
+import { ScrollviewComponent } from './scrollview/scrollview.component';
 
 @NgModule({
   declarations: [
-    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective, ScrollLoaderDirective
+    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective, ScrollviewComponent
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    PortfoliopageComponent,
-    PageloaderDirective,
-    ScrollLoaderDirective
+    PageloaderDirective
   ],
   entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent]
 })
