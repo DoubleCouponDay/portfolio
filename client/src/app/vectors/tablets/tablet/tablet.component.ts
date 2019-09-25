@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
@@ -42,7 +42,7 @@ export class TabletComponent implements OnInit {
 
   private animation: AnimationFactory
 
-  constructor(private animationbuilder: AnimationBuilder) {
+  constructor(private animationbuilder: AnimationBuilder, private changer: ChangeDetectorRef) {
     this.animation = animationbuilder.build(rotatetablet)
   }
 
@@ -98,5 +98,6 @@ export class TabletComponent implements OnInit {
     else {
       this.castelement.style.transform += newtransform
     }    
+    this.changer.detectChanges()
   }
 }

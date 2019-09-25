@@ -8,13 +8,15 @@ import { PageloaderDirective } from '../pages/pageloader/pageloader.directive';
 import { PortfoliopageComponent } from '../pages/portfoliopage/portfoliopage.component';
 import { MusicpageComponent } from '../pages/musicpage/musicpage.component';
 import { TabletsComponent } from './tablets/tablets.component';
+import { ScrollviewComponent } from './tablets/tablet/scrollview/scrollview.component';
 
 @NgModule({
   declarations: [
     BlocksComponent,
     TabletComponent,
     vectorscomponent,
-    TabletsComponent
+    TabletsComponent,
+    ScrollviewComponent
   ],
   imports: [
     CommonModule,

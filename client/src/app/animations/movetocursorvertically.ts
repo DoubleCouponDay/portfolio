@@ -11,7 +11,7 @@ const movetocursorvertically = animation(
 
 export const resetposition = animation(
     animate(
-        "0.8s ease-out",
+        "0.5s ease-out",
         style({
             transform: "translate(0px, 0px)"
         })
