@@ -4,7 +4,7 @@ import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
-import { translateelement } from 'src/app/elementtranslator';
+import { transformelement } from 'src/app/elementtranslator';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -54,7 +54,7 @@ export class TabletComponent implements OnInit {
     this.castelement.style.transformOrigin = 
       `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
 
-    translateelement(this.castelement, rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
+    transformelement(this.castelement, rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
     this.applycorrectvisibility()
   }
 
@@ -74,16 +74,16 @@ export class TabletComponent implements OnInit {
   }
 
   private maketabletvisible = () => {
-    this.translateelement(scalename, "1")
+    transformelement(this.castelement, scalename, "1")
   }
 
   private applycorrectvisibility = () => {
     if(this.rotationfield === tablet3initialrotation) {
-      this.translateelement(scalename, "0")
+      transformelement(this.castelement, scalename, "0")
     }
 
     else {
-      this.translateelement(scalename, "1")
+      transformelement(this.castelement, scalename, "1")
     }
   }
 

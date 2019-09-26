@@ -1,10 +1,10 @@
 import { nooccurrence } from './global.data';
 
-export function translateelement(element: HTMLElement | SVGElement, translationkey: string, translationvalue: string) {
-    let newtransform = `${translationkey}(${translationvalue})`
+export function transformelement(element: HTMLElement | SVGElement, transformkey: string, transformvalue: string) {
+    let newtransform = `${transformkey}(${transformvalue})`
 
-    if(element.style.transform.indexOf(translationkey) !== nooccurrence) {
-      let anyvalueregex = new RegExp(`${translationkey}\\(.+\\)`) //any translationvalue one or more times
+    if(element.style.transform.indexOf(transformkey) !== nooccurrence) {
+      let anyvalueregex = new RegExp(`${transformkey}\\(.+\\)`) //any translationvalue one or more times
       let replacement = element.style.transform.replace(anyvalueregex, newtransform)  
       element.style.transform = replacement
     }
@@ -12,4 +12,12 @@ export function translateelement(element: HTMLElement | SVGElement, translationk
     else {
       element.style.transform += newtransform
     }    
+}
+
+export function applytransformtoeachnode(nodes: NodeListOf<Element>, transformkey: string, transformvalue: string) {
+  
+  nodes.forEach((value, index) => {
+    let castvalue = <SVGElement>value
+    transformelement(castvalue, transformkey, transformvalue)
+  })
 }

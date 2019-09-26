@@ -11,6 +11,7 @@ import { rotationtime } from '../animations/rotatetablet';
 import { translatename, pixelunit } from '../animations/styleconstants';
 import { SubSink } from 'subsink'
 import { isnullorundefined } from '../utilities';
+import { transformelement } from '../elementtranslator';
 
 @Component({
   selector: 'app-vectors',
@@ -73,7 +74,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
     let box1element = <SVGElement>this.box1.nativeElement
-    box1element.style.transform = `translate(0${pixelunit}, ${this.box1position.translationy}${pixelunit})`
+    transformelement(box1element, translatename, `0${pixelunit}, ${this.box1position.translationy}${pixelunit}`)
 
     this.box2position = new blockstate(boxgroup2name, minboxtranslation)
     this.box3position = new blockstate(boxgroup3name, minboxtranslation)

@@ -1,13 +1,14 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { maximumtranslation, minimumtranslation } from './scrollview.data';
 import { Subject, Observable, pipe } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
 import { SubSink } from 'subsink';
-import { translateelement } from 'src/app/elementtranslator';
+import { transformelement } from 'src/app/elementtranslator';
+import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 
 @Component({
-  selector: 'app-scrollview',
+  selector: 'svg:svg[app-scrollview]',
   templateUrl: './scrollview.component.html',
   styleUrls: ['./scrollview.component.css']
 })
@@ -19,13 +20,11 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
   private scrollbuttonheld: boolean = false
   private scrollbuttonposition: number = 0
 
-  @ViewChild('scrollbutton', {static: true})
-  scrollbutton: ElementRef
-
-  private castbutton: SVGElement
+  @ViewChildren('scrollbutton')
+  scrollbuttonparts: QueryList<SVGElement>
 
   private onscroll = this.scrollbuttonmoved.asObservable()
-  private scrollaudio = new Audio('assets/tabletscraping.mp3') 
+  private scrollaudio: HTMLAudioElement
 
   private sink = new SubSink()
 
@@ -34,6 +33,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
       throttleTime(soundinteractioncooldown)
     )
     .subscribe(() => {
+      this.scrollaudio = new Audio('assets/tabletscraping.mp3') 
       this.scrollaudio.play()
     })
 
@@ -41,7 +41,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.castbutton = <SVGElement>this.scrollbutton.nativeElement
+     
   }
 
   onscrollbuttonpressed(event: MouseEvent) {
@@ -50,6 +50,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
+    this.scrollaudio = null
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
@@ -59,6 +60,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
     let shouldmove = this.calculatescrollbuttonposition(event.movementY)
 
     if(shouldmove) {
+      this.movescrollbutton()
       this.scrollbuttonmoved.emit()
     }
   }
@@ -93,7 +95,9 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
   }
 
   private movescrollbutton() {
-    translateelement()
+    this.scrollbuttonparts.forEach((item) => {
+      transformelement(item, translatename, `0${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
+    })    
   }
 
   ngOnDestroy(): void {

@@ -26,10 +26,14 @@
 .scroll-box {
     width: 300px;
     height:  500px;
-    overflow: scroll;
+    overflow: hidden;
 }
 
 
 .scroll-item {
     margin: 10px;
+}
+
+.scroll-bar {
+
 }
