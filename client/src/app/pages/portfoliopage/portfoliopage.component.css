@@ -1,6 +1,7 @@
 .content-page {
     transform: translate(1330px, 700px);
     width: 904px;
+    overflow: hidden;
 }
 
 .small-image {
@@ -23,17 +24,15 @@
     user-select: none;
 }
 
-.scroll-box {
-    width: 300px;
-    height:  500px;
-    overflow: hidden;
-}
-
-
 .scroll-item {
     margin: 10px;
 }
 
 .scroll-bar {
 
+}
+
+.link {
+    text-decoration: underline;
+    font-size: 60px
 }

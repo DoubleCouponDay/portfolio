@@ -8,7 +8,7 @@ import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 
 @Component({
-  selector: 'svg:svg[app-scrollview]',
+  selector: 'g[app-scrollview]',
   templateUrl: './scrollview.component.html',
   styleUrls: ['./scrollview.component.css']
 })
