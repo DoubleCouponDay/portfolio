@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, scrollmultiplier, mintranslationX, volumedecrement, scrapesoundpath, nomovementtimer, volumeincrement, volumestate, mintranslationY } from './scrollview.data';
+import { maximumtranslation, scrollmultiplier, mintranslationX, volumedecrement, scrapesoundpath, nomovementtimer, volumeincrement, volumestate, mintranslationY, buttonidentifier } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -8,7 +8,7 @@ import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { isnullorundefined } from 'src/app/utilities';
 import fadeout from 'src/app/animations/fadeout';
-import { generatedraggable } from 'src/app/audio/generatedraggable';
+import { generatedraggableaudio } from 'src/app/audio/generatedraggable';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -24,14 +24,14 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private scrollbuttonposition: number = 0
 
-  @ViewChildren('scrollbutton')
+  @ViewChildren(buttonidentifier)
   scrollbuttonparts: QueryList<ElementRef>
 
   private castbuttonparts: SVGElement[]
 
   private sink = new SubSink()
 
-  private scrapesoundgenerator = new generatedraggable(
+  private scrapesoundgenerator = new generatedraggableaudio(
     scrapesoundpath,
     volumeincrement,
     volumedecrement)

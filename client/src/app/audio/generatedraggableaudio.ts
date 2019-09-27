@@ -3,7 +3,7 @@ import { isnullorundefined } from '../utilities';
 
 export const maxvolume  = 1
 
-export class generatedraggable {
+export class generatedraggableaudio {
 
     private timeoutIDs = new Array<number>()
 

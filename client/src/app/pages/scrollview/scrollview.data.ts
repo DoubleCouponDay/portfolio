@@ -8,7 +8,7 @@ export const volumedecrement = 0.01
 export const volumeincrement = volumedecrement * 2
 export const scrapesoundpath = 'assets/tabletscraping.mp3'
 export const nomovementtimer = 1000
-
+export const buttonidentifier = 'scrollbutton'
 export const millisecondspoint = 1000
 
 export enum volumestate {
