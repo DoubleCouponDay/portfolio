@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation } from './scrollview.data';
+import { maximumtranslation, minimumtranslation, scrollmultiplier } from './scrollview.data';
 import { Subject, Observable, pipe } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -32,7 +32,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   constructor() { 
     let sub = this.onscroll.pipe(
-      throttleTime(soundinteractioncooldown)
+      throttleTime(50)
     )
     .subscribe(() => {
       this.scrollaudio = new Audio('assets/tabletscraping.mp3') 
@@ -53,6 +53,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
     this.scrollaudio = null
+    console.log("scroll released")
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
@@ -71,18 +72,14 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
    * returns if button should move
    */
   private calculatescrollbuttonposition(unitchange: number): boolean {
-    let chosenfutureposition: number
+    let chosenfutureposition = this.scrollbuttonposition + unitchange * scrollmultiplier
 
-    if(unitchange > maximumtranslation) {
+    if(chosenfutureposition > maximumtranslation) {
       chosenfutureposition = maximumtranslation       
     }
 
-    else if(unitchange < minimumtranslation) {
+    else if(chosenfutureposition < minimumtranslation) {
       chosenfutureposition = minimumtranslation
-    }
-
-    else {
-      chosenfutureposition = this.scrollbuttonposition + unitchange
     }
     let shouldplay = this.scrapesoundshouldplay(chosenfutureposition)
     this.scrollbuttonposition = shouldplay ? chosenfutureposition : this.scrollbuttonposition
