@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumeincrement, pathtoaudio, nomovementtimer, maxvolume } from './scrollview.data';
+import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumedecrement, pathtoaudio, nomovementtimer, maxvolume, volumeincrement } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -89,8 +89,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private fadeoutaudio()
   {
     setTimeout(() => {
-      if(this.scrollaudio.volume >= volumeincrement) {        
-        this.scrollaudio.volume -= volumeincrement
+      if(this.scrollaudio.volume >= volumedecrement) {        
+        this.scrollaudio.volume -= volumedecrement
         this.fadeoutaudio()
       }
 
@@ -104,7 +104,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private fadeupaudio() {
     setTimeout(() => {
       if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
-        this.scrollaudio.volume += volumeincrement * 2
+        this.scrollaudio.volume += volumeincrement
         this.fadeupaudio()
       }
     })
