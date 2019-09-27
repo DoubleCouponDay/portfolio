@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumedecrement, pathtoaudio, nomovementtimer, maxvolume, volumeincrement } from './scrollview.data';
+import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumedecrement, pathtoaudio, nomovementtimer, maxvolume, volumeincrement, volumestate } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -35,6 +35,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private timeoutIDs = new Array<number>()
 
+  private volumescurrentmode = volumestate.stable
+
   constructor() { 
 
   }
@@ -49,7 +51,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    this.state3_audioreset()
+    this.resetaudio()
     clearInterval()
   }
 
@@ -63,27 +65,29 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       return
     }
     this.movescrollbutton()
-    this.scrollbuttonmoved.emit()
-    this.state2_audiomaintained()
+    this.scrollbuttonmoved.emit()    
+    this.maintainaudio()
 
     if(this.throttleinput === true) {
       return
     }    
-    this.state1_audiostart()
+    this.startaudio()
   }
 
-  private state1_audiostart() {    
+  private startaudio() {    
     this.scrollaudio = new Audio(pathtoaudio) 
-    this.scrollaudio.play()    
+    this.scrollaudio.play()  
+    this.volumescurrentmode = volumestate.decreasing  
     this.fadeoutaudio()
     this.throttleinput = true
   }
 
-  private state2_audiomaintained() {
+  private maintainaudio() {
+    this.volumescurrentmode = volumestate.increasing  
     this.fadeupaudio()
   }
 
-  private state3_audioreset() {
+  private resetaudio() {
     this.throttleinput = false    
 
     this.fadeoutaudio(() => {
@@ -94,19 +98,22 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   }
 
   /** invoke after movement detection */
-  private fadeoutaudio(onfaded?: () => void)
-  {
+  private fadeoutaudio(onfaded?: () => void) {  
     let id = setTimeout(() => {
       if(this.scrollaudio.volume >= volumedecrement) {        
         this.scrollaudio.volume -= volumedecrement
-        this.fadeoutaudio()
+
+        if(this.volumescurrentmode === volumestate.decreasing) {
+          this.fadeoutaudio()  
+        }        
       }
 
       else {
+        this.volumescurrentmode = volumestate.stable
         this.scrollaudio.pause()
         this.throttleinput = false
 
-        if(isnullorundefined(onfaded)) {
+        if(isnullorundefined(onfaded) === true) {
           return
         }
         onfaded()
@@ -119,8 +126,15 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     let id = setTimeout(() => {
       if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
         this.scrollaudio.volume += volumeincrement
-        this.fadeupaudio()
+
+        if(this.volumescurrentmode === volumestate.increasing) {
+          this.fadeupaudio()
+        }
       }
+
+      else {
+        this.volumescurrentmode = volumestate.stable
+      }      
     })
     this.timeoutIDs.push(id)
   }
