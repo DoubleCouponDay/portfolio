@@ -1,11 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation, scrollmultiplier } from './scrollview.data';
-import { Subject, Observable, pipe } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumeincrement, pathtoaudio, nomovementtimer } from './scrollview.data';
+import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
+import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
 import { SubSink } from 'subsink';
 import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
+import { isnullorundefined } from 'src/app/utilities';
+import fadeout from 'src/app/animations/fadeout';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -25,21 +27,15 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private castbuttonparts: SVGElement[]
 
-  private onscroll = this.scrollbuttonmoved.asObservable()
-  private scrollaudio: HTMLAudioElement
+  private scrollaudio: HTMLAudioElement = new Audio(pathtoaudio) 
 
   private sink = new SubSink()
 
-  constructor() { 
-    let sub = this.onscroll.pipe(
-      throttleTime(50)
-    )
-    .subscribe(() => {
-      this.scrollaudio = new Audio('assets/tabletscraping.mp3') 
-      this.scrollaudio.play()
-    })
+  private shouldthrottleplays = false
+  private scrollstillmoving = false
 
-    this.sink.add(sub)
+  constructor() { 
+
   }
 
   ngAfterViewInit() {
@@ -52,7 +48,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    this.scrollaudio = null
+    this.shouldthrottleplays = false    
+    this.fadeoutaudio()    
     console.log("scroll released")
   }
 
@@ -62,10 +59,38 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     }
     let shouldmove = this.calculatescrollbuttonposition(event.movementY)
 
-    if(shouldmove === true) {
-      this.movescrollbutton()
-      this.scrollbuttonmoved.emit()
+    if(shouldmove === false) {
+      return
     }
+    this.movescrollbutton()
+    this.scrollbuttonmoved.emit()
+    this.scrollstillmoving = true
+
+    setTimeout(() => this.scrollstillmoving = false, nomovementtimer);
+
+    if(this.shouldthrottleplays === true) {
+      return
+    }
+    this.shouldthrottleplays = true
+    this.scrollaudio = new Audio(pathtoaudio) 
+    this.scrollaudio.play()    
+
+    setTimeout(() => {
+      this.fadeoutaudio()
+    },
+    nomovementtimer)
+  }
+
+  private fadeoutaudio()
+  {
+    if(this.scrollaudio.volume >= volumeincrement) {        
+      this.scrollaudio.volume -= volumeincrement
+      this.fadeoutaudio()
+    }
+
+    else {
+      this.scrollaudio.pause()
+    }    
   }
 
   /**
@@ -95,7 +120,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private movescrollbutton() {
     this.castbuttonparts.forEach((item) => {
-      transformelement(item, translatename, `0${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
+      transformelement(item, translatename, `${translationX}${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
     })    
   }
 
