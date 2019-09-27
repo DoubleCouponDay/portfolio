@@ -8,7 +8,7 @@
                 <feOffset xmlns="http://www.w3.org/2000/svg" in="SourceGraphic" dx="3" dy="3" />
                 <feGaussianBlur xmlns="http://www.w3.org/2000/svg" stdDeviation="0" result="pf_100_offsetBlur" />
                 <feComposite xmlns="http://www.w3.org/2000/svg" in="SourceGraphic" in2="pf_100_offsetBlur" result="pf_100_inverse" operator="out" />
-                <feFlood xmlns="http://www.w3.org/2000/svg" flood-color="#7B7672" flood-opacity="1" result="pf_100_color" />
+                <feFlood xmlns="http://www.w3.org/2000/svg" flood-color="#a8a099" flood-opacity="1" result="pf_100_color" />
                 <feComposite xmlns="http://www.w3.org/2000/svg" in="pf_100_color" in2="pf_100_inverse" operator="in" result="pf_100_shadow" />
                 <feComposite xmlns="http://www.w3.org/2000/svg" in="pf_100_shadow" in2="SourceGraphic" operator="over" />
             </filter>
@@ -16,11 +16,13 @@
         <g filter="url(#ojgB1D3z7fqJExkKgSmvCN4ol8uW1mxH)">
             <rect x="2106" y="670" width="74" height="773" transform="matrix(1,0,0,1,0,0)" id="scrollbar" fill="rgb(206,198,192)" />
         </g>
-        <path d="M 2127.7 670 L 2154.3 670 C 2166.276556 670 2176 679.723444 2176 691.7 L 2176 796.3 C 2176 808.276556 2166.276556 818 2154.3 818 L 2127.7 818 C 2115.723444 818 2106 808.276556 2106 796.3 L 2106 691.7 C 2106 679.723444 2115.723444 670 2127.7 670 Z" style="stroke:none;fill:#E8DBE4;stroke-miterlimit:10;"
+        <path d="M 2127.7 670 L 2154.3 670 C 2166.276556 670 2176 679.723444 2176 691.7 L 2176 796.3 C 2176 808.276556 2166.276556 818 2154.3 818 L 2127.7 818 C 2115.723444 818 2106 808.276556 2106 796.3 L 2106 691.7 C 2106 679.723444 2115.723444 670 2127.7 670 Z" style="stroke:none;fill:rgb(213, 209, 206);stroke-miterlimit:10;"
             #scrollbutton
+            class="scroll-button"
             (mousedown)="onscrollbuttonpressed($event)" />
         <path d="M 2127.7 670 L 2154.3 670 C 2166.276556 670 2176 679.723444 2176 691.7 L 2176 796.3 C 2176 808.276556 2166.276556 818 2154.3 818 L 2127.7 818 C 2115.723444 818 2106 808.276556 2106 796.3 L 2106 691.7 C 2106 679.723444 2115.723444 670 2127.7 670 Z" style="fill:none;stroke:#A99F99;stroke-width:3;stroke-linecap:square;stroke-miterlimit:2;"
             #scrollbutton
+            class="scroll-button"
             (mousedown)="onscrollbuttonpressed($event)" />
     </g>
 </svg>
