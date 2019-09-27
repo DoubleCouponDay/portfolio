@@ -33,6 +33,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private sink = new SubSink()
 
+  private timeoutIDs = new Array<number>()
+
   constructor() { 
 
   }
@@ -48,6 +50,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
     this.state3_audioreset()
+    clearInterval()
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
@@ -82,13 +85,18 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private state3_audioreset() {
     this.throttleinput = false    
-    this.fadeoutaudio()    
+
+    this.fadeoutaudio(() => {
+      this.timeoutIDs.forEach((value) => {
+        clearTimeout(value)
+      })
+    })    
   }
 
   /** invoke after movement detection */
-  private fadeoutaudio()
+  private fadeoutaudio(onfaded?: () => void)
   {
-    setTimeout(() => {
+    let id = setTimeout(() => {
       if(this.scrollaudio.volume >= volumedecrement) {        
         this.scrollaudio.volume -= volumedecrement
         this.fadeoutaudio()
@@ -97,17 +105,24 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       else {
         this.scrollaudio.pause()
         this.throttleinput = false
+
+        if(isnullorundefined(onfaded)) {
+          return
+        }
+        onfaded()
       }    
     })
+    this.timeoutIDs.push(id)    
   }
 
   private fadeupaudio() {
-    setTimeout(() => {
+    let id = setTimeout(() => {
       if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
         this.scrollaudio.volume += volumeincrement
         this.fadeupaudio()
       }
     })
+    this.timeoutIDs.push(id)
   }
 
   /**
