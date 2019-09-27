@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { maximumtranslation, minimumtranslation } from './scrollview.data';
 import { Subject, Observable, pipe } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { translatename, pixelunit } from 'src/app/animations/styleconstants';
   templateUrl: './scrollview.component.html',
   styleUrls: ['./scrollview.component.css']
 })
-export class ScrollviewComponent implements OnInit, OnDestroy {
+export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   @Output()
   scrollbuttonmoved: EventEmitter<number> = new EventEmitter()
@@ -21,7 +21,9 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
   private scrollbuttonposition: number = 0
 
   @ViewChildren('scrollbutton')
-  scrollbuttonparts: QueryList<SVGElement>
+  scrollbuttonparts: QueryList<ElementRef>
+
+  private castbuttonparts: SVGElement[]
 
   private onscroll = this.scrollbuttonmoved.asObservable()
   private scrollaudio: HTMLAudioElement
@@ -40,8 +42,8 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
     this.sink.add(sub)
   }
 
-  ngOnInit() {
-     
+  ngAfterViewInit() {
+    this.castbuttonparts = this.scrollbuttonparts.map((item) => <SVGElement>item.nativeElement)
   }
 
   onscrollbuttonpressed(event: MouseEvent) {
@@ -59,7 +61,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
     }
     let shouldmove = this.calculatescrollbuttonposition(event.movementY)
 
-    if(shouldmove) {
+    if(shouldmove === true) {
       this.movescrollbutton()
       this.scrollbuttonmoved.emit()
     }
@@ -80,7 +82,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
     }
 
     else {
-      chosenfutureposition = unitchange
+      chosenfutureposition = this.scrollbuttonposition + unitchange
     }
     let shouldplay = this.scrapesoundshouldplay(chosenfutureposition)
     this.scrollbuttonposition = shouldplay ? chosenfutureposition : this.scrollbuttonposition
@@ -95,7 +97,7 @@ export class ScrollviewComponent implements OnInit, OnDestroy {
   }
 
   private movescrollbutton() {
-    this.scrollbuttonparts.forEach((item) => {
+    this.castbuttonparts.forEach((item) => {
       transformelement(item, translatename, `0${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
     })    
   }
