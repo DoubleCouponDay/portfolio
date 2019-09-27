@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumeincrement, pathtoaudio, nomovementtimer } from './scrollview.data';
+import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumeincrement, pathtoaudio, nomovementtimer, maxvolume } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -19,7 +19,9 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   @Output()
   scrollbuttonmoved: EventEmitter<number> = new EventEmitter()
 
-  private scrollbuttonheld: boolean = false
+  private scrollbuttonheld = false  
+  private throttleinput = false
+
   private scrollbuttonposition: number = 0
 
   @ViewChildren('scrollbutton')
@@ -30,9 +32,6 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private scrollaudio: HTMLAudioElement = new Audio(pathtoaudio) 
 
   private sink = new SubSink()
-
-  private shouldthrottleplays = false
-  private scrollstillmoving = false
 
   constructor() { 
 
@@ -48,9 +47,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    this.shouldthrottleplays = false    
-    this.fadeoutaudio()    
-    console.log("scroll released")
+    this.state3_audioreset()
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
@@ -64,33 +61,53 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     }
     this.movescrollbutton()
     this.scrollbuttonmoved.emit()
-    this.scrollstillmoving = true
+    this.state2_audiomaintained()
 
-    setTimeout(() => this.scrollstillmoving = false, nomovementtimer);
-
-    if(this.shouldthrottleplays === true) {
+    if(this.throttleinput === true) {
       return
-    }
-    this.shouldthrottleplays = true
-    this.scrollaudio = new Audio(pathtoaudio) 
-    this.scrollaudio.play()    
-
-    setTimeout(() => {
-      this.fadeoutaudio()
-    },
-    nomovementtimer)
+    }    
+    this.state1_audiostart()
   }
 
+  private state1_audiostart() {    
+    this.scrollaudio = new Audio(pathtoaudio) 
+    this.scrollaudio.play()    
+    this.fadeoutaudio()
+    this.throttleinput = true
+  }
+
+  private state2_audiomaintained() {
+    this.fadeupaudio()
+  }
+
+  private state3_audioreset() {
+    this.throttleinput = false    
+    this.fadeoutaudio()    
+  }
+
+  /** invoke after movement detection */
   private fadeoutaudio()
   {
-    if(this.scrollaudio.volume >= volumeincrement) {        
-      this.scrollaudio.volume -= volumeincrement
-      this.fadeoutaudio()
-    }
+    setTimeout(() => {
+      if(this.scrollaudio.volume >= volumeincrement) {        
+        this.scrollaudio.volume -= volumeincrement
+        this.fadeoutaudio()
+      }
 
-    else {
-      this.scrollaudio.pause()
-    }    
+      else {
+        this.scrollaudio.pause()
+        this.throttleinput = false
+      }    
+    })
+  }
+
+  private fadeupaudio() {
+    setTimeout(() => {
+      if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
+        this.scrollaudio.volume += volumeincrement * 2
+        this.fadeupaudio()
+      }
+    })
   }
 
   /**
