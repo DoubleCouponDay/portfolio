@@ -8,7 +8,7 @@ import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { isnullorundefined } from 'src/app/utilities';
 import fadeout from 'src/app/animations/fadeout';
-import { generatedraggableaudio } from 'src/app/audio/generatedraggable';
+import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 
 @Component({
   selector: 'g[app-scrollview]',
