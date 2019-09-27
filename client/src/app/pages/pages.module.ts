@@ -15,7 +15,8 @@ import { ScrollviewComponent } from './scrollview/scrollview.component';
     CommonModule
   ],
   exports: [
-    PageloaderDirective
+    PageloaderDirective,
+    ScrollviewComponent
   ],
   entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent]
 })

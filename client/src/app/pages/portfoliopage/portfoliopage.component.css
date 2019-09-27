@@ -28,8 +28,9 @@
     margin: 10px;
 }
 
-.scroll-bar {
-
+.scroll-view {
+    transform-origin: 0px 0px;
+    transform: translate(28px, 0px);
 }
 
 .link {

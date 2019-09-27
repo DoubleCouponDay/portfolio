@@ -1,63 +1,58 @@
-<svg:g class="content-page">    
-    <g class="scroll-item">
-        <image href="assets/moonmachine.png" 
-            class="small-image"
-            x="0" dy="1.2em" />
-        
-        <text class="content-text">
-            <tspan x="320" dy="1.2em">Moon Machine</tspan>
-            <a href="https://www.moonmachine.biz">
-                <tspan x="650" class="link">link</tspan>
-            </a>   
-            <tspan x="320" dy="1.2em">An automated trading</tspan>
-            <tspan x="320" dy="1.2em">plaform. Written in</tspan>
-            <tspan x="320" dy="1.2em">Angular, Typescript, </tspan>
-            <tspan x="0" dy="1.2em">Aspnet core, C Sharp. Deployment</tspan>
-            <tspan x="0" dy="1.2em">software written in F Sharp. Serverless</tspan>
-            <tspan x="0" dy="1.2em">functions written in Typescript and</tspan>    
-            <tspan x="0" dy="1.2em">Node.</tspan>  
-        </text>
+<svg:g>    
+    <g class="content-page">
+        <g class="scroll-item">
+            <image href="assets/moonmachine.png" 
+                class="small-image"
+                x="0" dy="1.2em" />
+            
+            <text class="content-text">
+                <tspan x="320" dy="1.2em">Moon Machine</tspan>
+
+                <a href="https://www.moonmachine.biz">
+                    <tspan x="650" class="link">Link</tspan>
+                </a>   
+                <tspan x="320" dy="1.2em">An automated trading</tspan>
+                <tspan x="320" dy="1.2em">plaform. Written in</tspan>
+                <tspan x="320" dy="1.2em">Angular, Typescript, </tspan>
+                <tspan x="0" dy="1.2em">Aspnet core, C Sharp. Deployment</tspan>
+                <tspan x="0" dy="1.2em">software written in F Sharp. Serverless</tspan>
+                <tspan x="0" dy="1.2em">functions written in Typescript and</tspan>    
+                <tspan x="0" dy="1.2em">Node.</tspan>  
+            </text>
+        </g>
+
+        <g class="scroll-item">
+            <image href="assets/dragontrack.png" 
+                class="small-image"
+                x="0" dy="1.2em" />
+            
+            <tspan x="" dy="1.2em">Dragontrack</tspan>
+            <tspan x="0" dy="1.2em">A peer to peer music listening website.</tspan>
+            <tspan x="0" dy="1.2em">Written in Angular, Typescript, Aspet Core, F Sharp.</tspan>
+            <a x="0" dy="1.2em" href="https://github.com/doublecouponday/dragontrack">Link</a>
+        </g>
+
+        <!-- <g class="scroll-item">
+            <image href="assets/luggate.png" 
+                class="small-image"
+                x="0" dy="1.2em" />
+            
+            <tspan x="0" dy="1.2em">A candidate for the luggate hotel's website.</tspan>
+            <tspan x="0" dy="1.2em">Written with minimal javascript.</tspan>
+            <a x="0" dy="1.2em" href="https://dcdgoluggatehotel.z26.web.core.windows.net/">Link</a>
+        </g>
+
+        <g class="scroll-item">
+            <image href="assets/ttsmod.jpg" 
+                class="small-image"
+                x="0" dy="1.2em" />
+
+            <tspan x="0" dy="1.2em">A text to speed algorithm for the game space engineers.</tspan>
+            <tspan x="0" dy="1.2em">This is where I cut my teeth on big architecture projects.</tspan>
+            <tspan x="0" dy="1.2em">Written in C Sharp.</tspan>
+            <a x="0" dy="1.2em" href="https://steamcommunity.com/sharedfiles/filedetails/?id=641860452&searchtext=text+to+speech+mod">Link</a>
+        </g> -->
     </g>
-
-    <g class="scroll-item">
-        <image href="assets/dragontrack.png" 
-            class="small-image"
-            x="0" dy="1.2em" />
-        
-        <tspan x="" dy="1.2em">Dragontrack</tspan>
-        <tspan x="0" dy="1.2em">A peer to peer music listening website.</tspan>
-        <tspan x="0" dy="1.2em">Written in Angular, Typescript, Aspet Core, F Sharp.</tspan>
-        <a x="0" dy="1.2em" href="https://github.com/doublecouponday/dragontrack">link</a>
-    </g>
-
-    <!-- <g class="scroll-item">
-        <image href="assets/luggate.png" 
-            class="small-image"
-            x="0" dy="1.2em" />
-        
-        <tspan x="0" dy="1.2em">A candidate for the luggate hotel's website.</tspan>
-        <tspan x="0" dy="1.2em">Written with minimal javascript.</tspan>
-        <a x="0" dy="1.2em" href="https://dcdgoluggatehotel.z26.web.core.windows.net/">link</a>
-    </g>
-
-    <g class="scroll-item">
-        <image href="assets/ttsmod.jpg" 
-            class="small-image"
-            x="0" dy="1.2em" />
-
-        <tspan x="0" dy="1.2em">A text to speed algorithm for the game space engineers.</tspan>
-        <tspan x="0" dy="1.2em">This is where I cut my teeth on big architecture projects.</tspan>
-        <tspan x="0" dy="1.2em">Written in C Sharp.</tspan>
-        <a x="0" dy="1.2em" href="https://steamcommunity.com/sharedfiles/filedetails/?id=641860452&searchtext=text+to+speech+mod">link</a>
-    </g> -->
-    
-    <svg>
-        <g app-scrollview></g>
-    </svg>
+    <g app-scrollview class="scroll-view"
+        (scrollbuttonmoved)="onscroll($event)"></g>
 </svg:g>
-
-<!--
-class="scroll-bar"
-        (scrollbuttonmoved)="onscroll($event)"
-
-        -->
