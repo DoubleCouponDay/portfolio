@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, minimumtranslation, scrollmultiplier, translationX, volumedecrement, pathtoaudio, nomovementtimer, maxvolume, volumeincrement, volumestate } from './scrollview.data';
+import { maximumtranslation, scrollmultiplier, mintranslationX, volumedecrement, scrapesoundpath, nomovementtimer, volumeincrement, volumestate, mintranslationY } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -8,6 +8,7 @@ import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { isnullorundefined } from 'src/app/utilities';
 import fadeout from 'src/app/animations/fadeout';
+import { generatedraggable } from 'src/app/audio/generatedraggable';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -19,8 +20,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   @Output()
   scrollbuttonmoved: EventEmitter<number> = new EventEmitter()
 
-  private scrollbuttonheld = false  
-  private throttleinput = false
+  private scrollbuttonheld = false    
 
   private scrollbuttonposition: number = 0
 
@@ -29,13 +29,12 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private castbuttonparts: SVGElement[]
 
-  private scrollaudio: HTMLAudioElement = new Audio(pathtoaudio) 
-
   private sink = new SubSink()
 
-  private timeoutIDs = new Array<number>()
-
-  private volumescurrentmode = volumestate.stable
+  private scrapesoundgenerator = new generatedraggable(
+    scrapesoundpath,
+    volumeincrement,
+    volumedecrement)
 
   constructor() { 
 
@@ -51,8 +50,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    this.resetaudio()
-    clearInterval()
+    console.log('audio stopped')
+    this.scrapesoundgenerator.resetaudio()    
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
@@ -66,77 +65,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     }
     this.movescrollbutton()
     this.scrollbuttonmoved.emit()    
-    this.maintainaudio()
-
-    if(this.throttleinput === true) {
-      return
-    }    
-    this.startaudio()
-  }
-
-  private startaudio() {    
-    this.scrollaudio = new Audio(pathtoaudio) 
-    this.scrollaudio.play()  
-    this.volumescurrentmode = volumestate.decreasing  
-    this.fadeoutaudio()
-    this.throttleinput = true
-  }
-
-  private maintainaudio() {
-    this.volumescurrentmode = volumestate.increasing  
-    this.fadeupaudio()
-  }
-
-  private resetaudio() {
-    this.throttleinput = false    
-
-    this.fadeoutaudio(() => {
-      this.timeoutIDs.forEach((value) => {
-        clearTimeout(value)
-      })
-    })    
-  }
-
-  /** invoke after movement detection */
-  private fadeoutaudio(onfaded?: () => void) {  
-    let id = setTimeout(() => {
-      if(this.scrollaudio.volume >= volumedecrement) {        
-        this.scrollaudio.volume -= volumedecrement
-
-        if(this.volumescurrentmode === volumestate.decreasing) {
-          this.fadeoutaudio()  
-        }        
-      }
-
-      else {
-        this.volumescurrentmode = volumestate.stable
-        this.scrollaudio.pause()
-        this.throttleinput = false
-
-        if(isnullorundefined(onfaded) === true) {
-          return
-        }
-        onfaded()
-      }    
-    })
-    this.timeoutIDs.push(id)    
-  }
-
-  private fadeupaudio() {
-    let id = setTimeout(() => {
-      if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
-        this.scrollaudio.volume += volumeincrement
-
-        if(this.volumescurrentmode === volumestate.increasing) {
-          this.fadeupaudio()
-        }
-      }
-
-      else {
-        this.volumescurrentmode = volumestate.stable
-      }      
-    })
-    this.timeoutIDs.push(id)
+    this.scrapesoundgenerator.maintainaudio()  
+    this.scrapesoundgenerator.startaudio()
   }
 
   /**
@@ -149,8 +79,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       chosenfutureposition = maximumtranslation       
     }
 
-    else if(chosenfutureposition < minimumtranslation) {
-      chosenfutureposition = minimumtranslation
+    else if(chosenfutureposition < mintranslationY) {
+      chosenfutureposition = mintranslationY
     }
     let shouldplay = this.scrapesoundshouldplay(chosenfutureposition)
     this.scrollbuttonposition = shouldplay ? chosenfutureposition : this.scrollbuttonposition
@@ -166,7 +96,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private movescrollbutton() {
     this.castbuttonparts.forEach((item) => {
-      transformelement(item, translatename, `${translationX}${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
+      transformelement(item, translatename, `${mintranslationX}${pixelunit}, ${this.scrollbuttonposition}${pixelunit}`)
     })    
   }
 
