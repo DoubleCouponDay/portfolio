@@ -50,7 +50,6 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    console.log('audio stopped')
     this.scrapesoundgenerator.resetaudio()    
   }
 
