@@ -41,7 +41,7 @@ export class generatedraggableaudio {
 
         this.fadeoutaudio(() => {
             this.timeoutIDs.forEach((value) => {
-            clearTimeout(value)
+                clearTimeout(value)
             })
             this.timeoutIDs = new Array<number>()
         })    
@@ -51,23 +51,23 @@ export class generatedraggableaudio {
     fadeoutaudio(onfaded?: () => void) {  
         let id = setTimeout(() => {
             if(this.scrollaudio.volume >= this.volumedecrement) {        
-            this.scrollaudio.volume -= this.volumedecrement
+                this.scrollaudio.volume -= this.volumedecrement
 
-            if(this.volumescurrentmode === volumestate.decreasing) {
-                this.fadeoutaudio()  
-            }        
+                if(this.volumescurrentmode === volumestate.decreasing) {
+                    this.fadeoutaudio()  
+                }        
             }
 
             else {
-            this.scrollaudio.volume = 0        
-            this.volumescurrentmode = volumestate.stable
-            this.scrollaudio.pause()
-            this.throttleinput = false
+                this.scrollaudio.volume = 0        
+                this.volumescurrentmode = volumestate.stable
+                this.scrollaudio.pause()
+                this.throttleinput = false
 
-            if(isnullorundefined(onfaded) === true) {
-                return
-            }
-            onfaded()
+                if(isnullorundefined(onfaded) === true) {
+                    return
+                }
+                onfaded()
             }    
         })
         this.timeoutIDs.push(id)    
@@ -76,16 +76,16 @@ export class generatedraggableaudio {
     fadeupaudio() {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume <= maxvolume - this.volumeincrement) { //prevents out of bounds exc
-            this.scrollaudio.volume += this.volumeincrement
+                this.scrollaudio.volume += this.volumeincrement
 
-            if(this.volumescurrentmode === volumestate.increasing) {
-                this.fadeupaudio()
-            }
+                if(this.volumescurrentmode === volumestate.increasing) {
+                    this.fadeupaudio()
+                }
             }
 
             else {
-            this.scrollaudio.volume = 1
-            this.volumescurrentmode = volumestate.stable
+                this.scrollaudio.volume = 1
+                this.volumescurrentmode = volumestate.stable
             }      
         })
         this.timeoutIDs.push(id)    
