@@ -10,6 +10,7 @@ import { isnullorundefined } from 'src/app/utilities';
 import fadeout from 'src/app/animations/fadeout';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
+import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -54,9 +55,12 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
     this.scrapesoundgenerator.resetaudio()    
+    resetmouse()
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
+    changetodragicon()
+
     if(this.scrollbuttonheld === false) {
       return
     }
