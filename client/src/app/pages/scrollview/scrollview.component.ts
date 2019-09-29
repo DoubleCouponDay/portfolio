@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, scrollmultiplier, mintranslationX, volumedecrement, scrapesoundpath, nomovementtimer, volumeincrement, volumestate, mintranslationY, buttonidentifier } from './scrollview.data';
+import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -11,6 +11,7 @@ import fadeout from 'src/app/animations/fadeout';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
+import { volumeincrement, volumedecrement } from 'src/app/audio/audio.data';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -33,12 +34,9 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private sink = new SubSink()
 
-  private highlighter = new mousehighlighter()
+  private highlighter: mousehighlighter
 
-  private scrapesoundgenerator = new generatedraggableaudio(
-    scrapesoundpath,
-    volumeincrement,
-    volumedecrement)
+  private scrapesoundgenerator = new generatedraggableaudio(scrapesoundpath)
 
   constructor() { 
 
@@ -46,6 +44,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.castbuttonparts = this.scrollbuttonparts.map((item) => <SVGElement>item.nativeElement)
+    this.highlighter = new mousehighlighter(this.castbuttonparts[0].style.fill)
   }
 
   onscrollbuttonpressed(event: MouseEvent) {
@@ -70,9 +69,9 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       return
     }
     this.movescrollbutton()
-    this.scrollbuttonmoved.emit()    
+    this.scrollbuttonmoved.emit()        
     this.scrapesoundgenerator.maintainaudio()  
-    this.scrapesoundgenerator.startaudio()
+    this.scrapesoundgenerator.startaudio()    
   }
 
   onmouseshouldhighlight(event: MouseEvent) {
@@ -82,7 +81,6 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onmouseleavescroll(event: MouseEvent) {
     this.highlighter.resethighlight(this.castbuttonparts[0])
-    this.onscrollbuttonreleased(event)
   }
 
   /**

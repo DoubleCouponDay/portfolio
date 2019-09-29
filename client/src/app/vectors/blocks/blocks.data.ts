@@ -23,3 +23,4 @@ export const biggestshadow = 1
 export const smallestshadow = 4
 
 export const soundinteractioncooldown = 3000
+export const grindingaudiopath = 'assets/stone-grinding.mp3'

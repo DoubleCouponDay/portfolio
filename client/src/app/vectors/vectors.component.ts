@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
-import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name, soundinteractioncooldown } from './blocks/blocks.data';
+import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name, soundinteractioncooldown, grindingaudiopath } from './blocks/blocks.data';
 import movetocursorvertically, { resetposition } from '../animations/movetocursorvertically';
 import { AnimationBuilder, AnimationFactory, animation, animate, style, AnimationReferenceMetadata } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -13,6 +13,7 @@ import { SubSink } from 'subsink'
 import { isnullorundefined } from '../utilities';
 import { transformelement } from '../elementtranslator';
 import { changetodragicon, resetmouse } from '../animations/mousechanger';
+import { generatedraggableaudio } from '../audio/generatedraggableaudio';
 
 @Component({
   selector: 'app-vectors',
@@ -49,7 +50,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   aboxismoving = new Subject<MouseEvent>()
   onboxmoving = this.aboxismoving.asObservable()
 
-  blocksoundplayer = new Audio('assets/stone-grinding.mp3')
+  blocksoundplayer = new generatedraggableaudio(grindingaudiopath)
 
   entirepage: HTMLElement = document.documentElement
 
@@ -61,15 +62,6 @@ export class vectorscomponent implements OnInit, OnDestroy {
   constructor(private animationbuilder: AnimationBuilder) {
     this.boxmovefactory = this.animationbuilder.build(movetocursorvertically)   
     this.boxresetfactory = this.animationbuilder.build(resetposition)
-
-    let sub = this.onboxmoving.pipe(        
-      throttleTime(soundinteractioncooldown)
-    )
-    .subscribe(() => {
-      this.blocksoundplayer.play()        
-    })
-    
-    this.sink.add(sub)    
   }
 
   ngOnInit() {
@@ -111,7 +103,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
   onmousereleasedbox(event: MouseEvent) {
     this.currentbox = null
     this.currentposition = null
-    resetmouse()
+    this.blocksoundplayer.resetaudio()
+    resetmouse()    
   }
 
   onmousemoved(event: MouseEvent) {
@@ -120,6 +113,8 @@ export class vectorscomponent implements OnInit, OnDestroy {
       return
     }    
     this.animatebox(event.movementY)    
+    this.blocksoundplayer.maintainaudio()
+    this.blocksoundplayer.startaudio()    
     this.aboxismoving.next(event)
   }
 
@@ -135,8 +130,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   private choosecursor() {    
     if(this.tabletsmoving === true) {
-      this.makecursorstopsign()
-      
+      this.makecursorstopsign()      
     }
 
     else {
