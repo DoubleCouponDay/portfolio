@@ -53,7 +53,6 @@ export class generatedraggableaudio {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume >= this.volumedecrement) {        
                 this.scrollaudio.volume -= this.volumedecrement
-                console.log(`volume: ${this.scrollaudio.volume}`)
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -62,7 +61,6 @@ export class generatedraggableaudio {
 
             else {
                 this.scrollaudio.volume = 0        
-                console.log(`volume: ${this.scrollaudio.volume}`)
                 this.volumescurrentmode = volumestate.stable
                 this.scrollaudio.pause()
                 this.throttleinput = false

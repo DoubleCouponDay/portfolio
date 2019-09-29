@@ -9,6 +9,7 @@ import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { isnullorundefined } from 'src/app/utilities';
 import fadeout from 'src/app/animations/fadeout';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
+import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -30,6 +31,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private castbuttonparts: SVGElement[]
 
   private sink = new SubSink()
+
+  private highlighter = new mousehighlighter()
 
   private scrapesoundgenerator = new generatedraggableaudio(
     scrapesoundpath,
@@ -66,6 +69,16 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     this.scrollbuttonmoved.emit()    
     this.scrapesoundgenerator.maintainaudio()  
     this.scrapesoundgenerator.startaudio()
+  }
+
+  onmouseshouldhighlight(event: MouseEvent) {
+    this.highlighter.applyhighlight(this.castbuttonparts[0])
+    this.onmousemoveoverscroll(event)
+  }
+
+  onmouseleavescroll(event: MouseEvent) {
+    this.highlighter.resethighlight(this.castbuttonparts[0])
+    this.onscrollbuttonreleased(event)
   }
 
   /**
