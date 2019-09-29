@@ -1,7 +1,6 @@
 import { volumestate, millisecondspoint } from '../pages/scrollview/scrollview.data';
 import { isnullorundefined } from '../utilities';
-
-export const maxvolume  = 1
+import { maxvolume, volumedecrement, volumeincrement } from './audio.data';
 
 export class generatedraggableaudio {
 
@@ -13,9 +12,7 @@ export class generatedraggableaudio {
 
     private throttleinput = false
 
-    constructor(private pathtoaudio: string, 
-        private volumeincrement: number, 
-        private volumedecrement: number) {
+    constructor(private pathtoaudio: string) {
         this.scrollaudio = new Audio(pathtoaudio) 
     }
 
@@ -25,7 +22,11 @@ export class generatedraggableaudio {
         }  
         this.scrollaudio = new Audio(this.pathtoaudio) 
         this.throttleinput = true
-        this.scrollaudio.play()  
+        let playstate = this.scrollaudio.play()
+
+        playstate.catch((error) => {
+            console.error(error['message'])
+        })
         this.volumescurrentmode = volumestate.decreasing  
         this.fadeoutaudio()        
     }
@@ -51,8 +52,8 @@ export class generatedraggableaudio {
     /** invoke after movement detection */
     fadeoutaudio(onfaded?: () => void) {  
         let id = setTimeout(() => {
-            if(this.scrollaudio.volume >= this.volumedecrement) {        
-                this.scrollaudio.volume -= this.volumedecrement
+            if(this.scrollaudio.volume >= volumedecrement) {        
+                this.scrollaudio.volume -= volumedecrement
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -76,8 +77,8 @@ export class generatedraggableaudio {
 
     fadeupaudio() {
         let id = setTimeout(() => {
-            if(this.scrollaudio.volume <= maxvolume - this.volumeincrement) { //prevents out of bounds exc
-                this.scrollaudio.volume += this.volumeincrement
+            if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
+                this.scrollaudio.volume += volumeincrement
 
                 if(this.volumescurrentmode === volumestate.increasing) {
                     this.fadeupaudio()
