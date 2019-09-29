@@ -12,6 +12,7 @@ import { translatename, pixelunit } from '../animations/styleconstants';
 import { SubSink } from 'subsink'
 import { isnullorundefined } from '../utilities';
 import { transformelement } from '../elementtranslator';
+import { changetodragicon, resetmouse } from '../animations/mousechanger';
 
 @Component({
   selector: 'app-vectors',
@@ -110,7 +111,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
   onmousereleasedbox(event: MouseEvent) {
     this.currentbox = null
     this.currentposition = null
-    this.resetcursor()
+    resetmouse()
   }
 
   onmousemoved(event: MouseEvent) {
@@ -126,6 +127,12 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.choosecursor()
   }
 
+  onmouseleavebox(event: MouseEvent) {
+    if(isnullorundefined(this.currentbox) === true) {
+      resetmouse()
+    }    
+  }
+
   private choosecursor() {    
     if(this.tabletsmoving === true) {
       this.makecursorstopsign()
@@ -133,7 +140,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
     }
 
     else {
-      this.makecursorslideicon()      
+      changetodragicon()   
     }
   }
 
@@ -161,16 +168,6 @@ export class vectorscomponent implements OnInit, OnDestroy {
       }
       this.animatepagetransition(elementreference)
     })
-  }
-
-  private makecursorslideicon() {
-    this.entirepage.style.cursor = "ns-resize"
-  }
-
-  resetcursor() {
-    if(isnullorundefined(this.currentbox) === true) {
-      this.entirepage.style.cursor = "default"
-    }
   }
 
   private makecursorstopsign() {
