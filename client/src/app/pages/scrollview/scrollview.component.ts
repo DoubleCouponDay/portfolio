@@ -53,16 +53,13 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onscrollbuttonreleased(event: MouseEvent) {
     this.scrollbuttonheld = false
-    this.scrapesoundgenerator.resetaudio()    
-    resetmouse()
+    this.scrapesoundgenerator.resetaudio()       
   }
 
   onmousemoveoverscroll(event: MouseEvent) {
-    changetodragicon()
-
     if(this.scrollbuttonheld === false) {
       return
-    }
+    }    
     let shouldmove = this.calculatescrollbuttonposition(event.movementY)
 
     if(shouldmove === false) {
@@ -76,11 +73,13 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   onmouseshouldhighlight(event: MouseEvent) {
     this.highlighter.applyhighlight(this.castbuttonparts[0])
+    changetodragicon()
     this.onmousemoveoverscroll(event)
   }
 
   onmouseleavescroll(event: MouseEvent) {
     this.highlighter.resethighlight(this.castbuttonparts[0])
+    resetmouse()
   }
 
   /**
