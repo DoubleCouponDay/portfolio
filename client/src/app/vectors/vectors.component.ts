@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy } from '@angular/core';
-import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name, soundinteractioncooldown, grindingaudiopath } from './blocks/blocks.data';
+import { Component, OnInit, ViewChild, ElementRef, Output, Type, OnDestroy, AfterViewInit } from '@angular/core';
+import { idlabel, maxboxtranslation, minboxtranslation, boxgroupname, firstboxnumber, secondboxnumber, thirdboxnumber, lastboxnumber, box1name, box2name, box3name, box4name, boxgroup1name, boxgroup3name, boxgroup4name, boxgroup2name, soundinteractioncooldown, grindingaudiopath, defaultfill, wordname } from './blocks/blocks.data';
 import movetocursorvertically, { resetposition } from '../animations/movetocursorvertically';
 import { AnimationBuilder, AnimationFactory, animation, animate, style, AnimationReferenceMetadata } from '@angular/animations';
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
@@ -14,13 +14,14 @@ import { isnullorundefined } from '../utilities';
 import { transformelement } from '../elementtranslator';
 import { changetodragicon, resetmouse } from '../animations/mousechanger';
 import { generatedraggableaudio } from '../audio/generatedraggableaudio';
+import { mousehighlighter } from '../animations/mousehighlighter';
 
 @Component({
   selector: 'app-vectors',
   templateUrl: './vectors.component.html',
   styleUrls: ['./vectors.component.css']
 })
-export class vectorscomponent implements OnInit, OnDestroy {
+export class vectorscomponent implements AfterViewInit, OnDestroy {
   tabletsmoving: boolean = false
 
   //boxes
@@ -59,12 +60,14 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   private sink = new SubSink()
 
+  private highlighter: mousehighlighter
+
   constructor(private animationbuilder: AnimationBuilder) {
     this.boxmovefactory = this.animationbuilder.build(movetocursorvertically)   
     this.boxresetfactory = this.animationbuilder.build(resetposition)
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.box1position = new blockstate(boxgroup1name, maxboxtranslation)
     let box1element = <SVGElement>this.box1.nativeElement
     transformelement(box1element, translatename, `0${pixelunit}, ${this.box1position.translationy}${pixelunit}`)
@@ -72,6 +75,7 @@ export class vectorscomponent implements OnInit, OnDestroy {
     this.box2position = new blockstate(boxgroup2name, minboxtranslation)
     this.box3position = new blockstate(boxgroup3name, minboxtranslation)
     this.box4position = new blockstate(boxgroup4name, minboxtranslation)
+    this.highlighter = new mousehighlighter(defaultfill)
   }
 
   onmousepressedbox(event: MouseEvent) {  
@@ -120,11 +124,20 @@ export class vectorscomponent implements OnInit, OnDestroy {
 
   onmouseoverbox(event: MouseEvent) {
     this.choosecursor()
+    let element = <SVGElement>event.target
+    
+    if(element.id.indexOf(wordname) === nooccurrence) {
+      this.highlighter.applyhighlight(element)
+      console.log('highlight applied')
+    }
   }
 
   onmouseleavebox(event: MouseEvent) {
+    this.highlighter.resethighlight()
+    console.log('highlight removed')
+    
     if(isnullorundefined(this.currentbox) === true) {
-      resetmouse()
+      resetmouse()      
     }    
   }
 

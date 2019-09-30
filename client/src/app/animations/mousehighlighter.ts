@@ -1,17 +1,21 @@
 import { colourhighlight } from './styleconstants';
 import { elementAt } from 'rxjs/operators';
+import { isnullorundefined } from '../utilities';
 
 export class mousehighlighter {
-    constructor(private previouscolour: string) {
+    private previouselement: HTMLElement | SVGElement
+
+    constructor(private defaultcolour: string) {
 
     }
 
     applyhighlight(element: HTMLElement | SVGElement) {
-        this.previouscolour = element.style.fill
         element.style.fill = colourhighlight
+        this.previouselement = element
     }
     
-    resethighlight(element: HTMLElement | SVGElement) {
-        element.style.fill = this.previouscolour
+    resethighlight(element?: HTMLElement | SVGElement) {
+        let correctelement = isnullorundefined(element) ? this.previouselement : element
+        correctelement.style.fill = this.defaultcolour
     }
 }
