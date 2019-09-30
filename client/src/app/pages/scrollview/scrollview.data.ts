@@ -14,3 +14,8 @@ export enum volumestate {
     increasing,
     decreasing
 }
+
+export type movementcalculation = {
+    shouldmove: boolean,
+    changeinposition: number
+}

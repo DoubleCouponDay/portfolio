@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier } from './scrollview.data';
+import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
 import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
 import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
 import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
@@ -60,13 +60,13 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     if(this.scrollbuttonheld === false) {
       return
     }    
-    let shouldmove = this.calculatescrollbuttonposition(event.movementY)
+    let outcome = this.calculatescrollbuttonposition(event.movementY)
 
-    if(shouldmove === false) {
+    if(outcome.shouldmove === false) {
       return
     }
     this.movescrollbutton()
-    this.scrollbuttonmoved.emit()        
+    this.scrollbuttonmoved.emit(outcome.changeinposition)        
     this.scrapesoundgenerator.maintainaudio()  
     this.scrapesoundgenerator.startaudio()    
   }
@@ -85,8 +85,9 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   /**
    * returns if button should move
    */
-  private calculatescrollbuttonposition(unitchange: number): boolean {
-    let chosenfutureposition = this.scrollbuttonposition + unitchange * scrollmultiplier
+  private calculatescrollbuttonposition(unitchange: number): movementcalculation {
+    let change = unitchange * scrollmultiplier
+    let chosenfutureposition = this.scrollbuttonposition + change
 
     if(chosenfutureposition > maximumtranslation) {
       chosenfutureposition = maximumtranslation       
@@ -97,7 +98,11 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     }
     let shouldplay = this.scrapesoundshouldplay(chosenfutureposition)
     this.scrollbuttonposition = shouldplay ? chosenfutureposition : this.scrollbuttonposition
-    return shouldplay
+
+    return { 
+      shouldmove: shouldplay,
+      changeinposition: change
+    }
   }
 
   private scrapesoundshouldplay(possiblefutureposition: number): boolean {
