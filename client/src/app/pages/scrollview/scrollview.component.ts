@@ -69,7 +69,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       return
     }
     this.movescrollbutton()
-    this.scrollbuttonmoved.emit()  
+    this.scrollbuttonmoved.emit()        
     this.scrapesoundgenerator.maintainaudio()  
     this.scrapesoundgenerator.startaudio()    
   }

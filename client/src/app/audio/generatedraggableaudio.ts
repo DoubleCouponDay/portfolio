@@ -4,60 +4,95 @@ import { maxvolume, volumedecrement, volumeincrement } from './audio.data';
 
 export class generatedraggableaudio {
 
+    private timeoutIDs = new Array<number>()
+
+    private volumescurrentmode = volumestate.stable
+
     private scrollaudio: HTMLAudioElement
 
-    private isplaying = false
+    private throttleinput = false
 
     constructor(private pathtoaudio: string) {
         this.scrollaudio = new Audio(pathtoaudio) 
     }
 
     startaudio() {   
-        if(this.isplaying === true) {
+        if(this.throttleinput === true) {
             return
         }  
+        console.log('audio started')
         this.scrollaudio = new Audio(this.pathtoaudio) 
-
-        this.scrollaudio.onplay = () => {
-            this.isplaying = true
-        }
-        this.scrollaudio.onpause = () => {
-            this.isplaying = false
-        }
+        this.throttleinput = true
         let playstate = this.scrollaudio.play()
-        console.log('played')
 
         playstate.catch((error) => {
             console.error(error['message'])
         })
+        this.volumescurrentmode = volumestate.decreasing  
         this.fadeoutaudio()        
     }
 
-    maintainaudio() {        
+    maintainaudio() {
+        console.log('audio maintained')
+        this.volumescurrentmode = volumestate.increasing  
         this.fadeupaudio()
     }
 
     resetaudio() {
-        this.fadeoutaudio()    
+        console.log('audio reset')
+        this.volumescurrentmode = volumestate.decreasing  
+
+        this.fadeoutaudio(() => {
+            this.throttleinput = false    
+
+            this.timeoutIDs.forEach((value) => {
+                clearTimeout(value)
+            })
+            this.timeoutIDs = new Array<number>()
+        })    
     }
 
-    private fadeoutaudio() {  
-        while(this.scrollaudio.volume >= volumedecrement) {
-            this.scrollaudio.volume -= volumedecrement
-        }
-        this.scrollaudio.volume = 0           
+    /** invoke after movement detection */
+    fadeoutaudio(onfaded?: () => void) {  
+        let id = setTimeout(() => {
+            if(this.scrollaudio.volume >= volumedecrement) {        
+                this.scrollaudio.volume -= volumedecrement
 
-        if(this.isplaying === true) {
-            this.scrollaudio.pause()
-        }
-        
-        console.log('paused')     
+                if(this.volumescurrentmode === volumestate.decreasing) {
+                    this.fadeoutaudio()  
+                }        
+            }
+
+            else {
+                this.scrollaudio.volume = 0        
+                this.volumescurrentmode = volumestate.stable
+                this.scrollaudio.pause()
+                this.throttleinput = false
+
+                if(isnullorundefined(onfaded) === true) {
+                    return
+                }
+                onfaded()
+            }    
+        })
+        this.timeoutIDs.push(id)    
     }
 
-    private fadeupaudio() {
-        while(this.scrollaudio.volume <= maxvolume - volumeincrement) {
-            this.scrollaudio.volume += volumeincrement
-        }
-        this.scrollaudio.volume = 1
+    fadeupaudio() {
+        let id = setTimeout(() => {
+            if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
+                this.scrollaudio.volume += volumeincrement
+
+                if(this.volumescurrentmode === volumestate.increasing) {
+                    this.fadeupaudio()
+                }
+            }
+
+            else {
+                this.scrollaudio.volume = 1
+                this.volumescurrentmode = volumestate.stable
+            }      
+        })
+        this.timeoutIDs.push(id)    
     }
 }
