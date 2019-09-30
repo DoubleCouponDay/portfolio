@@ -30,7 +30,9 @@ export class TabletComponent implements OnInit {
       if(this.initialized === false) {
         return
       }
-      this.applyrotation(input)          
+      setTimeout(() => {
+        this.applyrotation(input)
+      })
   }
 
   @ViewChild(tabletname, {static: true})
@@ -58,7 +60,7 @@ export class TabletComponent implements OnInit {
     this.applycorrectvisibility()
   }
 
-  applyrotation(angle: number) {    
+  private applyrotation(angle: number) {    
     let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
         params: {
             inputtransform: `${rotatename}(${angle}${degreesunit})`

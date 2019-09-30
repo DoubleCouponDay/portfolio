@@ -20,7 +20,6 @@ export class generatedraggableaudio {
         if(this.throttleinput === true) {
             return
         }  
-        console.log('audio started')
         this.scrollaudio = new Audio(this.pathtoaudio) 
         this.throttleinput = true
         let playstate = this.scrollaudio.play()
@@ -33,13 +32,11 @@ export class generatedraggableaudio {
     }
 
     maintainaudio() {
-        console.log('audio maintained')
         this.volumescurrentmode = volumestate.increasing  
         this.fadeupaudio()
     }
 
     resetaudio() {
-        console.log('audio reset')
         this.volumescurrentmode = volumestate.decreasing  
 
         this.fadeoutaudio(() => {
