@@ -128,13 +128,11 @@ export class vectorscomponent implements AfterViewInit, OnDestroy {
     
     if(element.id.indexOf(wordname) === nooccurrence) {
       this.highlighter.applyhighlight(element)
-      console.log('highlight applied')
     }
   }
 
   onmouseleavebox(event: MouseEvent) {
     this.highlighter.resethighlight()
-    console.log('highlight removed')
     
     if(isnullorundefined(this.currentbox) === true) {
       resetmouse()      

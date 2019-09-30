@@ -48,12 +48,12 @@ export class TabletsComponent implements OnInit {
   
   constructor() { 
     this.tablet1data = {
-      page: PortfoliopageComponent,
+      page: websitespageComponent,
       translationposition: tablettranslationposition
     }
 
     this.tablet2data = {
-      page: websitespageComponent,
+      page: PortfoliopageComponent,
       translationposition: tablettranslationposition
     }
 
@@ -66,7 +66,8 @@ export class TabletsComponent implements OnInit {
       page: MusicpageComponent,
       translationposition: tablettranslationposition
     }
-    this.applyfirstpagestate()
+    // this.applyfirstpagestate()
+    this.applysecondpagestate()
   }
 
   ngOnInit() {
