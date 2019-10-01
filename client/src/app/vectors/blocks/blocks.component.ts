@@ -108,14 +108,14 @@ export class BlocksComponent implements AfterViewInit, OnDestroy {
     this.choosecursor()
   }
 
-  private onmousereleasedbox(event: MouseEvent) {
+  private onmousereleasedbox = (event: MouseEvent) => {
     this.currentbox = null
     this.currentposition = null
     this.blocksoundplayer.resetaudio()
     resetmouse()    
   }
 
-  private onmousemoved(event: MouseEvent) {
+  private onmousemoved = (event: MouseEvent) => {
     if(isnullorundefined(this.currentbox) === true ||
       this.tabletsmoving === true) {
       return
