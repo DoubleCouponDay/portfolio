@@ -57,7 +57,8 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private onscrollbuttonreleased = (event: MouseEvent) => {
     this.scrollbuttonheld = false
-    this.scrapesoundgenerator.resetaudio()       
+    this.scrapesoundgenerator.resetaudio()      
+    resetmouse() 
   }
 
   private onmousemoveoverscroll = (event: MouseEvent) => {
@@ -82,8 +83,11 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   }
 
   onmouseleavescroll(event: MouseEvent) {
-    this.highlighter.resethighlight(this.castbuttonparts[0])
-    resetmouse()
+    this.highlighter.resethighlight(this.castbuttonparts[0])    
+
+    if(this.scrollbuttonheld === false) {
+      resetmouse()
+    }
   }
 
   /**

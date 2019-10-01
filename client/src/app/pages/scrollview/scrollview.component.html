@@ -23,11 +23,13 @@
             d="M 2127.7 670 L 2154.3 670 C 2166.276556 670 2176 679.723444 2176 691.7 L 2176 796.3 C 2176 808.276556 2166.276556 818 2154.3 818 L 2127.7 818 C 2115.723444 818 2106 808.276556 2106 796.3 L 2106 691.7 C 2106 679.723444 2115.723444 670 2127.7 670 Z"
             style="stroke:none;fill:rgb(213, 209, 206);stroke-miterlimit:10;" #scrollbutton class="scroll-button"
             (mousedown)="onscrollbuttonpressed($event)"
-            (mouseover)="onmouseshouldhighlight($event)" />
+            (mouseover)="onmouseshouldhighlight($event)"
+            (mouseleave)="onmouseleavescroll($event)" />
         <path
             d="M 2127.7 670 L 2154.3 670 C 2166.276556 670 2176 679.723444 2176 691.7 L 2176 796.3 C 2176 808.276556 2166.276556 818 2154.3 818 L 2127.7 818 C 2115.723444 818 2106 808.276556 2106 796.3 L 2106 691.7 C 2106 679.723444 2115.723444 670 2127.7 670 Z"
             style="fill:none;stroke:#a8a099;stroke-width:3;stroke-linecap:square;stroke-miterlimit:2;" #scrollbutton
             class="scroll-button" (mousedown)="onscrollbuttonpressed($event)"
-            (mouseover)="onmouseshouldhighlight($event)" />
+            (mouseover)="onmouseshouldhighlight($event)"
+            (mouseleave)="onmouseleavescroll($event)" />
     </g>
 </svg>
