@@ -1,0 +1,5 @@
+
+.music-player {
+    transform: scale(2) translate(960px, 25px);
+    height: 100px;    
+}
