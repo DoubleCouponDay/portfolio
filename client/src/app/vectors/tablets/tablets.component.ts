@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, Type } from '@angular/core';
-import { page } from 'src/app/pages/Page.interface';
 import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
 import { MusicpageComponent } from 'src/app/pages/musicpage/musicpage.component';
-import { totalpagesamount, firstpagenumber, softwarepagenumber, hardwarepagenumber } from 'src/app/pages/pageconstants';
+import { totalpagesamount, firstpagenumber, softwarepagenumber, hardwarepagenumber } from 'src/app/pages/page.data';
 import { tabletdata, currentpagerotation, tablettranslationposition, tablet2initialrotation,  tablet3initialrotation, tablet4initialrotation} from './tablet/tablet.data';
 import { softwarepageComponent } from 'src/app/pages/softwarepage/softwarepage.component';
 import { websitespageComponent } from 'src/app/pages/websitespage/websitespage.component';
@@ -48,7 +47,7 @@ export class TabletsComponent implements OnInit {
   
   constructor() { 
     this.tablet1data = {
-      page: websitespageComponent,
+      page: softwarepageComponent,
       translationposition: tablettranslationposition
     }
 
@@ -67,7 +66,7 @@ export class TabletsComponent implements OnInit {
       translationposition: tablettranslationposition
     }
     // this.applyfirstpagestate()
-    this.applysecondpagestate()
+    this.applythirdpagestate()
   }
 
   ngOnInit() {

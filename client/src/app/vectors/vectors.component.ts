@@ -5,7 +5,7 @@ import { AnimationBuilder, AnimationFactory, animation, animate, style, Animatio
 import { of, Observable, Subscriber, observable, Subject } from 'rxjs';
 import { throttleTime, filter, map, debounceTime, throttle } from 'rxjs/operators'
 import { blockstate } from './blocks/blockstate';
-import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamount } from '../pages/pageconstants';
+import { firstpagenumber, softwarepagenumber, hardwarepagenumber, totalpagesamount } from '../pages/page.data';
 import { nooccurrence } from '../global.data';
 import { rotationtime } from '../animations/rotatetablet';
 import { translatename, pixelunit } from '../animations/styleconstants';

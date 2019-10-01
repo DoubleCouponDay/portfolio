@@ -1,5 +1,5 @@
 import { Component, OnInit, NgModule } from '@angular/core';
-import { page } from '../Page.interface';
+import { page } from '../page.data';
 
 @Component({
   selector: 'svg:svg[app-portfoliopage]',
