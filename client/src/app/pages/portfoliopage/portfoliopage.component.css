@@ -38,9 +38,3 @@
     font-size: 60px;
     fill: #888881;
 }
-
-.overflow-container {
-    overflow: hidden;
-    width: 900px;
-    height: 1500px;
-}
