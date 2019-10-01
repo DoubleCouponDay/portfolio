@@ -16,6 +16,10 @@ export class mousehighlighter {
     
     resethighlight(element?: HTMLElement | SVGElement) {
         let correctelement = isnullorundefined(element) ? this.previouselement : element
+
+        if(isnullorundefined(correctelement) === true) {
+            return
+        }
         correctelement.style.fill = this.defaultcolour
     }
 }
