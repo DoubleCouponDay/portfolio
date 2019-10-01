@@ -1,7 +1,7 @@
 .content-page {
     transform: translate(1330px, 700px);
     width: 904px;
-    overflow: hidden;
+    clip-path: url('#overflow-container');
 }
 
 .small-image {
@@ -37,4 +37,10 @@
     text-decoration: underline;
     font-size: 60px;
     fill: #888881;
+}
+
+.overflow-container {
+    overflow: hidden;
+    width: 900px;
+    height: 1500px;
 }
