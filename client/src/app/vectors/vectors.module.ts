@@ -5,13 +5,15 @@ import { TabletComponent } from './tablets/tablet/tablet.component';
 import { vectorscomponent } from './vectors.component';
 import { PagesModule } from '../pages/pages.module';
 import { TabletsComponent } from './tablets/tablets.component';
+import { BlockComponent } from './blocks/block/block.component';
 
 @NgModule({
   declarations: [
     BlocksComponent,
     TabletComponent,
     vectorscomponent,
-    TabletsComponent
+    TabletsComponent,
+    BlockComponent
   ],
   imports: [
     CommonModule,
