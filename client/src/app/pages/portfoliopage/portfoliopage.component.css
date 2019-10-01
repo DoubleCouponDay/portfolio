@@ -6,6 +6,7 @@
 
 .small-image {
     width:300px;   
+    user-select: all;
 }
 
 .portrait-image {     
@@ -25,7 +26,6 @@
 }
 
 .scroll-item {
-    margin: 10px;
 }
 
 .scroll-view {

@@ -1,64 +1,84 @@
-<svg class="overflow-container">   
+<svg class="overflow-container">
     <g class="content-page">
         <g class="scroll-item">
-            <image href="assets/moonmachine.png" 
-                class="small-image"
-                x="0" dy="1.2em" />
-            
-            <text class="content-text">
+            <a href="assets/moonmachine.png">
+                <image href="assets/moonmachine.png" class="small-image" x="0" dy="1.2em" />
+            </a>
+
+            <text class="content-text" y="0">
                 <tspan x="320" dy="1.2em">Moon Machine</tspan>
 
                 <a href="https://www.moonmachine.biz">
                     <tspan x="650" class="link">Link</tspan>
-                </a>   
+                </a>
                 <tspan x="320" dy="1.2em">An automated trading</tspan>
                 <tspan x="320" dy="1.2em">plaform. Written in</tspan>
                 <tspan x="320" dy="1.2em">Angular, Typescript, </tspan>
                 <tspan x="0" dy="1.2em">Aspnet core, C Sharp. Deployment</tspan>
                 <tspan x="0" dy="1.2em">tool written in F Sharp. Serverless</tspan>
-                <tspan x="0" dy="1.2em">functions written in Typescript and</tspan>    
-                <tspan x="0" dy="1.2em">Node.</tspan>  
+                <tspan x="0" dy="1.2em">functions written in Typescript, Node,</tspan>
+                <tspan x="0" dy="1.2em">Node.</tspan>
             </text>
         </g>
 
         <g class="scroll-item">
-            <image href="assets/dragontrack.png" 
-                class="small-image"
-                x="0" dy="1.2em" />
+            <a href="assets/dragontrack.png">
+                <image href="assets/dragontrack.png" class="small-image" x="0" dy="1.2em" y="460" />
+            </a>            
 
-            <text class="content-text" dy="40em">
-                <tspan x="320" dy="1.2em">Dragontrack</tspan>
+            <text class="content-text" y="460">
+                <tspan dy="1.2em" x="320">Dragontrack</tspan>
 
-                <a x="0" dy="1.2em" href="https://github.com/doublecouponday/dragontrack">
-                    <tspan x="650" class="link">Link</tspan>
+                <a dy="1.2em" href="https://github.com/doublecouponday/dragontrack" x="0">
+                    <tspan class="link" x="650">Link</tspan>
                 </a>
-                <tspan x="0" dy="1.2em">A peer to peer music listening website.</tspan>
-                <tspan x="0" dy="1.2em">Written in Angular, Typescript, Aspet Core, F Sharp.</tspan>
-            </text>            
-        </g>
-
-        <!-- <g class="scroll-item">
-            <image href="assets/luggate.png" 
-                class="small-image"
-                x="0" dy="1.2em" />
-            
-            <tspan x="0" dy="1.2em">A candidate for the luggate hotel's website.</tspan>
-            <tspan x="0" dy="1.2em">Written with minimal javascript.</tspan>
-            <a x="0" dy="1.2em" href="https://dcdgoluggatehotel.z26.web.core.windows.net/">Link</a>
+                <tspan dy="1.2em" x="320">A peer to peer music</tspan>
+                <tspan dy="1.2em" x="320">streaming room. Written</tspan>
+                <tspan dy="1.2em" x="320">in Angular, Typescript,</tspan>
+                <tspan dy="1.2em" x="320">Aspnetnet core, C</tspan>
+                <tspan dy="1.2em" x="0">Sharp.</tspan>
+            </text>
         </g>
 
         <g class="scroll-item">
-            <image href="assets/ttsmod.jpg" 
-                class="small-image"
-                x="0" dy="1.2em" />
+            <a href="assets/luggate.png">
+                <image href="assets/luggate.png" 
+                    class="small-image"
+                    x="0" dy="1.2em" y="800" />
+            </a>
+            
+            <text class="content-text" y="800">
+                <tspan x="320" dy="1.2em">Hotel site</tspan>
 
-            <tspan x="0" dy="1.2em">A text to speed algorithm for the game space engineers.</tspan>
-            <tspan x="0" dy="1.2em">This is where I cut my teeth on big architecture projects.</tspan>
-            <tspan x="0" dy="1.2em">Written in C Sharp.</tspan>
-            <a x="0" dy="1.2em" href="https://steamcommunity.com/sharedfiles/filedetails/?id=641860452&searchtext=text+to+speech+mod">Link</a>
-        </g> -->
+                <a dy="1.2em" href="https://dcdgoluggatehotel.z26.web.core.windows.net">
+                    <tspan class="link" x="650">Link</tspan>
+                </a>
+                <tspan x="320" dy="1.2em">A candidate for the</tspan>
+                <tspan x="320" dy="1.2em">Luggate Hotel's</tspan>
+                <tspan x="0" dy="1.2em">website. Written with minimal javascript.</tspan>
+            </text>
+        </g>
+
+        <g class="scroll-item">
+            <a href="assets/ttsmod.jpg">
+                <image href="assets/ttsmod.jpg" 
+                    class="small-image"
+                    x="0" dy="1.2em" y="1050" />
+            </a>
+
+            <text class="content-text" y="1050">
+                <tspan x="320" dy="1.2em">Text To Speech</tspan>
+                <tspan x="320" dy="1.2em">Mod</tspan>
+
+                <a dy="1.2em" href="https://steamcommunity.com/sharedfiles/filedetails/?id=641860452&searchtext=text+to+speech+mod">
+                    <tspan class="link" x="650">Link</tspan>
+                </a>
+                <tspan _ngcontent-akd-c6="" dy="1.2em" x="320">It sounds horrible lol.</tspan>        
+                <tspan _ngcontent-akd-c6="" dy="1.2em" x="320">Algorithm written in</tspan>        
+                <tspan _ngcontent-akd-c6="" dy="1.2em" x="0">C Sharp.</tspan>
+            </text>
+        </g>
     </g>
-    
-    <g app-scrollview class="scroll-view"
-        (scrollbuttonmoved)="onscroll($event)"></g>
+
+    <g app-scrollview class="scroll-view" (scrollbuttonmoved)="onscroll($event)"></g>
 </svg>
