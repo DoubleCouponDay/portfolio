@@ -12,6 +12,7 @@ import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { volumeincrement, volumedecrement } from 'src/app/audio/audio.data';
+import { mouseservice } from 'src/app/services/mouse.service';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -38,8 +39,11 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private scrapesoundgenerator = new generatedraggableaudio(scrapesoundpath)
 
-  constructor() { 
-
+  constructor(private mouseservice: mouseservice) { 
+    let sub1 = mouseservice.subscribemovedevent(this.onmousemoveoverscroll)
+    let sub2 = mouseservice.subscribereleasedevent(this.onscrollbuttonreleased)
+    this.sink.add(sub1)
+    this.sink.add(sub2)
   }
 
   ngAfterViewInit() {
@@ -51,12 +55,12 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     this.scrollbuttonheld = true
   }
 
-  onscrollbuttonreleased(event: MouseEvent) {
+  private onscrollbuttonreleased = (event: MouseEvent) => {
     this.scrollbuttonheld = false
     this.scrapesoundgenerator.resetaudio()       
   }
 
-  onmousemoveoverscroll(event: MouseEvent) {
+  private onmousemoveoverscroll = (event: MouseEvent) => {
     if(this.scrollbuttonheld === false) {
       return
     }    

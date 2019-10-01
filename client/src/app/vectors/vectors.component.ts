@@ -13,6 +13,7 @@ export class vectorscomponent {
   }
   
   onmousereleased(event: MouseEvent) {
+    console.log('mouse released')
     this.mouseservice.emitreleasedevent(event)
   }
 
