@@ -72,6 +72,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       if(newpage === this.matchingpagenumber) {
         return
       }
+      this.tabletsmoving = true
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
       this.setshadow(biggestshadow)
