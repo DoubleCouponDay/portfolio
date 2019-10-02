@@ -5,7 +5,10 @@ import { TabletComponent } from './tablets/tablet/tablet.component';
 import { vectorscomponent } from './vectors.component';
 import { PagesModule } from '../pages/pages.module';
 import { TabletsComponent } from './tablets/tablets.component';
-import { BlockComponent } from './blocks/block/block.component';
+import { PortfolioblockComponent } from './blocks/portfolioblock/portfolioblock.component';
+import { WebsitesblockComponent } from './blocks/websitesblock/websitesblock.component';
+import { SoftwareblockComponent } from './blocks/softwareblock/softwareblock.component';
+import { MusicblockComponent } from './blocks/musicblock/musicblock.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +16,10 @@ import { BlockComponent } from './blocks/block/block.component';
     TabletComponent,
     vectorscomponent,
     TabletsComponent,
-    BlockComponent
+    PortfolioblockComponent,
+    WebsitesblockComponent,
+    SoftwareblockComponent,
+    MusicblockComponent
   ],
   imports: [
     CommonModule,

@@ -6,14 +6,10 @@ import { MusicpageComponent } from './musicpage/musicpage.component';
 import { PageloaderDirective } from '../dynamic/pageloader/pageloader.directive';
 import { softwarepageComponent } from './softwarepage/softwarepage.component';
 import { ScrollviewComponent } from './scrollview/scrollview.component';
-import { MusicblockComponent } from './musicblock/musicblock.component';
-import { PortfolioblockComponent } from './portfolioblock/portfolioblock.component';
-import { SoftwareblockComponent } from './softwareblock/softwareblock.component';
-import { WebsitesblockComponent } from './websitesblock/websitesblock.component';
 
 @NgModule({
   declarations: [
-    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective, ScrollviewComponent, MusicblockComponent, PortfolioblockComponent, SoftwareblockComponent, WebsitesblockComponent
+    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective, ScrollviewComponent
   ],
   imports: [
     CommonModule
@@ -22,6 +18,6 @@ import { WebsitesblockComponent } from './websitesblock/websitesblock.component'
     PageloaderDirective,
     ScrollviewComponent
   ],
-  entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, MusicblockComponent, PortfolioblockComponent, SoftwareblockComponent, WebsitesblockComponent]
+  entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent]
 })
 export class PagesModule { }

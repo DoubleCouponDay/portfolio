@@ -2,7 +2,6 @@ import { Type } from '@angular/core';
 import { page } from 'src/app/pages/page.data';
 
 export interface tabletdata {
-    translationposition: [number, number]
     page: Type<page>    
 }
 

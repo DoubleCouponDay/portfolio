@@ -1,37 +1,21 @@
-import { Component, OnInit, Input, Type } from '@angular/core';
+import { Component, OnInit, Input, Type, OnDestroy } from '@angular/core';
 import { PortfoliopageComponent } from 'src/app/pages/portfoliopage/portfoliopage.component';
 import { MusicpageComponent } from 'src/app/pages/musicpage/musicpage.component';
-import { totalpagesamount, firstpagenumber, softwarepagenumber, hardwarepagenumber } from 'src/app/pages/page.data';
+import { lastpagenumber, firstpagenumber, websitespagenumber, softwarepagenumber } from 'src/app/pages/page.data';
 import { tabletdata, currentpagerotation, tablettranslationposition, tablet2initialrotation,  tablet3initialrotation, tablet4initialrotation} from './tablet/tablet.data';
 import { softwarepageComponent } from 'src/app/pages/softwarepage/softwarepage.component';
 import { websitespageComponent } from 'src/app/pages/websitespage/websitespage.component';
+import { PagingService } from 'src/app/services/paging.service';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'g[app-tablets]',
   templateUrl: './tablets.component.html',
   styleUrls: ['./tablets.component.css']
 })
-export class TabletsComponent implements OnInit {
-  private currentpagefield = 0
+export class TabletsComponent implements OnInit, OnDestroy {
+  private currentpage = 0
   private initialized = false
-
-  @Input()
-  set inputcurrentpage(input: number) {
-    if(input > totalpagesamount ||
-      input < firstpagenumber)
-    {
-      throw new Error('selected new page is outside the boundaries of existence')
-    }
-
-    if(input !== this.currentpagefield) {
-      this.choosenewrotations(input)      
-    }
-
-    if(this.initialized === true) {
-      this.playgearsaudio()
-    }
-    this.currentpagefield = input
-  }
 
   readonly tablet1data: tabletdata
   tablet1rotation: number
@@ -44,33 +28,50 @@ export class TabletsComponent implements OnInit {
 
   readonly tablet4data: tabletdata
   tablet4rotation: number
+
+  private sink = new SubSink()
   
-  constructor() { 
+  constructor(private _pagingservice: PagingService) { 
     this.tablet1data = {
-      page: PortfoliopageComponent,
-      translationposition: tablettranslationposition
+      page: PortfoliopageComponent
     }
 
     this.tablet2data = {
-      page: websitespageComponent,
-      translationposition: tablettranslationposition
+      page: websitespageComponent
     }
 
     this.tablet3data = {
-      page: softwarepageComponent,
-      translationposition: tablettranslationposition
+      page: softwarepageComponent
     }
 
     this.tablet4data = {
-      page: MusicpageComponent,
-      translationposition: tablettranslationposition
+      page: MusicpageComponent
     }
     this.applyfirstpagestate()
+    let sub1 = _pagingservice.subscribepagechange(this.onpagechange)
+    this.sink.add(sub1)
   }
 
   ngOnInit() {
     this.initialized = true
   }
+
+  private onpagechange(input: number) {
+    if(input > lastpagenumber ||
+      input < firstpagenumber)
+    {
+      throw new Error('selected new page is outside the boundaries of existence')
+    }
+
+    if(input !== this.currentpage) {
+      this.choosenewrotations(input)      
+    }
+
+    if(this.initialized === true) {
+      this.playgearsaudio()
+    }
+    this.currentpage = input
+  }  
 
   private choosenewrotations(newpagenumber: number) {
     switch(newpagenumber) {
@@ -78,15 +79,15 @@ export class TabletsComponent implements OnInit {
         this.applyfirstpagestate()
         break
 
-      case softwarepagenumber:
+      case websitespagenumber:
         this.applysecondpagestate()
         break
 
-      case hardwarepagenumber:
+      case softwarepagenumber:
         this.applythirdpagestate()
         break
 
-      case totalpagesamount:
+      case lastpagenumber:
         this.applyfourthpagestate()
         break
     }
@@ -123,5 +124,9 @@ export class TabletsComponent implements OnInit {
   private playgearsaudio() {
     let gearssound = new Audio('assets/drawbridge.mp3')
     gearssound.play()
+  }
+
+  ngOnDestroy() {
+    this.sink.unsubscribe()
   }
 }
