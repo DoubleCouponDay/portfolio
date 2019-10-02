@@ -1,5 +1,7 @@
 
 export const boxname = 'box'
+export const pathname = 'path'
+export const boxgroupname = '#box-group'
 
 export const minboxtranslation = 0
 export const maxboxtranslation = 140
@@ -12,3 +14,4 @@ export const grindingaudiopath = 'assets/stone-grinding.mp3'
 
 export const defaultfill = 'rgb(204,195,184)'
 export const wordname = 'word'
+

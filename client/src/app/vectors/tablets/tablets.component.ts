@@ -56,7 +56,7 @@ export class TabletsComponent implements OnInit, OnDestroy {
     this.initialized = true
   }
 
-  private onpagechange(input: number) {
+  private onpagechange = (input: number) => {
     if(input > lastpagenumber ||
       input < firstpagenumber)
     {

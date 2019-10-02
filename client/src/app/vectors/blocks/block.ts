@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { scalename, translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
-import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname } from './blocks.data';
+import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname } from './blocks.data';
 import { AnimationFactory, AnimationBuilder } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
@@ -18,7 +18,9 @@ import { PagingService } from 'src/app/services/paging.service';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
-    protected box: ElementRef = null
+    box: ElementRef = null
+
+    boxgroup: SVGElement
 
     private castbox: SVGElement 
 
@@ -60,10 +62,11 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.castbox = <SVGElement>this.box.nativeElement
         transformelement(this.castbox, translatename, `0${pixelunit}, ${this.translationY}${pixelunit}`)
         this.highlighter = new mousehighlighter(defaultfill)
+        this.boxgroup = document.querySelector(boxgroupname)
         this.chooseshadow()
     }
     
-    private onpagechanged(newpage: number) {
+    private onpagechanged = (newpage: number) => {
       if(newpage === this.matchingpagenumber) {
         return
       }
@@ -101,7 +104,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     private setshadow(shadownumber: number) {
         let chosenshadow = <SVGElement>document.querySelector(`#${shadowname}${shadownumber}`)
-        let nativeboxparts = this.castbox.querySelectorAll('')
+        let nativeboxparts = this.boxgroup.querySelectorAll(`${pathname}`)
 
         if(chosenshadow === null) {
             throw new Error('shadow is null')
@@ -109,11 +112,12 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         chosenshadow.style.transform = `${scalename}(1)`        
 
         nativeboxparts.forEach((currentelement) => {
-            if(currentelement .id.indexOf(shadowname) !== nooccurrence &&
+            if(currentelement .id.indexOf(shadowname) === nooccurrence ||
                 currentelement.id !== `${shadowname}${shadownumber}`) { //assuming the shadows are in order
-                let htmlelement = <SVGElement>currentelement
-                htmlelement.style.transform = `${scalename}(0)`
+              return
             }
+            let htmlelement = <SVGElement>currentelement
+            htmlelement.style.transform = `${scalename}(0)`
         })
     }
 
