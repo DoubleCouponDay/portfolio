@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { scalename, translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
-import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname } from './blocks.data';
+import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
 import { AnimationFactory, AnimationBuilder } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
@@ -18,13 +18,17 @@ import { PagingService } from 'src/app/services/paging.service';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
-    box: ElementRef = null
+    box: ElementRef
 
     @ViewChild(boxgroupname, {static: true}) 
-    boxgroup: ElementRef = null
+    boxgroup: ElementRef
+
+    @ViewChild(topsidename, {static: true})
+    boxtopside: ElementRef
     
     private castbox: SVGElement 
     private castgroup: SVGElement
+    private casttopside: SVGElement
 
     protected abstract translationY: number = 0
     protected abstract matchingpagenumber: number = 0
@@ -65,6 +69,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         transformelement(this.castbox, translatename, `0${pixelunit}, ${this.translationY}${pixelunit}`)
         this.highlighter = new mousehighlighter(defaultfill)
         this.castgroup = <SVGElement>this.boxgroup.nativeElement
+        this.casttopside = <SVGElement>this.boxtopside.nativeElement
         this.chooseshadow()
     }
     
@@ -155,11 +160,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     onmouseoverbox(event: MouseEvent) {
       this.choosecursor()
-      let element = <SVGElement>event.target
-      
-      if(element.id.indexOf(wordname) === nooccurrence) {
-        this.highlighter.applyhighlight(element)
-      }
+      this.highlighter.applyhighlight(this.casttopside)
     }
   
     onmouseleavebox(event: MouseEvent) {
