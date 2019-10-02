@@ -7,7 +7,7 @@ import { lastpagenumber } from 'src/app/pages/page.data';
 import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
-  selector: 'app-musicblock',
+  selector: 'g[app-musicblock]',
   templateUrl: './musicblock.component.html',
   styleUrls: ['./musicblock.component.css']
 })

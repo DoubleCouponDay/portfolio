@@ -7,7 +7,7 @@ import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
-  selector: 'app-softwareblock',
+  selector: 'g[app-softwareblock]',
   templateUrl: './softwareblock.component.html',
   styleUrls: ['./softwareblock.component.css']
 })

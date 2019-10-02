@@ -7,7 +7,7 @@ import { firstpagenumber } from 'src/app/pages/page.data';
 import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
-  selector: 'app-portfolioblock',
+  selector: 'g[app-portfolioblock]',
   templateUrl: './portfolioblock.component.html',
   styleUrls: ['./portfolioblock.component.css']
 })

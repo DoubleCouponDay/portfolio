@@ -7,7 +7,7 @@ import { websitespagenumber } from 'src/app/pages/page.data';
 import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
-  selector: 'app-websitesblock',
+  selector: 'g[app-websitesblock]',
   templateUrl: './websitesblock.component.html',
   styleUrls: ['./websitesblock.component.css']
 })
