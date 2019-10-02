@@ -4,6 +4,7 @@ import { Blockcomponent } from '../block';
 import { AnimationBuilder } from '@angular/animations';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { websitespagenumber } from 'src/app/pages/page.data';
+import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
   selector: 'app-websitesblock',
@@ -15,7 +16,7 @@ export class WebsitesblockComponent extends Blockcomponent {
 
   matchingpagenumber = websitespagenumber
 
-  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice) {
-    super(animationbuilder, _mouseservice)
+  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService) {
+    super(animationbuilder, _mouseservice, _pagingservice)
   }
 }

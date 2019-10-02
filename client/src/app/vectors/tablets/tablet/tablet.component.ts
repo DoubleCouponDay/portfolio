@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { tabletdata, tabletname, tablet3initialrotation } from './tablet.data';
+import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
@@ -54,7 +54,7 @@ export class TabletComponent implements OnInit {
     this.castelement = <SVGElement>this.tabletelement.nativeElement
 
     this.castelement.style.transformOrigin = 
-      `${this.initialdata.translationposition[0]}% ${this.initialdata.translationposition[1]}%`
+      `${tablettranslationposition[0]}% ${tablettranslationposition[1]}%`
 
     transformelement(this.castelement, rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
     this.applycorrectvisibility()
