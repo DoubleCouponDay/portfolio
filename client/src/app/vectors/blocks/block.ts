@@ -17,15 +17,15 @@ import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
-    @ViewChild(boxname, { static: true })
-    box: ElementRef = null
+
+    protected abstract box: ElementRef = null
 
     boxgroup: SVGElement
 
     private castbox: SVGElement 
 
-    protected abstract translationY: number
-    protected abstract matchingpagenumber: number
+    protected abstract translationY: number = 0
+    protected abstract matchingpagenumber: number = 0
 
     tabletsmoving: boolean = false
     private buttonheld = false
@@ -71,7 +71,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         return
       }
       this.chosenpage = newpage
-      this.animatebox(minboxtranslation, true)
+      this.animatebox(-maxboxtranslation, true)
     }
 
     /** returns whether the block is at the threshold of activating a page transition */
