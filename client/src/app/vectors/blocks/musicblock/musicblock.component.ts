@@ -16,7 +16,7 @@ export class MusicblockComponent extends Blockcomponent {
 
   matchingpagenumber = lastpagenumber
 
-  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService) {
-    super(animationbuilder, _mouseservice, _pagingservice)
+  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, pagingservice: PagingService) {
+    super(animationbuilder, _mouseservice, pagingservice)  
   }
 }
