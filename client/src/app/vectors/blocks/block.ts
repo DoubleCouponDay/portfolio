@@ -17,12 +17,14 @@ import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
+    @ViewChild(boxname, { static: true })
+    box: ElementRef = null
 
-    protected abstract box: ElementRef = null
-
-    boxgroup: SVGElement
-
+    @ViewChild(boxgroupname, {static: true}) 
+    boxgroup: ElementRef = null
+    
     private castbox: SVGElement 
+    private castgroup: SVGElement
 
     protected abstract translationY: number = 0
     protected abstract matchingpagenumber: number = 0
@@ -62,7 +64,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.castbox = <SVGElement>this.box.nativeElement
         transformelement(this.castbox, translatename, `0${pixelunit}, ${this.translationY}${pixelunit}`)
         this.highlighter = new mousehighlighter(defaultfill)
-        this.boxgroup = document.querySelector(boxgroupname)
+        this.castgroup = <SVGElement>this.boxgroup.nativeElement
         this.chooseshadow()
     }
     
@@ -72,6 +74,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       }
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
+      this.setshadow(biggestshadow)
     }
 
     /** returns whether the block is at the threshold of activating a page transition */
@@ -98,27 +101,33 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
 
     protected chooseshadow() {
-        let shadownumber = Math.floor(this.translationY / maxboxtranslation * smallestshadow) + 1
-        this.setshadow(shadownumber)
+      let safeposition = this.translationY === 0 ? 1 : this.translationY
+      let shadownumber = Math.floor(safeposition / maxboxtranslation * smallestshadow) + 1
+      let cielinged = shadownumber > smallestshadow ? smallestshadow : shadownumber
+      this.setshadow(cielinged)
     }
 
     private setshadow(shadownumber: number) {
-        let chosenshadow = <SVGElement>document.querySelector(`#${shadowname}${shadownumber}`)
-        let nativeboxparts = this.boxgroup.querySelectorAll(`${pathname}`)
-
-        if(chosenshadow === null) {
-            throw new Error('shadow is null')
+      if(shadownumber < biggestshadow ||
+        shadownumber > smallestshadow) {
+          throw new Error('shadow number out of bounds!')
         }
-        chosenshadow.style.transform = `${scalename}(1)`        
+      let chosenshadow = <SVGElement>this.castgroup.querySelector(`#${shadowname}${shadownumber}`)
+      let nativeboxparts = this.castgroup.querySelectorAll(`${pathname}`)
 
-        nativeboxparts.forEach((currentelement) => {
-            if(currentelement .id.indexOf(shadowname) === nooccurrence ||
-                currentelement.id !== `${shadowname}${shadownumber}`) { //assuming the shadows are in order
-              return
-            }
-            let htmlelement = <SVGElement>currentelement
-            htmlelement.style.transform = `${scalename}(0)`
-        })
+      if(chosenshadow === null) {
+          throw new Error('shadow is null')
+      }
+      chosenshadow.style.transform = `${scalename}(1)`        
+
+      nativeboxparts.forEach((currentelement) => {
+          if(currentelement.id.indexOf(shadowname) === nooccurrence ||
+              currentelement.id === chosenshadow.id) { //assuming the shadows are in order
+            return
+          }
+          let svgcurrent = <SVGElement>currentelement
+          svgcurrent.style.transform = `${scalename}(0)`
+      })
     }
 
     onmousepressedbox(event: MouseEvent) {  
