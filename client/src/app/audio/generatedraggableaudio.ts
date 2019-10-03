@@ -1,6 +1,7 @@
 import { volumestate, millisecondspoint } from '../pages/scrollview/scrollview.data';
 import { isnullorundefined } from '../utilities';
 import { maxvolume, volumedecrement, volumeincrement } from './audio.data';
+import { nooccurrence } from '../global.data';
 
 export class generatedraggableaudio {
 
@@ -24,11 +25,15 @@ export class generatedraggableaudio {
         this.throttleinput = true
         let playstate = this.scrollaudio.play()
 
+        this.volumescurrentmode = volumestate.decreasing  
+        this.fadeoutaudio()       
+
+        if(navigator.userAgent.indexOf('chrome') === nooccurrence) {
+            return
+        }
         playstate.catch((error) => {
             console.error(error['message'])
-        })
-        this.volumescurrentmode = volumestate.decreasing  
-        this.fadeoutaudio()        
+        })         
     }
 
     maintainaudio() {
