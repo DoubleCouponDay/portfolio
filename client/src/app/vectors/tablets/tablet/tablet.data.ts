@@ -1,8 +1,8 @@
 import { Type } from '@angular/core';
-import { page } from 'src/app/pages/page.data';
+import { pagecomponent } from 'src/app/pages/page.data';
 
 export interface tabletdata {
-    page: Type<page>    
+    page: Type<pagecomponent>    
 }
 
 export const tabletname = 'tablet'

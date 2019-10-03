@@ -1,6 +1,6 @@
 import { Directive, ViewContainerRef, Input, ComponentFactoryResolver, OnInit, Type, OnDestroy, ComponentRef, ChangeDetectorRef } from '@angular/core';
 import { PortfoliopageComponent } from '../../pages/portfoliopage/portfoliopage.component';
-import { page } from 'src/app/pages/page.data';
+import { pagecomponent } from 'src/app/pages/page.data';
 
 @Directive({
   selector: '[app-pageloader]'
@@ -8,9 +8,9 @@ import { page } from 'src/app/pages/page.data';
 export class PageloaderDirective implements OnInit, OnDestroy {
 
   @Input()
-  injectedpage: Type<page>
+  injectedpage: Type<pagecomponent>
 
-  private component: ComponentRef<page>;
+  private component: ComponentRef<pagecomponent>;
 
   constructor(private componentloader: ViewContainerRef,
     private componentfactory: ComponentFactoryResolver) {
