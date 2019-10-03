@@ -81,6 +81,12 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
       this.setshadow(biggestshadow)
+      
+      setTimeout(() => { 
+        this.tabletsmoving = false
+        this.choosecursor()
+      }, 
+      rotationtime)
     }
 
     /** returns whether the block is at the threshold of activating a page transition */
@@ -219,12 +225,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.chosenpage = this.matchingpagenumber
       this.tabletsmoving = true
       this._pagingservice.emitpagechange(this.chosenpage)            
-  
-      setTimeout(() => { 
-        this.tabletsmoving = false
-        this.choosecursor()
-      }, 
-      rotationtime)
     }
   
     ngOnDestroy() {
