@@ -84,7 +84,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       
       setTimeout(() => { 
         this.tabletsmoving = false
-        this.choosecursor()
       }, 
       rotationtime)
     }

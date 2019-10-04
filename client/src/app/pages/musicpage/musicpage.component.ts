@@ -56,8 +56,9 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = true
-    // this.animatecontentfade(1)
-    this.castcontent.style.opacity = '1'
+    this.animatecontentfade(1)
+    // this.castcontent.style.opacity = '1'
+    this.changer.detectChanges()
   }
 
   /** no string will default to visible */
