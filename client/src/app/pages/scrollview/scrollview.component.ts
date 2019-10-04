@@ -7,7 +7,6 @@ import { SubSink } from 'subsink';
 import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { isnullorundefined } from 'src/app/utilities';
-import fadeout from 'src/app/animations/fadeout';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';

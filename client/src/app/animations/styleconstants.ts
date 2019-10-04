@@ -7,3 +7,5 @@ export const degreesunit = 'deg'
 export const colourhighlight = '#C8C8FF'
 export const dragicon = 'ns-resize'
 export const defaulticon = 'default'
+
+export const inputopacityname = 'opacity'

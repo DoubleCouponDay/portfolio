@@ -5,6 +5,7 @@ import { rotatename, scalename, degreesunit } from 'src/app/animations/stylecons
 import { rotatetablet } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
+import { PagingService } from 'src/app/services/paging.service';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -45,7 +46,7 @@ export class TabletComponent implements OnInit {
 
   private animation: AnimationFactory
 
-  constructor(private animationbuilder: AnimationBuilder, private changer: ChangeDetectorRef) {
+  constructor(private animationbuilder: AnimationBuilder, private pager: PagingService) {
     this.animation = animationbuilder.build(rotatetablet)
   }
 
@@ -72,7 +73,9 @@ export class TabletComponent implements OnInit {
       this.maketabletvisible()
     })
 
-    animationplayer.onDone(this.applycorrectvisibility)
+    animationplayer.onDone(() => {
+      this.applycorrectvisibility()      
+    })
   }
 
   private maketabletvisible = () => {

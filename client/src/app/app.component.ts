@@ -1,5 +1,5 @@
 import { Component, Output, OnInit } from '@angular/core';
-import fadeout from './animations/fadeout';
+import { fadeout } from './animations/fadeout';
 
 @Component({
   selector: 'app-root',

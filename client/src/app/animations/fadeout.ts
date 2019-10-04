@@ -1,6 +1,7 @@
-import { AnimationTriggerMetadata, trigger, transition, animate, style, query } from '@angular/animations'
+import { AnimationTriggerMetadata, trigger, transition, animate, style, query, animation } from '@angular/animations'
+import { inputopacityname } from './styleconstants';
 
-const fadeout = trigger(
+export const fadeout = trigger(
     "fadeout", [
         transition(
             ":leave",
@@ -17,4 +18,11 @@ const fadeout = trigger(
     ]
 )
 
-export default fadeout
+export const togglefade = animation(
+    animate(
+        '3s',
+        style({
+            opacity: `{{ ${inputopacityname} }}`
+        })
+    )
+)

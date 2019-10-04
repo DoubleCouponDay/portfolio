@@ -7,6 +7,7 @@ import { softwarepageComponent } from 'src/app/pages/softwarepage/softwarepage.c
 import { websitespageComponent } from 'src/app/pages/websitespage/websitespage.component';
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
+import { rotationtime } from 'src/app/animations/rotatetablet';
 
 @Component({
   selector: 'g[app-tablets]',
@@ -56,21 +57,26 @@ export class TabletsComponent implements OnInit, OnDestroy {
     this.initialized = true
   }
 
-  private onpagechange = (input: number) => {
-    if(input > lastpagenumber ||
-      input < firstpagenumber)
+  private onpagechange = (newpage: number) => {
+    if(newpage > lastpagenumber ||
+      newpage < firstpagenumber)
     {
       throw new Error('selected new page is outside the boundaries of existence')
     }
 
-    if(input !== this.currentpage) {
-      this.choosenewrotations(input)      
+    if(newpage === this.currentpage) {
+      return      
     }
+    this.choosenewrotations(newpage)      
 
     if(this.initialized === true) {
       this.playgearsaudio()
     }
-    this.currentpage = input
+    this.currentpage = newpage
+
+    setTimeout(() => {
+      this._pagingservice.emitpagecompletedmove(newpage)
+    }, rotationtime)
   }  
 
   private choosenewrotations(newpagenumber: number) {
