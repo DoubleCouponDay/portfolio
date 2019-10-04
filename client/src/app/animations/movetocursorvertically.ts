@@ -1,10 +1,12 @@
 import { animation, animate, state, trigger, style, query, AnimationStyleMetadata, useAnimation } from '@angular/animations';
 
+export const inputtransformname = 'inputtransform'
+
 const movetocursorvertically = animation(
     animate(
         "0s",
         style({
-            transform: "{{ inputstyle }}"
+            transform: `{{ ${inputtransformname} }}`
         })
     )
 )

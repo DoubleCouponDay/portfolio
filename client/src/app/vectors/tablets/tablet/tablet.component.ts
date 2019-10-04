@@ -6,6 +6,7 @@ import { rotatetablet } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
 import { PagingService } from 'src/app/services/paging.service';
+import { inputtransformname } from 'src/app/animations/movetocursorvertically';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -62,10 +63,11 @@ export class TabletComponent implements OnInit {
   }
 
   private applyrotation(angle: number) {    
+    let params: any = {}
+    params[inputtransformname] = `${rotatename}(${angle}${degreesunit})`
+
     let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
-        params: {
-            inputtransform: `${rotatename}(${angle}${degreesunit})`
-        }
+        params: params
     })    
     animationplayer.play()    
 

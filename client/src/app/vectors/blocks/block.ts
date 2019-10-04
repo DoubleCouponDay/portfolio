@@ -8,7 +8,7 @@ import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { firstpagenumber, websitespagenumber, softwarepagenumber, lastpagenumber } from 'src/app/pages/page.data';
 import { SubSink } from 'subsink';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
-import movetocursorvertically, { resetposition } from 'src/app/animations/movetocursorvertically';
+import movetocursorvertically, { resetposition, inputtransformname } from 'src/app/animations/movetocursorvertically';
 import { transformelement } from 'src/app/elementtranslator';
 import { resetmouse, changetodragicon } from 'src/app/animations/mousechanger';
 import { isnullorundefined } from 'src/app/utilities';
@@ -192,13 +192,14 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       let inputtransformation = `${translatename}(0${pixelunit}, ${this.translationY}${pixelunit})`
   
       let chosenfactory = useresetanimation === true ? this.boxresetfactory : this.boxmovefactory
-  
+
+      let params: any = {}
+      params[inputtransformname] = inputtransformation
+
       let animationplayer = chosenfactory.create(
         this.castbox,
         {
-          params: {
-            inputstyle: inputtransformation
-          }
+          params: params
         }
       )
       animationplayer.play()
