@@ -14,10 +14,9 @@ export function transformelement(element: HTMLElement | SVGElement, transformkey
     }    
 }
 
-export function applytransformtoeachnode(nodes: NodeListOf<Element>, transformkey: string, transformvalue: string) {
+export function applytransformtoeachnode(nodes: NodeListOf<SVGElement | HTMLElement>, transformkey: string, transformvalue: string) {
   
   nodes.forEach((value, index) => {
-    let castvalue = <SVGElement>value
-    transformelement(castvalue, transformkey, transformvalue)
+    transformelement(value, transformkey, transformvalue)
   })
 }
