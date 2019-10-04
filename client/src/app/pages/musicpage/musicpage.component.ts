@@ -26,7 +26,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   private animator: AnimationFactory
 
-  constructor(private pagingservice: PagingService, private builder: AnimationBuilder, private changer: ChangeDetectorRef) {
+  constructor(pagingservice: PagingService, builder: AnimationBuilder) {
     super()
     let sub = pagingservice.subscribepagechange(this.onpagechange)
     let sub2 = pagingservice.subscribepagecompletedmove(this.onpagechangecomplete)
@@ -45,7 +45,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = false
-    this.animatecontentfade(0)
+    this.castcontent.style.opacity = '0'
   }
 
   private onpagechangecomplete = (pagenumber: number) => {
@@ -54,7 +54,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = true
-    this.animatecontentfade(1)
+    this.castcontent.style.opacity = '1'
   }
 
   private animatecontentfade(state: number) {
@@ -63,11 +63,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
     let animation = this.animator.create(this.castcontent, {
       params: params
-    })
-
-    animation.onDone(() => {
-      resetmouse()
-      this.changer.markForCheck()
     })
 
     animation.play()
