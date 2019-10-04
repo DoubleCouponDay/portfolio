@@ -56,8 +56,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = true
-    this.animatecontentfade(1)
-    this.changer.detectChanges()
+    // this.animatecontentfade(1)
+    this.castcontent.style.opacity = '1'
   }
 
   /** no string will default to visible */
@@ -65,24 +65,10 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     let params: any = {}
     params[inputopacityname] = state
 
-    console.log(`moving to opacity: ${state}`)
-
     let animation = this.animator.create(this.castcontent, {
       params: params
     })
-
-    animation.onStart(() => {
-      console.log(`started. opacity: ${this.castcontent.style.opacity}`)
-      this.changer.detectChanges()
-    }) 
-
     animation.play()
-
-    animation.onDone(() => {
-      this.changer.markForCheck()
-      this.changer.detectChanges()
-      console.log(`ended. opacity: ${this.castcontent.style.opacity}`)      
-    })
   }
   
   ngOnDestroy() {

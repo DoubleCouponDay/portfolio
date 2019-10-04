@@ -1,16 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
-import { Subject, Observable, pipe, MonoTypeOperatorFunction, of, interval } from 'rxjs';
-import { throttleTime, filter, throttle, timeout } from 'rxjs/operators';
-import { soundinteractioncooldown } from 'src/app/vectors/blocks/blocks.data';
 import { SubSink } from 'subsink';
 import { transformelement } from 'src/app/elementtranslator';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
-import { isnullorundefined } from 'src/app/utilities';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
-import { volumeincrement, volumedecrement } from 'src/app/audio/audio.data';
 import { mouseservice } from 'src/app/services/mouse.service';
 
 @Component({
