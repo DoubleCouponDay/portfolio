@@ -10,7 +10,7 @@ import { scrollitemclass, pagecomponent, page } from '../page.data';
 })
 export class websitespageComponent extends pagecomponent implements page {
   
-  contentlength = 1000
+  contentlength = 50
 
   constructor() {
     super()

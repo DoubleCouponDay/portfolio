@@ -26,8 +26,7 @@ export abstract class pagecomponent implements AfterViewInit  {
     
     onscroll(newY: number) {
       let percentagechange = newY / 100 * this.contentlength
-      let realchange = this.contentlength * percentagechange
-      this.currentpageposition = this.currentpageposition - realchange
+      this.currentpageposition = this.currentpageposition - percentagechange
       let scrollitems = this.castcontent.querySelectorAll(scrollitemclass)
       applytransformtoeachnode(<NodeListOf<SVGElement>>scrollitems, translatename, `0${pixelunit}, ${this.currentpageposition}${pixelunit}`)
     }
