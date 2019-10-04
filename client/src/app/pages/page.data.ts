@@ -10,7 +10,7 @@ export const pagename = 'page'
 export const scrollitemclass = '.scroll-item'
 export const contentidentifier = 'content'
 
-export class pagecomponent implements AfterViewInit  {
+export abstract class pagecomponent implements AfterViewInit  {
     private currentpageposition: number = 0
 
     @ViewChild(contentidentifier, {static: true})
@@ -18,16 +18,19 @@ export class pagecomponent implements AfterViewInit  {
 
     private castcontent: SVGElement
 
+    abstract contentlength: number
+
     ngAfterViewInit() {
       this.castcontent = <SVGElement>this.content.nativeElement      
     }
     
     onscroll(newY: number) {
-        let potentialnewposition = this.currentpageposition - newY
-        this.currentpageposition = potentialnewposition        
-        let scrollitems = this.castcontent.querySelectorAll(scrollitemclass)
-        applytransformtoeachnode(<NodeListOf<SVGElement>>scrollitems, translatename, `0${pixelunit}, ${this.currentpageposition}${pixelunit}`)
-      }
+      let percentagechange = newY / 100 * this.contentlength
+      let realchange = this.contentlength * percentagechange
+      this.currentpageposition = this.currentpageposition - realchange
+      let scrollitems = this.castcontent.querySelectorAll(scrollitemclass)
+      applytransformtoeachnode(<NodeListOf<SVGElement>>scrollitems, translatename, `0${pixelunit}, ${this.currentpageposition}${pixelunit}`)
+    }
 }
 
 export interface page {

@@ -25,6 +25,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   private animator: AnimationFactory
 
+  contentlength = 500
+
   constructor(pagingservice: PagingService, builder: AnimationBuilder) {
     super()
     let sub = pagingservice.subscribepagechange(this.onpagechange)

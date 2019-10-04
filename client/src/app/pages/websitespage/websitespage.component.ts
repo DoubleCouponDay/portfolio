@@ -9,6 +9,9 @@ import { scrollitemclass, pagecomponent, page } from '../page.data';
   styleUrls: ['./websitespage.component.css', '../portfoliopage/portfoliopage.component.css']
 })
 export class websitespageComponent extends pagecomponent implements page {
+  
+  contentlength = 1000
+
   constructor() {
     super()
   }
