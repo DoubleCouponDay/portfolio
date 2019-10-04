@@ -1,13 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterContentInit, ChangeDetectorRef, ViewChildren, QueryList, AfterViewChecked, AfterViewInit } from '@angular/core';
-import { scrollitemclass, pagecomponent, lastpagenumber } from '../page.data';
-import { applytransformtoeachnode } from 'src/app/elementtranslator';
-import { translatename, pixelunit, inputopacityname } from 'src/app/animations/styleconstants';
+import { Component,  OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import {  pagecomponent, lastpagenumber } from '../page.data';
+import {  inputopacityname } from 'src/app/animations/styleconstants';
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { togglefade } from 'src/app/animations/fadeout';
-import { isnullorundefined } from 'src/app/utilities';
-import { rotationtime } from 'src/app/animations/rotatetablet';
+import { resetmouse } from 'src/app/animations/mousechanger';
 
 const contentidentifier = 'content'
 
@@ -57,11 +55,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     }
     this.pagealreadydisplaying = true
     this.animatecontentfade(1)
-    // this.castcontent.style.opacity = '1'
-    this.changer.detectChanges()
   }
 
-  /** no string will default to visible */
   private animatecontentfade(state: number) {
     let params: any = {}
     params[inputopacityname] = state
@@ -69,6 +64,12 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     let animation = this.animator.create(this.castcontent, {
       params: params
     })
+
+    animation.onDone(() => {
+      resetmouse()
+      this.changer.markForCheck()
+    })
+
     animation.play()
   }
   

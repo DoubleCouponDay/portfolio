@@ -20,7 +20,7 @@ export const fadeout = trigger(
 
 export const togglefade = animation(
     animate(
-        '3s',
+        '2s',
         style({
             opacity: `{{ ${inputopacityname} }}`
         })

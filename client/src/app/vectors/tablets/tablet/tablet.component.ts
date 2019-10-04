@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
@@ -11,7 +11,8 @@ import { inputtransformname } from 'src/app/animations/movetocursorvertically';
 @Component({
   selector: 'g[app-tablet]',
   templateUrl: './tablet.component.html',
-  styleUrls: ['./tablet.component.css']
+  styleUrls: ['./tablet.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabletComponent implements OnInit {
   private rotationfield: number = 0
@@ -47,7 +48,7 @@ export class TabletComponent implements OnInit {
 
   private animation: AnimationFactory
 
-  constructor(private animationbuilder: AnimationBuilder, private pager: PagingService) {
+  constructor(private animationbuilder: AnimationBuilder, private pager: PagingService, private changer: ChangeDetectorRef) {
     this.animation = animationbuilder.build(rotatetablet)
   }
 
@@ -68,14 +69,16 @@ export class TabletComponent implements OnInit {
 
     let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
         params: params
-    })    
+    })
+    this.changer.detach()    
     animationplayer.play()    
 
     animationplayer.onStart(() => {
-      this.maketabletvisible()
+      this.maketabletvisible()      
     })
 
     animationplayer.onDone(() => {
+      this.changer.reattach()
       this.applycorrectvisibility()      
     })
   }
