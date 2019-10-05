@@ -146,7 +146,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.choosecursor()
     }
   
-    private onmousereleasedbox = (event: MouseEvent) => {
+    onmousereleasedbox = (event: MouseEvent) => {
       this.buttonheld = false
       this.blocksoundplayer.resetaudio()
       resetmouse()    
@@ -169,11 +169,24 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     onmouseleavebox(event: MouseEvent) {
-      this.highlighter.resethighlight()
+      if(isnullorundefined(event) === false &&
+        isnullorundefined(event['target']) === false) {
+        this.choosehighlightreset(event)
+      }
       
       if(this.buttonheld === false) {
         resetmouse()      
       }    
+    }
+
+    private choosehighlightreset(event: MouseEvent) {
+      let targetelement = <SVGElement>event.target
+      let elementisword = targetelement.id.indexOf(wordname) !== nooccurrence
+
+      if(elementisword === false) {
+        console.log(`mouse left ${targetelement.id} element`)
+        this.highlighter.resethighlight()
+      }
     }
   
     private choosecursor() {    
@@ -212,7 +225,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       })
     }
   
-    private makecursorstopsign() {
+    protected makecursorstopsign() {
       this.entirepage.style.cursor = 'not-allowed'
     }
   

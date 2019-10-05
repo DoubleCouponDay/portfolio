@@ -11,7 +11,7 @@ import { PagingService } from 'src/app/services/paging.service';
   templateUrl: './portfolioblock.component.html',
   styleUrls: ['./portfolioblock.component.css']
 })
-export class PortfolioblockComponent extends Blockcomponent {
+export class PortfolioblockComponent extends Blockcomponent  {
   translationY = maxboxtranslation
 
   matchingpagenumber = firstpagenumber

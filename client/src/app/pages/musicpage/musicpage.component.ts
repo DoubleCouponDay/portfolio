@@ -38,8 +38,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   ngAfterViewInit() {
     this.castcontent2 = <SVGElement>this.content.nativeElement
-    // this.castcontent2.style.opacity = '0'
-    this.castcontent2.style.opacity = '1'
+    this.castcontent2.style.opacity = '0'
     super.ngAfterViewInit()
   }
 

@@ -34,7 +34,7 @@ export class TabletsComponent implements OnInit, OnDestroy {
   
   constructor(private _pagingservice: PagingService) { 
     this.tablet1data = {
-      page: MusicpageComponent
+      page: PortfoliopageComponent
     }
 
     this.tablet2data = {
