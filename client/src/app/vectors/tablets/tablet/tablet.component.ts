@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition } from './tablet.data';
+import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
-import { rotatetablet } from 'src/app/animations/rotatetablet';
+import { rotatetablet90, angle1name, rotatetablet180, time2name, inputtimename, rotationtime, angle2name } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
 import { PagingService } from 'src/app/services/paging.service';
@@ -15,27 +15,25 @@ import { inputtransformname } from 'src/app/animations/movetocursorvertically';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabletComponent implements OnInit {
-  private rotationfield: number = 0
+  private currentrotationfield: number = 0
   private initialized: boolean = false
+
+  public get currentrotation() { return this.currentrotationfield }
 
   @Input()
   public set currentrotation(input: number) {
-      if(input > 360) {
-          throw new Error('angle cannot be greater than 360')
-      }
+    let difference = Math.abs(input - this.currentrotationfield)
+    let shoulduseflip = difference === flip
+    let currentangle = this.currentrotationfield
+    this.currentrotationfield = input
 
-      else if(input < 0) {
-          throw new Error('angle cannot be less than -360')
-      }
+    if(this.initialized === false) {
+      return
+    }
 
-      this.rotationfield = input
-
-      if(this.initialized === false) {
-        return
-      }
-      setTimeout(() => {
-        this.applyrotation(input)
-      })
+    setTimeout(() => {
+      this.applyrotation(currentangle, input, shoulduseflip)
+    })
   }
 
   @ViewChild(tabletname, {static: true})
@@ -46,10 +44,12 @@ export class TabletComponent implements OnInit {
   @Input()
   initialdata: tabletdata
 
-  private animation: AnimationFactory
+  private animation90: AnimationFactory
+  private animation180: AnimationFactory
 
   constructor(private animationbuilder: AnimationBuilder, private pager: PagingService, private changer: ChangeDetectorRef) {
-    this.animation = animationbuilder.build(rotatetablet)
+    this.animation90 = animationbuilder.build(rotatetablet90)
+    this.animation180 = animationbuilder.build(rotatetablet180)
   }
 
   ngOnInit() {
@@ -59,15 +59,24 @@ export class TabletComponent implements OnInit {
     this.castelement.style.transformOrigin = 
       `${tablettranslationposition[0]}% ${tablettranslationposition[1]}%`
 
-    transformelement(this.castelement, rotatename, `${this.rotationfield}${degreesunit}`) //there should be no animation to the initial position
+    transformelement(this.castelement, rotatename, `${this.currentrotationfield}${degreesunit}`) //there should be no animation to the initial position
     this.applycorrectvisibility()
   }
 
-  private applyrotation(angle: number) {    
-    let params: any = {}
-    params[inputtransformname] = `${rotatename}(${angle}${degreesunit})`
+  private applyrotation(currentangle: number, newangle: number, useflipanimation = false) {    
+    let chosenanimation = useflipanimation === true ? this.animation180 : this.animation90
 
-    let animationplayer = this.animation.create(this.tabletelement.nativeElement, {
+    let params: any = {}
+    let flipangle = currentangle + 90
+    let fliptime = rotationtime / 2
+    params[angle1name] = useflipanimation === true ? flipangle : this.currentrotationfield
+    params[inputtimename] = useflipanimation === true ? fliptime : rotationtime
+
+    if(useflipanimation === true) {
+      params[angle2name] = newangle
+    } 
+
+    let animationplayer = chosenanimation.create(this.tabletelement.nativeElement, {
         params: params
     })
     this.changer.detach()    
@@ -88,7 +97,7 @@ export class TabletComponent implements OnInit {
   }
 
   private applycorrectvisibility = () => {
-    if(this.rotationfield === tablet3initialrotation) {
+    if(this.currentrotationfield === tablet3initialrotation) {
       transformelement(this.castelement, scalename, "0")
     }
 

@@ -15,3 +15,5 @@ export const tablet3initialrotation = 180
 
 export const tablet4initialrotation = 90
 
+export const flip = 180
+

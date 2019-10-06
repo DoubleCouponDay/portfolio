@@ -184,7 +184,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       let elementisword = targetelement.id.indexOf(wordname) !== nooccurrence
 
       if(elementisword === false) {
-        console.log(`mouse left ${targetelement.id} element`)
         this.highlighter.resethighlight()
       }
     }
