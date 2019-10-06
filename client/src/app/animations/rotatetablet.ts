@@ -2,13 +2,18 @@ import { animation, style, animate, sequence } from "@angular/animations";
 import { rotatename, degreesunit } from './styleconstants';
 
 export const rotationtime = 6800
-export const anglename = 'angle1'
+export const anglename = 'angle'
 export const inputtimename = 'inputtime'
 
-/**parameters: inputangle */
+export const normalkick = `.21, .14, 0, -0.32`
+export const flipkick = '.18, .23, .29, -0.31'
+
+export const curvename = 'curve'
+
+/**parameters: inputangle, angle, curve */
 export const rotatetablet90withkick = animation(    
     animate(
-        `{{ ${inputtimename} }}ms cubic-bezier(.21,.14,0,-0.32)`,
+        `{{ ${inputtimename} }}ms cubic-bezier({{ ${curvename} }})`,
         style({
             transform: `${rotatename}({{ ${anglename} }}${degreesunit})`
         }),

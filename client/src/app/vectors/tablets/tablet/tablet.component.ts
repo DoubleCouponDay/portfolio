@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDe
 import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip, resetpoint } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
-import { rotatetablet90, anglename } from 'src/app/animations/rotatetablet';
+import { rotatetablet90, anglename, flipkick, normalkick, curvename } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
 import { PagingService } from 'src/app/services/paging.service';
@@ -73,9 +73,11 @@ export class TabletComponent implements OnInit {
     let fliptime = rotationtime / 2
 
     let angle1 = useflipanimation === true ? flipangle : newangle
-    let time1 = useflipanimation === true ? fliptime : rotationtime
+    let time = useflipanimation === true ? fliptime : rotationtime
+    let curve = useflipanimation === true ? flipkick : normalkick
     params[anglename] = angle1
-    params[inputtimename] = time1
+    params[inputtimename] = time
+    params[curvename] = curve
 
     let animationplayer1 = this.animation90withkick.create(this.tabletelement.nativeElement, {
         params: params
@@ -90,7 +92,7 @@ export class TabletComponent implements OnInit {
 
     animationplayer1.onDone(() => {
       if(useflipanimation === true) {
-        this.playflipanimation(params, flipangle, newangle)
+        this.playflipanimation(params, flipangle, newangle, time)
       }
 
       else {
@@ -100,7 +102,7 @@ export class TabletComponent implements OnInit {
     })
   }
 
-  private playflipanimation(inputparams: any, currentangle: number, newangle: number) {
+  private playflipanimation(inputparams: any, currentangle: number, newangle: number, a3time: number) {
     let animationplayer2: AnimationPlayer    
 
     if(currentangle === resetpoint) {
@@ -114,18 +116,19 @@ export class TabletComponent implements OnInit {
     }
 
     else {
-      this.playthirdanimation(inputparams, newangle)
+      this.playthirdanimation(inputparams, newangle, a3time)
       return
     }
 
     animationplayer2.onDone(() => {
-      this.playthirdanimation(inputparams, newangle)
+      this.playthirdanimation(inputparams, newangle, a3time)
     })
   }
 
-  private playthirdanimation(inputparams: any, newangle: number) {
+  private playthirdanimation(inputparams: any, newangle: number, time: number) {
     let animationplayer3: AnimationPlayer
     inputparams[anglename] = newangle
+    inputparams[inputtimename] = time
 
     animationplayer3 = this.animation90.create(this.tabletelement.nativeElement, {
       params: inputparams
