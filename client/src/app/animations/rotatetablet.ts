@@ -6,19 +6,17 @@ export const angle1name = 'angle1'
 export const angle2name = 'angle2'
 export const inputtimename = 'inputtime'
 
-const rotationtemplate = `${rotatename}({{ ${angle1name} }}${degreesunit})`
-
 export const kickstart90 = animate(
-    `{{ ${angle1name} }}ms cubic-bezier(.21,.14,0,-0.32)`,
+    `{{ ${inputtimename} }}ms cubic-bezier(.21,.14,0,-0.32)`,
     style({
-        transform: rotationtemplate
+        transform: `${rotatename}({{ ${angle1name} }}${degreesunit})`
     }),
 )
 
 export const rotate90 = animate(
-    `{{ ${angle2name} }}ms cubic-bezier(0, 0, 1, 1)`,
+    `{{ ${inputtimename} }}ms cubic-bezier(0, 0, 1, 1)`,
     style({
-        transform: rotationtemplate
+        transform: `${rotatename}({{ ${angle2name} }}${degreesunit})`
     })
 )
 

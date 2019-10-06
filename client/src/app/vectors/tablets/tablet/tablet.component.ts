@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDe
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
-import { rotatetablet90, angle1name, rotatetablet180, time2name, inputtimename, rotationtime, angle2name } from 'src/app/animations/rotatetablet';
+import { rotatetablet90, angle1name, rotatetablet180, inputtimename, rotationtime, angle2name } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
 import { PagingService } from 'src/app/services/paging.service';
