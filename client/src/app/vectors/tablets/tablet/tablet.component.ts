@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip } from './tablet.data';
+import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/animations';
+import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip, resetpoint } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
-import { rotatetablet90, angle1name, rotatetablet180, inputtimename, rotationtime, angle2name } from 'src/app/animations/rotatetablet';
+import { rotatetablet90, anglename } from 'src/app/animations/rotatetablet';
 import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtranslator';
 import { PagingService } from 'src/app/services/paging.service';
 import { inputtransformname } from 'src/app/animations/movetocursorvertically';
+import { inputtimename, rotationtime, rotatetablet90withkick, reset360 } from 'src/app/animations/rotatetablet';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -44,12 +46,14 @@ export class TabletComponent implements OnInit {
   @Input()
   initialdata: tabletdata
 
+  private animation90withkick: AnimationFactory
   private animation90: AnimationFactory
-  private animation180: AnimationFactory
+  private winddownanimation: AnimationFactory
 
   constructor(private animationbuilder: AnimationBuilder, private pager: PagingService, private changer: ChangeDetectorRef) {
+    this.animation90withkick = animationbuilder.build(rotatetablet90withkick)
     this.animation90 = animationbuilder.build(rotatetablet90)
-    this.animation180 = animationbuilder.build(rotatetablet180)
+    this.winddownanimation = animationbuilder.build(reset360)
   }
 
   ngOnInit() {
@@ -64,29 +68,71 @@ export class TabletComponent implements OnInit {
   }
 
   private applyrotation(currentangle: number, newangle: number, useflipanimation = false) {    
-    let chosenanimation = useflipanimation === true ? this.animation180 : this.animation90
-
     let params: any = {}
     let flipangle = currentangle + 90
     let fliptime = rotationtime / 2
-    params[angle1name] = useflipanimation === true ? flipangle : this.currentrotationfield
-    params[inputtimename] = useflipanimation === true ? fliptime : rotationtime
 
-    if(useflipanimation === true) {
-      params[angle2name] = newangle
-    } 
+    let angle1 = useflipanimation === true ? flipangle : newangle
+    let time1 = useflipanimation === true ? fliptime : rotationtime
+    params[anglename] = angle1
+    params[inputtimename] = time1
 
-    let animationplayer = chosenanimation.create(this.tabletelement.nativeElement, {
+    let animationplayer1 = this.animation90withkick.create(this.tabletelement.nativeElement, {
         params: params
     })
-    this.changer.detach()    
-    animationplayer.play()    
 
-    animationplayer.onStart(() => {
+    this.changer.detach()    
+    animationplayer1.play()    
+
+    animationplayer1.onStart(() => {
       this.maketabletvisible()      
     })
 
-    animationplayer.onDone(() => {
+    animationplayer1.onDone(() => {
+      if(useflipanimation === true) {
+        this.playflipanimation(params, flipangle, newangle)
+      }
+
+      else {
+        this.changer.reattach()
+        this.applycorrectvisibility()      
+      }
+    })
+  }
+
+  private playflipanimation(inputparams: any, currentangle: number, newangle: number) {
+    let animationplayer2: AnimationPlayer    
+
+    if(currentangle === resetpoint) {
+      inputparams[anglename] = 0
+      inputparams[inputtimename] = '0'
+
+      animationplayer2 = this.winddownanimation.create(this.tabletelement.nativeElement, {
+        params: inputparams
+      })
+      animationplayer2.play()
+    }
+
+    else {
+      this.playthirdanimation(inputparams, newangle)
+      return
+    }
+
+    animationplayer2.onDone(() => {
+      this.playthirdanimation(inputparams, newangle)
+    })
+  }
+
+  private playthirdanimation(inputparams: any, newangle: number) {
+    let animationplayer3: AnimationPlayer
+    inputparams[anglename] = newangle
+
+    animationplayer3 = this.animation90.create(this.tabletelement.nativeElement, {
+      params: inputparams
+    })
+    animationplayer3.play()
+
+    animationplayer3.onDone(() => {      
       this.changer.reattach()
       this.applycorrectvisibility()      
     })
