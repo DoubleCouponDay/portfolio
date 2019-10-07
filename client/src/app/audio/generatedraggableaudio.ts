@@ -1,5 +1,5 @@
 import { volumestate, millisecondspoint } from '../pages/scrollview/scrollview.data';
-import { isnullorundefined } from '../utilities';
+import { isnullorundefined } from '../utility/utilities';
 import { maxvolume, volumedecrement, volumeincrement } from './audio.data';
 import { nooccurrence } from '../global.data';
 

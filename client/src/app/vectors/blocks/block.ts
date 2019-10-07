@@ -11,7 +11,7 @@ import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import movetocursorvertically, { resetposition, inputtransformname } from 'src/app/animations/movetocursorvertically';
 import { transformelement } from 'src/app/elementtransformer';
 import { resetmouse, changetodragicon } from 'src/app/animations/mousechanger';
-import { isnullorundefined, ismobile } from 'src/app/utilities';
+import { isnullorundefined, ismobile } from 'src/app/utility/utilities';
 import { rotationtime } from 'src/app/animations/rotatetablet';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';

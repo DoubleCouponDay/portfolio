@@ -1,6 +1,6 @@
 import { colourhighlight } from './styleconstants';
 import { elementAt } from 'rxjs/operators';
-import { isnullorundefined } from '../utilities';
+import { isnullorundefined } from '../utility/utilities';
 
 export class mousehighlighter {
     private previouselement: HTMLElement | SVGElement

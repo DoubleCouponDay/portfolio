@@ -1,5 +1,6 @@
 import { Component, Output, OnInit } from '@angular/core';
 import { fadeout } from './animations/fadeout';
+import { disabletouchevents } from './utility/utilities';
 
 @Component({
   selector: 'app-root',
