@@ -9,7 +9,7 @@ import { firstpagenumber, websitespagenumber, softwarepagenumber, lastpagenumber
 import { SubSink } from 'subsink';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import movetocursorvertically, { resetposition, inputtransformname } from 'src/app/animations/movetocursorvertically';
-import { transformelement } from 'src/app/elementtranslator';
+import { transformelement } from 'src/app/elementtransformer';
 import { resetmouse, changetodragicon } from 'src/app/animations/mousechanger';
 import { isnullorundefined } from 'src/app/utilities';
 import { rotationtime } from 'src/app/animations/rotatetablet';

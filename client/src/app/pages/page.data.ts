@@ -1,4 +1,4 @@
-import { applytransformtoeachnode } from '../elementtranslator';
+import { applytransformtoeachnode } from '../elementtransformer';
 import { translatename, pixelunit } from '../animations/styleconstants';
 import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 

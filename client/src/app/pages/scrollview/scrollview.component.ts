@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
 import { SubSink } from 'subsink';
-import { transformelement } from 'src/app/elementtranslator';
+import { transformelement } from 'src/app/elementtransformer';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';

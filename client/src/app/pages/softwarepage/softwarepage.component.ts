@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { applytransformtoeachnode } from 'src/app/elementtranslator';
+import { applytransformtoeachnode } from 'src/app/elementtransformer';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
 import { scrollitemclass, pagecomponent, page } from '../page.data';
 
