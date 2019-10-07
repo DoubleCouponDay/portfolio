@@ -25,12 +25,8 @@ export class generatedraggableaudio {
         this.throttleinput = true
         let playstate = this.scrollaudio.play()
 
-        this.volumescurrentmode = volumestate.decreasing  
-        this.fadeoutaudio()       
+        this.volumescurrentmode = volumestate.stable  
 
-        if(navigator.userAgent.indexOf('chrome') === nooccurrence) {
-            return
-        }
         playstate.catch((error) => {
             console.error(error['message'])
         })         
@@ -55,10 +51,11 @@ export class generatedraggableaudio {
     }
 
     /** invoke after movement detection */
-    fadeoutaudio(onfaded?: () => void) {  
+    private fadeoutaudio(onfaded?: () => void) {  
         let id = setTimeout(() => {
             if(this.scrollaudio.volume >= volumedecrement) {        
                 this.scrollaudio.volume -= volumedecrement
+                console.log('audio fading')
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -80,7 +77,7 @@ export class generatedraggableaudio {
         this.timeoutIDs.push(id)    
     }
 
-    fadeupaudio() {
+    private fadeupaudio() {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
                 this.scrollaudio.volume += volumeincrement
