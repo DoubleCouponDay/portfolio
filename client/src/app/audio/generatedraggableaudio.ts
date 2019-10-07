@@ -17,27 +17,37 @@ export class generatedraggableaudio {
         this.scrollaudio = new Audio(pathtoaudio) 
     }
 
-    startaudio() {   
+    playaudio() {   
         if(this.throttleinput === true) {
-            return
+            this.scrollaudio.volume = 1
+            this.resetaudio()
+            return            
         }  
         this.scrollaudio = new Audio(this.pathtoaudio) 
         this.throttleinput = true
         let playstate = this.scrollaudio.play()
 
-        this.volumescurrentmode = volumestate.stable  
+        this.scrollaudio.volume = 1
+        this.volumescurrentmode = volumestate.decreasing
+        this.fadeoutaudio()
 
         playstate.catch((error) => {
             console.error(error['message'])
         })         
     }
 
-    maintainaudio() {
+    private maintainaudio() {
+        if(this.volumescurrentmode === volumestate.increasing) {
+            return
+        }
         this.volumescurrentmode = volumestate.increasing  
-        this.fadeupaudio()
+        this.fadeupaudio()        
     }
 
     resetaudio() {
+        if(this.volumescurrentmode === volumestate.decreasing) {
+            return
+        }
         this.volumescurrentmode = volumestate.decreasing  
 
         this.fadeoutaudio(() => {
@@ -55,6 +65,7 @@ export class generatedraggableaudio {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume >= volumedecrement) {        
                 this.scrollaudio.volume -= volumedecrement
+                console.log('fading down')
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -80,6 +91,7 @@ export class generatedraggableaudio {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
                 this.scrollaudio.volume += volumeincrement
+                console.log('fading up')
 
                 if(this.volumescurrentmode === volumestate.increasing) {
                     this.fadeupaudio()

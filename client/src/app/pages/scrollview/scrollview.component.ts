@@ -66,8 +66,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     }
     this.movescrollbutton()
     this.scrollbuttonmoved.emit(outcome.changeinposition)        
-    this.scrapesoundgenerator.maintainaudio()  
-    this.scrapesoundgenerator.startaudio()    
+    this.scrapesoundgenerator.playaudio()    
   }
 
   onmouseshouldhighlight(event: MouseEvent) {

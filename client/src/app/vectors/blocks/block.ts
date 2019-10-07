@@ -160,8 +160,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         return
       }    
       this.animatebox(event.movementY)    
-      this.blocksoundplayer.maintainaudio()
-      this.blocksoundplayer.startaudio()    
+      this.blocksoundplayer.playaudio()    
       this.aboxismoving.next(event)
     }
   
