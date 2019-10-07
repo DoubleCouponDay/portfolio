@@ -65,7 +65,6 @@ export class generatedraggableaudio {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume >= volumedecrement) {        
                 this.scrollaudio.volume -= volumedecrement
-                console.log('fading down')
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -91,7 +90,6 @@ export class generatedraggableaudio {
         let id = setTimeout(() => {
             if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
                 this.scrollaudio.volume += volumeincrement
-                console.log('fading up')
 
                 if(this.volumescurrentmode === volumestate.increasing) {
                     this.fadeupaudio()

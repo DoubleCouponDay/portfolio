@@ -11,7 +11,7 @@ import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import movetocursorvertically, { resetposition, inputtransformname } from 'src/app/animations/movetocursorvertically';
 import { transformelement } from 'src/app/elementtransformer';
 import { resetmouse, changetodragicon } from 'src/app/animations/mousechanger';
-import { isnullorundefined } from 'src/app/utilities';
+import { isnullorundefined, ismobile } from 'src/app/utilities';
 import { rotationtime } from 'src/app/animations/rotatetablet';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
@@ -144,19 +144,25 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
 
     onmousepressedbox(event: MouseEvent) {  
-        this.buttonheld = true
-        this.choosecursor()
+      this.buttonheld = true      
+      this.choosecursor()
+
+      if(ismobile() === false) {
+        return
+      }
+      this.animatebox(maxboxtranslation)
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
       this.buttonheld = false
       this.blocksoundplayer.resetaudio()
-      resetmouse()    
+      resetmouse()        
     }
   
     private onmousemoved = (event: MouseEvent) => {
       if(this.buttonheld === false ||
-        this.tabletsmoving === true) {
+        this.tabletsmoving === true ||
+        this.buttonactivated === true) {
         return
       }    
       this.animatebox(event.movementY)    
@@ -231,11 +237,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     private animatepagetransition() {
-      // let previouspage = this.chosenpage
-
-      // if(this.matchingpagenumber === previouspage) {
-      //   return
-      // }
       if(this.buttonactivated === true) {
         return
       }
