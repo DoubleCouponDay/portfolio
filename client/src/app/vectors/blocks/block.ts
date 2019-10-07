@@ -35,6 +35,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     tabletsmoving: boolean = false
     private buttonheld = false
+    protected buttonactivated = false
 
     private boxmovefactory: AnimationFactory
     private boxresetfactory: AnimationFactory
@@ -77,6 +78,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       if(newpage === this.matchingpagenumber) {
         return
       }
+      this.buttonactivated = false
       this.tabletsmoving = true
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
@@ -189,7 +191,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     private choosecursor() {    
-      if(this.tabletsmoving === true) {
+      if(this.tabletsmoving === true ||
+        this.buttonactivated === true) {
         this.makecursorstopsign()      
       }
   
@@ -229,13 +232,17 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     private animatepagetransition() {
-      let previouspage = this.chosenpage
+      // let previouspage = this.chosenpage
 
-      if(this.matchingpagenumber === previouspage) {
+      // if(this.matchingpagenumber === previouspage) {
+      //   return
+      // }
+      if(this.buttonactivated === true) {
         return
       }
       this.chosenpage = this.matchingpagenumber
       this.tabletsmoving = true
+      this.buttonactivated = true
       this._pagingservice.emitpagechange(this.chosenpage)            
     }
   

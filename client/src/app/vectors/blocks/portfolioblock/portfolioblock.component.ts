@@ -18,5 +18,6 @@ export class PortfolioblockComponent extends Blockcomponent  {
 
   constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService) {
     super(animationbuilder, _mouseservice, _pagingservice)
+    super.buttonactivated = true
   }
 }
