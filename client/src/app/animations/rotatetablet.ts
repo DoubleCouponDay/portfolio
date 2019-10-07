@@ -6,7 +6,7 @@ export const anglename = 'angle'
 export const inputtimename = 'inputtime'
 
 export const normalkick = `.21, .14, 0, -0.32`
-export const flipkick = '.18, .23, .29, -0.31'
+export const flipkick = '.5, 0.09, .3, 0.39'
 
 export const curvename = 'curve'
 
