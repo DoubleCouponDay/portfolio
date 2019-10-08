@@ -8,6 +8,7 @@ import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { touchevents } from 'src/app/touch/touchevents';
+import snackbarservice from 'src/app/services/snackbar.service';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -35,7 +36,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private scrapesoundgenerator = new generatedraggableaudio(scrapesoundpath)
   private touches: touchevents
 
-  constructor(private mouseservice: mouseservice) { 
+  constructor(private mouseservice: mouseservice, private alerter: snackbarservice) { 
     let sub1 = mouseservice.subscribemovedevent(this.onmousemoveoverscroll)
     let sub2 = mouseservice.subscribereleasedevent(this.onscrollbuttonreleased)
     this.sink.add(sub1)
@@ -47,6 +48,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     this.highlighter = new mousehighlighter(this.castbuttonparts[0].style.fill)
 
     this.touches = new touchevents(
+      this.alerter,
       this.onscrollbuttonpressed, 
       this.onmousemoveoverscroll, 
       this.onscrollbuttonreleased, 

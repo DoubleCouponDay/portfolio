@@ -1,5 +1,6 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
 import { OnDestroy } from '@angular/core';
+import snackbarservice from '../services/snackbar.service';
 
 const listenoptions: AddEventListenerOptions = {
     passive: false //prevents chrome from ignoring scroll disables
@@ -11,7 +12,10 @@ export class touchevents implements OnDestroy {
     private currentY = 0
     private changeinY = 0
 
-    constructor(private ontouch: (event: MouseEvent) => void,
+    private buttonheld = false
+
+    constructor(private alerter: snackbarservice,
+        private ontouch: (event: MouseEvent) => void,
         private onmove: (event: MouseEvent) => void,
         private onrelease: (event: MouseEvent) => void,
         ...interactables: SVGElement[]) {
@@ -19,9 +23,12 @@ export class touchevents implements OnDestroy {
 
         interactables.forEach((item) => {
             item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
-            item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
-            item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
+            // item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+            // item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
         })
+
+        document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+        document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
     }
 
     private ontouchoverride = (event: TouchEvent) => {
@@ -41,12 +48,14 @@ export class touchevents implements OnDestroy {
         
         switch(event.type) {
             case touchstartname:
+                this.buttonheld = true
                 convertedtype = mousedownname
-                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
-                document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
 
             case touchmovename:
+                if(this.buttonheld === false) {
+                    break
+                }
                 convertedtype = mouseovername
 
                 if(this.currentY !== 0) {
@@ -56,12 +65,10 @@ export class touchevents implements OnDestroy {
                 break
             
             case touchendname:
+                this.buttonheld = false
                 convertedtype = mouseupname
-                document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
-                document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
         }
-        
         event.preventDefault()
         event.stopImmediatePropagation()
 
@@ -69,6 +76,7 @@ export class touchevents implements OnDestroy {
             movementY: this.changeinY,
             relatedTarget: event.target
         })
+
         callback(mappedevent)
     }
 
@@ -77,10 +85,13 @@ export class touchevents implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.elements.forEach((item) => {
-            item.removeEventListener(touchstartname, this.ontouchoverride)
-            item.removeEventListener(touchmovename, this.onmoveoverride)
-            item.removeEventListener(touchendname, this.onreleaseoverride)
-        })
+        // this.elements.forEach((item) => {
+        //     item.removeEventListener(touchstartname, this.ontouchoverride)
+        //     item.removeEventListener(touchmovename, this.onmoveoverride)
+        //     item.removeEventListener(touchendname, this.onreleaseoverride)
+        // })
+
+        document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
+        document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
     }
 }

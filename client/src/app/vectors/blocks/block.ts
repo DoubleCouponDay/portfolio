@@ -16,6 +16,8 @@ import { rotationtime } from 'src/app/animations/rotatetablet';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
+import { MatSnackBar } from '@angular/material';
+import snackbarservice from 'src/app/services/snackbar.service';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
@@ -60,7 +62,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     private touch: touchevents
 
-    constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
+    constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService,
+      private alerter: snackbarservice) {
         this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
         this.boxresetfactory = animationbuilder.build(resetposition)
         let sub1 = _mouseservice.subscribemovedevent(this.onmousemoved)
@@ -69,6 +72,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.sink.add(sub1)
         this.sink.add(sub2)
         this.sink.add(sub3)
+        this.alerter.raisemessage('hello')
     }    
       
     ngAfterViewInit() {
@@ -81,6 +85,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.chooseshadow()
 
         this.touch = new touchevents(
+          this.alerter,
           this.onmousepressedbox,
           this.onmousemoved,
           this.onmousereleasedbox,
