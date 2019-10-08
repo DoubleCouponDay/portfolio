@@ -5,6 +5,7 @@ import { OnDestroy } from '@angular/core';
 export class touchevents implements OnDestroy {
     private elements: SVGElement[]
 
+    private currentY = 0
     private changeinY = 0
     private touchheld = false
 
@@ -19,10 +20,22 @@ export class touchevents implements OnDestroy {
         }
 
         interactables.forEach((item) => {
-            item.addEventListener(touchstartname, (event) => { this.onevent(event, ontouch)}, listenoptions)
-            item.addEventListener(touchmovename, (event) => { this.onevent(event, onmove)}, listenoptions)
-            item.addEventListener(touchendname, (event) => { this.onevent(event, onrelease)}, listenoptions)
+            item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
+            item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+            item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
         })
+    }
+
+    private ontouchoverride = (event: TouchEvent) => {
+        this.onevent(event, this.ontouch)
+    }
+
+    private onmoveoverride = (event: TouchEvent) => {
+        this.onevent(event, this.onmove)
+    }
+
+    private onreleaseoverride = (event: TouchEvent) => {
+        this.onevent(event, this.onrelease)
     }
 
     private onevent = (event: TouchEvent, callback: (event: MouseEvent) => void) => {
@@ -36,6 +49,11 @@ export class touchevents implements OnDestroy {
 
             case touchmovename:
                 convertedtype = mouseovername
+
+                if(this.currentY !== 0) {
+                    this.changeinY = event.touches[0].clientY - this.currentY
+                }                
+                this.currentY = event.touches[0].clientY
                 break
             
             case touchendname:
@@ -45,16 +63,20 @@ export class touchevents implements OnDestroy {
         }
         
         event.preventDefault()
-        let transformedevent = new MouseEvent(convertedtype)
-        transformedevent
-        callback(event)
+        event.stopImmediatePropagation()
+
+        let mappedevent = new MouseEvent(convertedtype, {
+            movementY: this.changeinY,
+            relatedTarget: event.target
+        })
+        callback(mappedevent)
     }
 
     ngOnDestroy(): void {
         this.elements.forEach((item) => {
-            item.removeEventListener(touchstartname, this.ontouch)
-            item.removeEventListener(touchmovename, this.onmove)
-            item.removeEventListener(touchendname, this.onrelease)
+            item.removeEventListener(touchstartname, this.ontouchoverride)
+            item.removeEventListener(touchmovename, this.onmoveoverride)
+            item.removeEventListener(touchendname, this.onreleaseoverride)
         })
     }
 }

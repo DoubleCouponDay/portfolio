@@ -7,7 +7,7 @@ import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { mouseservice } from 'src/app/services/mouse.service';
-import { touchevents } from 'src/app/touch/touch.events';
+import { touchevents } from 'src/app/touch/touchevents';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -45,7 +45,12 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.castbuttonparts = this.scrollbuttonparts.map((item) => <SVGElement>item.nativeElement)
     this.highlighter = new mousehighlighter(this.castbuttonparts[0].style.fill)
-    this.touches = new touchevents(this.onscrollbuttonpressed, this.onmousemoveoverscroll, this.onscrollbuttonreleased)
+
+    this.touches = new touchevents(
+      this.onscrollbuttonpressed, 
+      this.onmousemoveoverscroll, 
+      this.onscrollbuttonreleased, 
+      ...this.castbuttonparts)
   }
 
   onscrollbuttonpressed(event: MouseEvent) {

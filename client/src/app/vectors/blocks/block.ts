@@ -15,6 +15,7 @@ import { isnullorundefined, ismobile } from 'src/app/utility/utilities';
 import { rotationtime } from 'src/app/animations/rotatetablet';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
+import { touchevents } from 'src/app/touch/touchevents';
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
@@ -25,10 +26,14 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     @ViewChild(topsidename, {static: true})
     boxtopside: ElementRef
+
+    @ViewChild(`${boxname}${wordname}`, {static: true})
+    boxword: ElementRef
     
     private castbox: SVGElement 
     private castgroup: SVGElement
     private casttopside: SVGElement
+    private castword: SVGElement
 
     protected abstract translationY: number = 0
     protected abstract matchingpagenumber: number = 0
@@ -47,12 +52,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     entirepage: HTMLElement = document.documentElement
   
-    //tablets
     chosenpage: number = firstpagenumber
   
     private sink = new SubSink()
   
     private highlighter: mousehighlighter    
+
+    private touch: touchevents
 
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
         this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
@@ -71,7 +77,16 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.highlighter = new mousehighlighter(defaultfill)
         this.castgroup = <SVGElement>this.boxgroup.nativeElement
         this.casttopside = <SVGElement>this.boxtopside.nativeElement
+        this.castword = <SVGElement>this.boxword.nativeElement
         this.chooseshadow()
+
+        this.touch = new touchevents(
+          this.onmousepressedbox,
+          this.onmousemoved,
+          this.onmousereleasedbox,
+          this.casttopside,
+          this.castword
+        )
     }
     
     private onpagechanged = (newpage: number) => {
@@ -248,5 +263,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     ngOnDestroy() {
       this.sink.unsubscribe()
+      this.touch.ngOnDestroy()
     }    
 }
