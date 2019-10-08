@@ -1,23 +1,21 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
 import { OnDestroy } from '@angular/core';
 
+const listenoptions: AddEventListenerOptions = {
+    passive: false //prevents chrome from ignoring scroll disables
+}
 
 export class touchevents implements OnDestroy {
     private elements: SVGElement[]
 
     private currentY = 0
     private changeinY = 0
-    private touchheld = false
 
     constructor(private ontouch: (event: MouseEvent) => void,
         private onmove: (event: MouseEvent) => void,
         private onrelease: (event: MouseEvent) => void,
         ...interactables: SVGElement[]) {
         this.elements = interactables
-
-        let listenoptions: AddEventListenerOptions = {
-            passive: false //prevents chrome from ignoring scroll disables
-        }
 
         interactables.forEach((item) => {
             item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
@@ -44,7 +42,8 @@ export class touchevents implements OnDestroy {
         switch(event.type) {
             case touchstartname:
                 convertedtype = mousedownname
-                this.touchheld = true
+                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+                document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
 
             case touchmovename:
@@ -58,7 +57,8 @@ export class touchevents implements OnDestroy {
             
             case touchendname:
                 convertedtype = mouseupname
-                this.touchheld = false
+                document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
+                document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
         }
         
@@ -70,6 +70,10 @@ export class touchevents implements OnDestroy {
             relatedTarget: event.target
         })
         callback(mappedevent)
+    }
+
+    privateonglobal(event: TouchEvent) {
+
     }
 
     ngOnDestroy(): void {
