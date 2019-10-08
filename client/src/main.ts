@@ -5,8 +5,6 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { disabletouchevents } from './app/utility/utilities';
 
-disabletouchevents()
-
 if (environment.production) {
   enableProdMode();
 }
