@@ -12,6 +12,7 @@ import { backgroundcomponent } from './background/background.component';
 import { TabletComponent } from './vectors/tablets/tablet/tablet.component';
 import { BlocksComponent } from './vectors/blocks/blocks.component';
 import { VectorsModule } from './vectors/vectors.module';
+import { MatSnackBarModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -25,8 +26,8 @@ import { VectorsModule } from './vectors/vectors.module';
     CommonModule,
     BrowserAnimationsModule,
     PagesModule,
-    BrowserAnimationsModule,
-    VectorsModule    
+    VectorsModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

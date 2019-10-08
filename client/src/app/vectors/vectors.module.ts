@@ -9,7 +9,6 @@ import { PortfolioblockComponent } from './blocks/portfolioblock/portfolioblock.
 import { WebsitesblockComponent } from './blocks/websitesblock/websitesblock.component';
 import { SoftwareblockComponent } from './blocks/softwareblock/softwareblock.component';
 import { MusicblockComponent } from './blocks/musicblock/musicblock.component';
-import { MatSnackBarModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { MatSnackBarModule } from '@angular/material';
   ],
   imports: [
     CommonModule,
-    PagesModule,
-    MatSnackBarModule
+    PagesModule
   ],
   exports: [
     vectorscomponent
