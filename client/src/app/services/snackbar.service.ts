@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isnullorundefined } from '../utility/utilities';
 
-/** requires @angular/material, util, @types/util, MatSnackBarModule */
+/** requires @angular/material, MatSnackBarModule, isnullorundefined */
 @Injectable({
     providedIn: 'root'
 })
@@ -13,7 +13,7 @@ export default class snackbarservice
     {
     }
 
-    public raisemessage = (message: string, title?:string) : void => {
+    public raisemessage = (message: string, title = 'alert') : void => {
         this.underlyingraise(message, title)
     }
 
@@ -31,17 +31,16 @@ export default class snackbarservice
             message = isnullorundefined(error.message) ? <any>error : error.message   
         }
         
-        this.underlyingraise(message, null)
+        this.underlyingraise(message)
     }
 
-    private underlyingraise = (message: string, title?:string) : void => {
-        let titletouse = isnullorundefined(title) === false ? title : ''
-        let output = `${titletouse}: ${JSON.stringify(message)}`
+    private underlyingraise = (message: string, title?: string) : void => {
+        let output = `${title}: ${JSON.stringify(message)}`
 
         this.snackBar.open(output, '', {
-            duration: 999999999,
+            duration: 1000,
             verticalPosition: "top",
-            horizontalPosition: "right"
+            horizontalPosition: "right"            
         });
         console.log(output)
     }

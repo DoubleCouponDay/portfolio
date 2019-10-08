@@ -71,8 +71,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         let sub3 = _pagingservice.subscribepagechange(this.onpagechanged)
         this.sink.add(sub1)
         this.sink.add(sub2)
-        this.sink.add(sub3)
-        this.alerter.raisemessage('hello')
+        this.sink.add(sub3)        
     }    
       
     ngAfterViewInit() {
@@ -92,6 +91,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
           this.casttopside,
           this.castword
         )
+        this.alerter.raisemessage('hello')
     }
     
     private onpagechanged = (newpage: number) => {
