@@ -62,10 +62,11 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     private touch: touchevents
 
-    private shouldnotmove: boolean = 
-      this.buttonheld === false ||
+    private get shouldnotmove() {
+      return this.buttonheld === false ||
       this.tabletsmoving === true ||
       this.buttonactivated === true
+    }
 
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService,
       private alerter: snackbarservice) {

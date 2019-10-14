@@ -23,7 +23,6 @@ export class touchevents implements OnDestroy {
 
         interactables.forEach((item) => {
             item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
-            // item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
             item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
         })
     }
@@ -70,7 +69,6 @@ export class touchevents implements OnDestroy {
                 document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
         }
-        // event.stopImmediatePropagation()
 
         let mappedevent = new MouseEvent(convertedtype, {
             movementY: this.changeinY,
