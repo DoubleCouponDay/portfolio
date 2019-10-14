@@ -47,9 +47,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private boxmovefactory: AnimationFactory
     private boxresetfactory: AnimationFactory
   
-    aboxismoving = new Subject<MouseEvent>()
-    onboxmoving = this.aboxismoving.asObservable()
-  
     blocksoundplayer = new generatedraggableaudio(grindingaudiopath)
   
     entirepage: HTMLElement = document.documentElement
@@ -108,6 +105,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
       this.setshadow(biggestshadow)
+      this.highlighter.resethighlight()      
       
       setTimeout(() => { 
         this.tabletsmoving = false
@@ -175,9 +173,9 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.shouldnotmove === true) {
         return
       }
+      this.highlighter.applyhighlight(this.casttopside)
       this.animatebox(maxboxtranslation, false, smoothtime)
       this.blocksoundplayer.playaudio()    
-      this.aboxismoving.next(event)
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
@@ -192,7 +190,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       }    
       this.animatebox(event.movementY)    
       this.blocksoundplayer.playaudio()    
-      this.aboxismoving.next(event)
     }
   
     onmouseoverbox = (event: MouseEvent) => {

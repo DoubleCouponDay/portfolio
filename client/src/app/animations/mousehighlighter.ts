@@ -14,6 +14,7 @@ export class mousehighlighter {
         this.previouselement = element
     }
     
+    /** resets previous element if none given */
     resethighlight(element?: HTMLElement | SVGElement) {
         let correctelement = isnullorundefined(element) ? this.previouselement : element
 
