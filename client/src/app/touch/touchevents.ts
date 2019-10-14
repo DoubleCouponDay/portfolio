@@ -23,6 +23,7 @@ export class touchevents implements OnDestroy {
 
         interactables.forEach((item) => {
             item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
+            item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
             item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
         })
     }
@@ -45,8 +46,8 @@ export class touchevents implements OnDestroy {
         switch(event.type) {
             case touchstartname:
                 this.buttonheld = true
-                convertedtype = mousedownname
-                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+                convertedtype = mousedownname      
+                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions) //because a drag action may leave the boundaries of the element
                 document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
 
@@ -60,6 +61,9 @@ export class touchevents implements OnDestroy {
                     this.changeinY = event.touches[0].clientY - this.currentY
                 }                
                 this.currentY = event.touches[0].clientY
+
+                event.preventDefault()
+                event.stopPropagation()
                 break
             
             case touchendname:
@@ -78,16 +82,11 @@ export class touchevents implements OnDestroy {
         callback(mappedevent)
     }
 
-    privateonglobal(event: TouchEvent) {
-
-    }
-
     ngOnDestroy(): void {
-        // this.elements.forEach((item) => {
-        //     item.removeEventListener(touchstartname, this.ontouchoverride)
-        //     item.removeEventListener(touchmovename, this.onmoveoverride)
-        //     item.removeEventListener(touchendname, this.onreleaseoverride)
-        // })
-
+        this.elements.forEach((item) => {
+            item.removeEventListener(touchstartname, this.ontouchoverride)
+            item.removeEventListener(touchmovename, this.onmoveoverride)
+            item.removeEventListener(touchendname, this.onreleaseoverride)
+        })
     }
 }
