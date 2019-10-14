@@ -131,7 +131,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
             return false
         }
 
-        else if(this.translationY > maxboxtranslation) {
+        else if(this.translationY >= maxboxtranslation) {
             this.translationY = maxboxtranslation
             this.setshadow(smallestshadow)
             return true
