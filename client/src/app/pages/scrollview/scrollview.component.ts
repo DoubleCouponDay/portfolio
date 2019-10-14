@@ -55,7 +55,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
       ...this.castbuttonparts)
   }
 
-  onscrollbuttonpressed(event: MouseEvent) {
+  onscrollbuttonpressed = (event: MouseEvent) => {
     this.scrollbuttonheld = true
   }
 

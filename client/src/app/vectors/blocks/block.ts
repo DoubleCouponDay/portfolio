@@ -62,6 +62,11 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     private touch: touchevents
 
+    private shouldnotmove: boolean = 
+      this.buttonheld === false ||
+      this.tabletsmoving === true ||
+      this.buttonactivated === true
+
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService,
       private alerter: snackbarservice) {
         this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
@@ -162,30 +167,28 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
 
     onmousepressedbox = (event: MouseEvent) => {  
-      console.log('mouse pressed')
       this.buttonheld = true      
       this.choosecursor()
 
-      if(ismobile() === false) {
+      if(ismobile() === false ||
+        this.shouldnotmove === true) {
         return
       }
       this.animatebox(maxboxtranslation, false, smoothtime)
+      this.blocksoundplayer.playaudio()    
+      this.aboxismoving.next(event)
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
-      console.log('mouse released')
       this.buttonheld = false
       this.blocksoundplayer.resetaudio()
       resetmouse()       
     }
   
     private onmousemoved = (event: MouseEvent) => {
-      if(this.buttonheld === false ||
-        this.tabletsmoving === true ||
-        this.buttonactivated === true) {
+      if(this.shouldnotmove === true) {
         return
       }    
-      console.log('mouse moved')
       this.animatebox(event.movementY)    
       this.blocksoundplayer.playaudio()    
       this.aboxismoving.next(event)
@@ -244,7 +247,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         }
       )
       animationplayer.play()
-  
+
       animationplayer.onDone(() => {
         this.chooseshadow()
         

@@ -3,7 +3,7 @@ import { OnDestroy } from '@angular/core';
 import snackbarservice from '../services/snackbar.service';
 
 const listenoptions: AddEventListenerOptions = {
-    passive: false //prevents chrome from ignoring scroll disables
+    passive: false //prevents chrome from ignoring scroll disables    
 }
 
 export class touchevents implements OnDestroy {
@@ -24,11 +24,8 @@ export class touchevents implements OnDestroy {
         interactables.forEach((item) => {
             item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
             // item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
-            // item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
+            item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
         })
-
-        document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
-        document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
     }
 
     private ontouchoverride = (event: TouchEvent) => {
@@ -50,6 +47,8 @@ export class touchevents implements OnDestroy {
             case touchstartname:
                 this.buttonheld = true
                 convertedtype = mousedownname
+                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
+                document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
 
             case touchmovename:
@@ -66,11 +65,12 @@ export class touchevents implements OnDestroy {
             
             case touchendname:
                 this.buttonheld = false
-                convertedtype = mouseupname
+                convertedtype = mouseupname                
+                document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
+                document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
                 break
         }
-        event.preventDefault()
-        event.stopImmediatePropagation()
+        // event.stopImmediatePropagation()
 
         let mappedevent = new MouseEvent(convertedtype, {
             movementY: this.changeinY,
@@ -91,7 +91,5 @@ export class touchevents implements OnDestroy {
         //     item.removeEventListener(touchendname, this.onreleaseoverride)
         // })
 
-        document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
-        document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
     }
 }

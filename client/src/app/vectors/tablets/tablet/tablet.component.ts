@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, Type, ElementRef, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/animations';
 import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip, resetpoint } from './tablet.data';
-import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
+import { rotatename, scalename, degreesunit, inputtimename } from 'src/app/animations/styleconstants';
 import { rotatetablet90, anglename, flipkick, normalkick, curvename } from 'src/app/animations/rotatetablet';
 import { transformelement } from 'src/app/elementtransformer';
 import { PagingService } from 'src/app/services/paging.service';
-import { inputtimename, rotationtime, rotatetablet90withkick, reset360 } from 'src/app/animations/rotatetablet';
+import { rotationtime, rotatetablet90withkick, reset360 } from 'src/app/animations/rotatetablet';
 
 @Component({
   selector: 'g[app-tablet]',
