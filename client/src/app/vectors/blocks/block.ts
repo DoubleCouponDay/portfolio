@@ -19,6 +19,8 @@ import { touchevents } from 'src/app/touch/touchevents';
 import { MatSnackBar } from '@angular/material';
 import snackbarservice from 'src/app/services/snackbar.service';
 
+const shadowcheckinterval = 100
+
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
     box: ElementRef
@@ -41,8 +43,9 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     protected abstract matchingpagenumber: number = 0
 
     tabletsmoving: boolean = false
-    private buttonheld = false
-    protected buttonactivated = false
+    private held = false
+    protected activated = false
+    private touched = false
 
     private boxmovefactory: AnimationFactory
     private boxresetfactory: AnimationFactory
@@ -57,24 +60,25 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     private highlighter: mousehighlighter    
 
-    private touch: touchevents
+    private touches: touchevents
 
     private get shouldnotmove() {
-      return this.buttonheld === false ||
+      return this.held === false ||
       this.tabletsmoving === true ||
-      this.buttonactivated === true
+      this.activated === true ||
+      this.touched === true
     }
 
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService,
       private alerter: snackbarservice) {
-        this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
-        this.boxresetfactory = animationbuilder.build(resetposition)
-        let sub1 = _mouseservice.subscribemovedevent(this.onmousemoved)
-        let sub2 = _mouseservice.subscribereleasedevent(this.onmousereleasedbox)
-        let sub3 = _pagingservice.subscribepagechange(this.onpagechanged)
-        this.sink.add(sub1)
-        this.sink.add(sub2)
-        this.sink.add(sub3)        
+      this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
+      this.boxresetfactory = animationbuilder.build(resetposition)
+      let sub1 = _mouseservice.subscribemovedevent(this.onmousemoved)
+      let sub2 = _mouseservice.subscribereleasedevent(this.onmousereleasedbox)
+      let sub3 = _pagingservice.subscribepagechange(this.onpagechanged)
+      this.sink.add(sub1)
+      this.sink.add(sub2)
+      this.sink.add(sub3)        
     }    
       
     ngAfterViewInit() {
@@ -86,7 +90,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.castword = <SVGElement>this.boxword.nativeElement
         this.chooseshadow()
 
-        this.touch = new touchevents(
+        this.touches = new touchevents(
           this.alerter,
           this.onmousepressedbox,
           this.onmousemoved,
@@ -100,7 +104,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       if(newpage === this.matchingpagenumber) {
         return
       }
-      this.buttonactivated = false
+      this.activated = false
       this.tabletsmoving = true
       this.chosenpage = newpage
       this.animatebox(-maxboxtranslation, true)
@@ -135,8 +139,9 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         return false
     }
 
-    protected chooseshadow() {
-      let safeposition = this.translationY === 0 ? 1 : this.translationY
+    protected chooseshadow(manualtranslation?: number) {
+      let chosentranslation = isnullorundefined(manualtranslation) ? this.translationY : manualtranslation
+      let safeposition = chosentranslation === 0 ? 1 : chosentranslation
       let shadownumber = Math.floor(safeposition / maxboxtranslation * smallestshadow) + 1
       let cielinged = shadownumber > smallestshadow ? smallestshadow : shadownumber
       this.setshadow(cielinged)
@@ -166,20 +171,25 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
 
     onmousepressedbox = (event: MouseEvent) => {  
-      this.buttonheld = true      
+      this.held = true      
       this.choosecursor()
 
       if(ismobile() === false ||
         this.shouldnotmove === true) {
         return
-      }
+      }      
+      this.applytouchedstate()
+    }
+
+    private applytouchedstate() {
+      this.touched = true
       this.highlighter.applyhighlight(this.casttopside)
       this.animatebox(maxboxtranslation, false, smoothtime)
       this.blocksoundplayer.playaudio()    
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
-      this.buttonheld = false
+      this.held = false
       this.blocksoundplayer.resetaudio()
       resetmouse()       
     }
@@ -203,7 +213,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.choosehighlightreset(event)
       }
       
-      if(this.buttonheld === false) {
+      if(this.held === false) {
         resetmouse()      
       }    
     }
@@ -219,7 +229,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     private choosecursor() {    
       if(this.tabletsmoving === true ||
-        this.buttonactivated === true) {
+        this.activated === true) {
         this.makecursorstopsign()      
       }
   
@@ -244,10 +254,18 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
           params: params
         }
       )
-      animationplayer.play()
+      let intervalid: number
+      console.log('play')
+
+      animationplayer.onStart(() => {
+        console.log('start')
+        intervalid = window.setInterval(() => { this.duringboxanimation(animationplayer.getPosition()) })
+      })
 
       animationplayer.onDone(() => {
-        this.chooseshadow()
+        console.log('end')
+        clearInterval(intervalid)
+        this.touched = false
         
         if(pagetriggered === false ||
           this.tabletsmoving === true) {
@@ -255,6 +273,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         }
         this.animatepagetransition()
       })
+
+      animationplayer.play()
+    }
+
+    private duringboxanimation = (currentposition: number) => {
+      console.log(currentposition)
+      this.chooseshadow(currentposition)
     }
   
     protected makecursorstopsign() {
@@ -262,17 +287,17 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     private animatepagetransition() {
-      if(this.buttonactivated === true) {
+      if(this.activated === true) {
         return
       }
       this.chosenpage = this.matchingpagenumber
       this.tabletsmoving = true
-      this.buttonactivated = true
+      this.activated = true
       this._pagingservice.emitpagechange(this.chosenpage)            
     }
   
     ngOnDestroy() {
       this.sink.unsubscribe()
-      this.touch.ngOnDestroy()
+      this.touches.ngOnDestroy()
     }    
 }
