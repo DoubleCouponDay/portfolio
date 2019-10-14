@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { scalename, translatename, pixelunit } from 'src/app/animations/styleconstants';
+import { scalename, translatename, pixelunit, inputtimename } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
 import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
 import { AnimationFactory, AnimationBuilder } from '@angular/animations';
@@ -8,7 +8,7 @@ import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { firstpagenumber, websitespagenumber, softwarepagenumber, lastpagenumber } from 'src/app/pages/page.data';
 import { SubSink } from 'subsink';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
-import movetocursorvertically, { resetposition, inputtransformname } from 'src/app/animations/movetocursorvertically';
+import { movetocursorvertically, resetposition, inputtransformname, smoothtime } from 'src/app/animations/movetocursorvertically';
 import { transformelement } from 'src/app/elementtransformer';
 import { resetmouse, changetodragicon } from 'src/app/animations/mousechanger';
 import { isnullorundefined, ismobile } from 'src/app/utility/utilities';
@@ -91,7 +91,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
           this.casttopside,
           this.castword
         )
-        this.alerter.raisemessage('hello')
     }
     
     private onpagechanged = (newpage: number) => {
@@ -128,8 +127,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
             this.translationY = maxboxtranslation
             this.setshadow(smallestshadow)
             return true
-        }
-        this.chooseshadow()
+        }        
         return false
     }
 
@@ -143,8 +141,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private setshadow(shadownumber: number) {
       if(shadownumber < biggestshadow ||
         shadownumber > smallestshadow) {
-          throw new Error('shadow number out of bounds!')
-        }
+        throw new Error('shadow number out of bounds!')
+      }
       let chosenshadow = <SVGElement>this.castgroup.querySelector(`#${shadowname}${shadownumber}`)
       let nativeboxparts = this.castgroup.querySelectorAll(`${pathname}`)
 
@@ -163,20 +161,22 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       })
     }
 
-    onmousepressedbox(event: MouseEvent) {  
+    onmousepressedbox = (event: MouseEvent) => {  
+      console.log('mouse pressed')
       this.buttonheld = true      
       this.choosecursor()
 
       if(ismobile() === false) {
         return
       }
-      this.animatebox(maxboxtranslation)
+      this.animatebox(maxboxtranslation, false, smoothtime)
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
+      console.log('mouse released')
       this.buttonheld = false
       this.blocksoundplayer.resetaudio()
-      resetmouse()        
+      resetmouse()       
     }
   
     private onmousemoved = (event: MouseEvent) => {
@@ -185,17 +185,18 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.buttonactivated === true) {
         return
       }    
+      console.log('mouse moved')
       this.animatebox(event.movementY)    
       this.blocksoundplayer.playaudio()    
       this.aboxismoving.next(event)
     }
   
-    onmouseoverbox(event: MouseEvent) {
+    onmouseoverbox = (event: MouseEvent) => {
       this.choosecursor()
       this.highlighter.applyhighlight(this.casttopside)
     }
   
-    onmouseleavebox(event: MouseEvent) {
+    onmouseleavebox = (event: MouseEvent) => {
       if(isnullorundefined(event) === false &&
         isnullorundefined(event['target']) === false) {
         this.choosehighlightreset(event)
@@ -226,14 +227,15 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       }
     }
   
-    private animatebox = (movementy: number, useresetanimation: boolean = false) => {
-      let pagetriggered = this.addmovement(movementy)
+    private animatebox = (movementy: number, useresetanimation: boolean = false, customtime: number = 0) => {
+      let pagetriggered = this.addmovement(movementy)      
       let inputtransformation = `${translatename}(0${pixelunit}, ${this.translationY}${pixelunit})`
   
       let chosenfactory = useresetanimation === true ? this.boxresetfactory : this.boxmovefactory
 
       let params: any = {}
       params[inputtransformname] = inputtransformation
+      params[inputtimename] = customtime
 
       let animationplayer = chosenfactory.create(
         this.castbox,
@@ -244,6 +246,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       animationplayer.play()
   
       animationplayer.onDone(() => {
+        this.chooseshadow()
+        
         if(pagetriggered === false ||
           this.tabletsmoving === true) {
           return

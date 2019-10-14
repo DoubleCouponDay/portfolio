@@ -3,12 +3,9 @@ import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/an
 import { tabletdata, tabletname, tablet3initialrotation, tablettranslationposition, flip, resetpoint } from './tablet.data';
 import { rotatename, scalename, degreesunit } from 'src/app/animations/styleconstants';
 import { rotatetablet90, anglename, flipkick, normalkick, curvename } from 'src/app/animations/rotatetablet';
-import { nooccurrence } from 'src/app/global.data';
 import { transformelement } from 'src/app/elementtransformer';
 import { PagingService } from 'src/app/services/paging.service';
-import { inputtransformname } from 'src/app/animations/movetocursorvertically';
 import { inputtimename, rotationtime, rotatetablet90withkick, reset360 } from 'src/app/animations/rotatetablet';
-import { from } from 'rxjs';
 
 @Component({
   selector: 'g[app-tablet]',

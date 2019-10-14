@@ -1,9 +1,8 @@
 import { animation, style, animate, sequence } from "@angular/animations";
-import { rotatename, degreesunit } from './styleconstants';
+import { rotatename, degreesunit, inputtimename } from './styleconstants';
 
 export const rotationtime = 6800
 export const anglename = 'angle'
-export const inputtimename = 'inputtime'
 
 export const normalkick = `.21, .14, 0, -0.32`
 export const flipkick = '.5, 0.09, .3, 0.39'
