@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } fr
 import { scalename, translatename, pixelunit, inputtimename } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
 import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
-import { AnimationFactory, AnimationBuilder } from '@angular/animations';
+import { AnimationFactory, AnimationBuilder, AnimationPlayer } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { firstpagenumber, websitespagenumber, softwarepagenumber, lastpagenumber } from 'src/app/pages/page.data';
@@ -17,9 +17,9 @@ import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import { MatSnackBar } from '@angular/material';
-import snackbarservice from 'src/app/services/snackbar.service';
+import {snackbarservice} from 'src/app/services/snackbar.service';
 
-const shadowcheckinterval = 100
+const shadowcheckinterval = smoothtime / 5 
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
@@ -139,9 +139,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         return false
     }
 
-    protected chooseshadow(manualtranslation?: number) {
-      let chosentranslation = isnullorundefined(manualtranslation) ? this.translationY : manualtranslation
-      let safeposition = chosentranslation === 0 ? 1 : chosentranslation
+    protected chooseshadow() {
+      let safeposition = this.translationY === 0 ? 1 : this.translationY
       let shadownumber = Math.floor(safeposition / maxboxtranslation * smallestshadow) + 1
       let cielinged = shadownumber > smallestshadow ? smallestshadow : shadownumber
       this.setshadow(cielinged)
@@ -254,16 +253,24 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
           params: params
         }
       )
-      let intervalid: number
-      console.log('play')
+      this.trackanimationstate(animationplayer, pagetriggered)      
+    }
 
-      animationplayer.onStart(() => {
-        console.log('start')
-        intervalid = window.setInterval(() => { this.duringboxanimation(animationplayer.getPosition()) })
+    private trackanimationstate = (player: AnimationPlayer, pagetriggered: boolean) => {
+      let shadow = 0
+      let intervalid = 0
+
+      player.onStart(() => {
+        if(ismobile() === false) {
+          return
+        } 
+        intervalid = window.setInterval(() => {           
+          shadow = this.duringmobileanimation(shadow)                    
+        },
+        shadowcheckinterval)
       })
 
-      animationplayer.onDone(() => {
-        console.log('end')
+      player.onDone(() => {
         clearInterval(intervalid)
         this.touched = false
         
@@ -273,13 +280,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         }
         this.animatepagetransition()
       })
-
-      animationplayer.play()
+      player.play()
     }
 
-    private duringboxanimation = (currentposition: number) => {
-      console.log(currentposition)
-      this.chooseshadow(currentposition)
+    private duringmobileanimation = (shadownumber: number) => {
+      shadownumber++
+      this.setshadow(shadownumber)
+      return shadownumber
     }
   
     protected makecursorstopsign() {

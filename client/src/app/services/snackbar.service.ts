@@ -2,12 +2,13 @@ import { MatSnackBar } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isnullorundefined } from '../utility/utilities';
+import { AppModule } from '../app.module';
 
 /** requires @angular/material, MatSnackBarModule, isnullorundefined */
 @Injectable({
     providedIn: 'root'
 })
-export default class snackbarservice
+export class snackbarservice
 {
     constructor(private snackBar: MatSnackBar)
     {

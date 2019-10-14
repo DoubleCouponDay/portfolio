@@ -8,7 +8,7 @@ import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { touchevents } from 'src/app/touch/touchevents';
-import snackbarservice from 'src/app/services/snackbar.service';
+import {snackbarservice} from 'src/app/services/snackbar.service';
 
 @Component({
   selector: 'g[app-scrollview]',

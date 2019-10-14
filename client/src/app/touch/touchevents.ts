@@ -1,6 +1,6 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
 import { OnDestroy } from '@angular/core';
-import snackbarservice from '../services/snackbar.service';
+import {snackbarservice} from '../services/snackbar.service';
 
 const listenoptions: AddEventListenerOptions = {
     passive: false //prevents chrome from ignoring scroll disables    

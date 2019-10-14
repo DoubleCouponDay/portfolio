@@ -5,7 +5,7 @@ import { minboxtranslation } from '../blocks.data';
 import { AnimationBuilder } from '@angular/animations';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
-import snackbarservice from 'src/app/services/snackbar.service';
+import {snackbarservice} from 'src/app/services/snackbar.service';
 
 @Component({
   selector: 'g[app-softwareblock]',
@@ -17,8 +17,7 @@ export class SoftwareblockComponent extends Blockcomponent {
 
   matchingpagenumber = softwarepagenumber
 
-  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService,
-    alerter: snackbarservice) {
+  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService, alerter: snackbarservice) {
     super(animationbuilder, _mouseservice, _pagingservice, alerter)
   }
 }

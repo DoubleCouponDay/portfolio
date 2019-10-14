@@ -10,6 +10,7 @@ import { PagesModule } from './pages/pages.module';
 import { backgroundcomponent } from './background/background.component';
 import { VectorsModule } from './vectors/vectors.module';
 import { MatSnackBarModule } from '@angular/material';
+import {snackbarservice} from './services/snackbar.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { MatSnackBarModule } from '@angular/material';
     VectorsModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [snackbarservice],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
