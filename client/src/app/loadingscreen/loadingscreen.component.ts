@@ -21,7 +21,7 @@ export class LoadingscreenComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit() {
-    this.touches = new touchevents(
+    this.touches = new touchevents( //prevents panning past the loading screen. bandaid eek!
       this.ontouch,
       this.ontouch,
       this.ontouch,
