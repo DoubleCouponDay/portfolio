@@ -127,13 +127,11 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
         else if(this.translationY < minboxtranslation) {
             this.translationY = minboxtranslation
-            this.setshadow(biggestshadow)
             return false
         }
 
         else if(this.translationY >= maxboxtranslation) {
             this.translationY = maxboxtranslation
-            this.setshadow(smallestshadow)
             return true
         }        
         return false
@@ -261,7 +259,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       let intervalid = 0
 
       player.onStart(() => {
-        if(ismobile() === false) {
+        if(ismobile() === false) {          
           return
         } 
         intervalid = window.setInterval(() => {           
@@ -273,6 +271,10 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       player.onDone(() => {
         clearInterval(intervalid)
         this.touched = false
+
+        if(ismobile() === false) {
+          this.chooseshadow()
+        }
         
         if(pagetriggered === false ||
           this.tabletsmoving === true) {
