@@ -42,13 +42,15 @@ export class touchevents implements OnDestroy {
 
     private onevent = (event: TouchEvent, callback: (event: MouseEvent) => void) => {
         let convertedtype: string
-        
+        let touch = event.touches[0]
+
         switch(event.type) {
             case touchstartname:
                 this.buttonheld = true
                 convertedtype = mousedownname      
                 document.addEventListener(touchmovename, this.onmoveoverride, listenoptions) //because a drag action may leave the boundaries of the element
                 document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
+                this.currentY = touch.clientY
                 break
 
             case touchmovename:
@@ -58,9 +60,10 @@ export class touchevents implements OnDestroy {
                 convertedtype = mouseovername
 
                 if(this.currentY !== 0) {
-                    this.changeinY = event.touches[0].clientY - this.currentY
+                    this.changeinY = touch.clientY - this.currentY
                 }                
-                this.currentY = event.touches[0].clientY
+                this.currentY = touch.clientY
+                console.log(`changeiy: ${this.changeinY}`)
 
                 event.preventDefault()
                 event.stopPropagation()
