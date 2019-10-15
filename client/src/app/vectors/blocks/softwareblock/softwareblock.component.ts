@@ -17,7 +17,7 @@ export class SoftwareblockComponent extends Blockcomponent {
 
   matchingpagenumber = softwarepagenumber
 
-  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService, alerter: snackbarservice) {
-    super(animationbuilder, _mouseservice, _pagingservice, alerter)
+  constructor(animationbuilder: AnimationBuilder, _mouseservice: mouseservice, _pagingservice: PagingService) {
+    super(animationbuilder, _mouseservice, _pagingservice)
   }
 }
