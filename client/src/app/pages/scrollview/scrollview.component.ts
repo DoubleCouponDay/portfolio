@@ -36,7 +36,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
   private scrapesoundgenerator = new generatedraggableaudio(scrapesoundpath)
   private touches: touchevents
 
-  constructor(private mouseservice: mouseservice, private alerter: snackbarservice) { 
+  constructor(private mouseservice: mouseservice) { 
     let sub1 = mouseservice.subscribemovedevent(this.onmousemoveoverscroll)
     let sub2 = mouseservice.subscribereleasedevent(this.onscrollbuttonreleased)
     this.sink.add(sub1)
@@ -48,7 +48,6 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
     this.highlighter = new mousehighlighter(this.castbuttonparts[0].style.fill)
 
     this.touches = new touchevents(
-      this.alerter,
       this.onscrollbuttonpressed, 
       this.onmousemoveoverscroll, 
       this.onscrollbuttonreleased, 

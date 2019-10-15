@@ -22,7 +22,7 @@ export class backgroundcomponent implements OnInit, AfterViewInit {
     let time = environment.production ? 3000 : 0
           
     setTimeout(() => {
-      this.backgroundloaded.emit(0)
+      // this.backgroundloaded.emit()
     }, time)
   }  
 }

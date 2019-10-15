@@ -14,6 +14,6 @@
 
 .ball-container {
     width: 100%;
-    height: var(--window-height);
+    height: 100%;
     background-color: white;
 }

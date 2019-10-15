@@ -14,8 +14,7 @@ export class touchevents implements OnDestroy {
 
     private buttonheld = false
 
-    constructor(private alerter: snackbarservice,
-        private ontouch: (event: MouseEvent) => void,
+    constructor(private ontouch: (event: MouseEvent) => void,
         private onmove: (event: MouseEvent) => void,
         private onrelease: (event: MouseEvent) => void,
         ...interactables: SVGElement[]) {
@@ -63,8 +62,6 @@ export class touchevents implements OnDestroy {
                     this.changeinY = touch.clientY - this.currentY
                 }                
                 this.currentY = touch.clientY
-                console.log(`changeiy: ${this.changeinY}`)
-
                 event.preventDefault()
                 event.stopPropagation()
                 break

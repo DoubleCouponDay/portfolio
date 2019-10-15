@@ -69,8 +69,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.touched === true
     }
 
-    constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService,
-      private alerter: snackbarservice) {
+    constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
       this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
       this.boxresetfactory = animationbuilder.build(resetposition)
       let sub1 = _mouseservice.subscribemovedevent(this.onmousemoved)
@@ -91,7 +90,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         this.chooseshadow()
 
         this.touches = new touchevents(
-          this.alerter,
           this.onmousepressedbox,
           this.onmousemoved,
           this.onmousereleasedbox,

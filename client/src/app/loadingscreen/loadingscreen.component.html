@@ -4,11 +4,12 @@
     xmlns="http://www.w3.org/2000/svg" 
     xmlns:xlink="http://www.w3.org/1999/xlink" 
     viewBox="0 0 100 100" 
-    preserveAspectRatio="xMidYMid meet">
+    preserveAspectRatio="xMidYMid meet"
+    #ballcontainer>
     <circle id="actor_1" 
         class="bouncing-ball"
         cx="50" 
-        cy="49" 
+        cy="50"
         r="2" 
         opacity="1" 
         fill="rgba(0,0,0,1)" 
@@ -16,7 +17,9 @@
         stroke="rgba(3,3,3,1)" 
         stroke-width="2" 
         stroke-opacity="1" 
-        stroke-dasharray=""></circle>
+        stroke-dasharray=""
+        #circle>
+    </circle>
     <script type="text/ecmascript">
         var actors={};
         actors.actor_1 = {node:document.getElementById("SVG-Circus-a9377e8d-c827-ae02-687d-c0fb5fce8aba")
@@ -55,4 +58,4 @@
         _reqAnimFrame(fnTick)};
         _reqAnimFrame(fnTick);
     </script></svg>
-<p class="loading-message">Loading...</p>
+<p class="loading-message" #message>Loading...</p>
