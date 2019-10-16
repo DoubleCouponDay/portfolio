@@ -9,11 +9,6 @@
     user-select: all;
 }
 
-.portrait-image {     
-    x: 250px;
-    y: 300px;
-}
-
 .content-text {
     font-family: 'zcool';
     font-size: 40px;
@@ -26,6 +21,7 @@
 }
 
 .scroll-item {
+    --empty-ruleset: 0;
 }
 
 .scroll-view {

@@ -36,7 +36,8 @@
               "namedChunks": false,
               "deleteOutputPath": true,
               "vendorChunk": false,
-              "aot": false
+              "aot": true,
+              "buildOptimizer": false
             },
             "production": {
               "fileReplacements": [
@@ -53,7 +54,9 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "deleteOutputPath": true,
-              "progress": true,              
+              "progress": true,     
+              "aot": true,         
+              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
