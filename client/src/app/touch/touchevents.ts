@@ -78,7 +78,9 @@ export class touchevents implements OnDestroy {
             relatedTarget: event.target
         })
 
-        callback(mappedevent)
+        setTimeout(() => {
+            callback(mappedevent)
+        })        
     }
 
     ngOnDestroy(): void {
