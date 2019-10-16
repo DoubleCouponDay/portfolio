@@ -1,5 +1,6 @@
 import { AnimationTriggerMetadata, trigger, transition, animate, style, query, animation } from '@angular/animations'
-import { inputopacityname } from './styleconstants';
+import { inputopacityname, inputtimename } from './styleconstants';
+import { smoothtime } from './movetocursorvertically';
 
 export const fadeout = trigger(
     "fadeout", [
@@ -18,9 +19,10 @@ export const fadeout = trigger(
     ]
 )
 
+/** parameteres: inputopacity */
 export const togglefade = animation(
     animate(
-        '2s',
+        `${smoothtime}ms`,
         style({
             opacity: `{{ ${inputopacityname} }}`
         })

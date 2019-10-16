@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { scalename, translatename, pixelunit, inputtimename } from 'src/app/animations/styleconstants';
+import { scalename, translatename, pixelunit, inputtimename, inputopacityname } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
 import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
 import { AnimationFactory, AnimationBuilder, AnimationPlayer } from '@angular/animations';
@@ -18,6 +18,7 @@ import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import { MatSnackBar } from '@angular/material';
 import {snackbarservice} from 'src/app/services/snackbar.service';
+import { fadeout, togglefade } from 'src/app/animations/fadeout';
 
 const shadowcheckinterval = smoothtime / 5 
 
@@ -49,6 +50,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
     private boxmovefactory: AnimationFactory
     private boxresetfactory: AnimationFactory
+    private fadefactory: AnimationFactory
   
     blocksoundplayer = new generatedraggableaudio(grindingaudiopath)
   
@@ -72,6 +74,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
       this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
       this.boxresetfactory = animationbuilder.build(resetposition)
+      this.fadefactory = animationbuilder.build(togglefade)
+
       let sub1 = _mouseservice.subscribemovedevent(this.onmousemoved)
       let sub2 = _mouseservice.subscribereleasedevent(this.onmousereleasedbox)
       let sub3 = _pagingservice.subscribepagechange(this.onpagechanged)
@@ -153,15 +157,29 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       if(chosenshadow === null) {
           throw new Error('shadow is null')
       }
-      chosenshadow.style.transform = `${scalename}(1)`        
+
+      let fadeinparams: any = {}
+      fadeinparams[inputopacityname] = '1'
+
+      let fadein = this.fadefactory.create(chosenshadow, {
+        params: fadeinparams
+      })
+      fadein.play()
 
       nativeboxparts.forEach((currentelement) => {
           if(currentelement.id.indexOf(shadowname) === nooccurrence ||
               currentelement.id === chosenshadow.id) { //assuming the shadows are in order
             return
           }
-          let svgcurrent = <SVGElement>currentelement
-          svgcurrent.style.transform = `${scalename}(0)`
+          let currentsvg = <SVGElement>currentelement
+
+          let fadeinparams: any = {}
+          fadeinparams[inputopacityname] = '0'
+    
+          let fadeout = this.fadefactory.create(currentsvg, {
+            params: fadeinparams
+          })
+          fadeout.play()
       })
     }
 
