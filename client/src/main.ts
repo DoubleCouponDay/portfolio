@@ -19,7 +19,7 @@ if(ismobile() === true) {
 
   stylesheet.insertRule(`
     html, body {
-      overflow-y: hidden;
+      overflow-y: auto;
       overflow-x: visible;
     }
   `)  
