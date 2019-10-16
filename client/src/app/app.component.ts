@@ -8,11 +8,15 @@ import { gratingsoundaddress, tabletsoundaddress, drawbridgesoundaddress } from 
   styleUrls: ['./app.component.css'],
   animations: [fadeout]
 })
-export class AppComponent implements OnInit, AfterContentChecked {
+export class AppComponent implements OnInit {
   title = 'portfolio';
 
   @Output()
   public loadingcomplete: boolean = false
+
+  private sound1: HTMLAudioElement
+  private sound2: HTMLAudioElement
+  private sound3: HTMLAudioElement
 
   constructor()
   {
@@ -26,17 +30,29 @@ export class AppComponent implements OnInit, AfterContentChecked {
     })
   }
 
-  ngAfterContentChecked() {
-    this.cachesounds()
-  }
-
   public onbackgroundloaded() {
       this.loadingcomplete = true
+      this.cachesounds()
   }
 
   private cachesounds() {
-    let sound1 = new Audio(gratingsoundaddress)
-    let sound2 = new Audio(tabletsoundaddress)
-    let sound3 = new Audio(drawbridgesoundaddress)
+    this.sound1 = new Audio(gratingsoundaddress)
+    this.sound1.preload = 'auto'
+
+    this.sound1.onloadend = () => {
+      this.sound1 = null
+    }
+    this.sound2 = new Audio(tabletsoundaddress)
+    this.sound2.preload = 'auto'
+
+    this.sound2.onloadend = () => {
+      this.sound2 = null
+    }
+    this.sound3 = new Audio(drawbridgesoundaddress)
+    this.sound3.preload = 'auto'
+
+    this.sound3.onloadend = () => {
+      this.sound3 = null
+    }
   }
 }
