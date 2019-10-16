@@ -1,4 +1,6 @@
-.blocks-container {
-    width: var(--window-width);
-    height: var(--window-height);    
+.vectors-container  {
+    min-width: var(--window-width);
+    min-height: var(--window-height);
+    width: auto;
+    height: 100vh;
 }
