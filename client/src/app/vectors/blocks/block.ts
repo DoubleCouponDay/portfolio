@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { scalename, translatename, pixelunit, inputtimename, inputopacityname } from 'src/app/animations/styleconstants';
 import { nooccurrence } from 'src/app/global.data';
-import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, grindingaudiopath, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
+import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
 import { AnimationFactory, AnimationBuilder, AnimationPlayer } from '@angular/animations';
 import { Subject } from 'rxjs';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
@@ -19,6 +19,7 @@ import { touchevents } from 'src/app/touch/touchevents';
 import { MatSnackBar } from '@angular/material';
 import {snackbarservice} from 'src/app/services/snackbar.service';
 import { fadeout, togglefade } from 'src/app/animations/fadeout';
+import { gratingsoundaddress } from 'src/app/audio/audio.data';
 
 const shadowcheckinterval = smoothtime / 5 
 
@@ -52,7 +53,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private boxresetfactory: AnimationFactory
     private fadefactory: AnimationFactory
   
-    blocksoundplayer = new generatedraggableaudio(grindingaudiopath)
+    blocksoundplayer = new generatedraggableaudio(gratingsoundaddress)
   
     entirepage: HTMLElement = document.documentElement
   
