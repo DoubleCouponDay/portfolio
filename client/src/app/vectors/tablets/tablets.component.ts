@@ -8,7 +8,6 @@ import { websitespageComponent } from 'src/app/pages/websitespage/websitespage.c
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
 import { rotationtime } from 'src/app/animations/rotatetablet';
-import { drawbridgesoundaddress } from 'src/app/audio/audio.data';
 
 @Component({
   selector: 'g[app-tablets]',
@@ -129,7 +128,7 @@ export class TabletsComponent implements OnInit, OnDestroy {
   }
 
   private playgearsaudio() {
-    let gearssound = new Audio(drawbridgesoundaddress)
+    let gearssound = new Audio('assets/drawbridge.mp3')
     gearssound.play()
   }
 

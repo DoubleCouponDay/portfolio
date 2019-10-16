@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestroy, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
-import { maximumtranslation, scrollmultiplier, mintranslationX, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
+import { maximumtranslation, scrollmultiplier, mintranslationX, scrapesoundpath, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
 import { SubSink } from 'subsink';
 import { transformelement } from 'src/app/elementtransformer';
 import { translatename, pixelunit } from 'src/app/animations/styleconstants';
@@ -9,7 +9,6 @@ import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import {snackbarservice} from 'src/app/services/snackbar.service';
-import { tabletsoundaddress } from 'src/app/audio/audio.data';
 
 @Component({
   selector: 'g[app-scrollview]',
@@ -34,7 +33,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private highlighter: mousehighlighter
 
-  private scrapesoundgenerator = new generatedraggableaudio(tabletsoundaddress)
+  private scrapesoundgenerator = new generatedraggableaudio(scrapesoundpath)
   private touches: touchevents
 
   constructor(private mouseservice: mouseservice) { 
