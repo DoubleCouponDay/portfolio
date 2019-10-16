@@ -11,3 +11,15 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+if(ismobile() === true) {
+  let newstyle = document.createElement('style')
+  document.head.appendChild(newstyle)
+  let stylesheet = <CSSStyleSheet>newstyle.sheet
+
+  stylesheet.insertRule(`
+    html, body {
+      overflow-y: auto;
+    }
+  `)  
+}
