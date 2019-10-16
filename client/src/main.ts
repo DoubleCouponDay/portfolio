@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { disabletouchevents } from './app/utility/utilities';
+import { ismobile } from './app/utility/utilities';
 
 if (environment.production) {
   enableProdMode();
@@ -11,3 +11,16 @@ if (environment.production) {
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err));
+
+if(ismobile() === true) {
+  let newstyle = document.createElement('style')
+  document.head.appendChild(newstyle)
+  let stylesheet = <CSSStyleSheet>newstyle.sheet
+
+  stylesheet.insertRule(`
+    html, body {
+      overflow-x: visible;
+      overflow-y: scroll;
+    }
+  `)  
+}

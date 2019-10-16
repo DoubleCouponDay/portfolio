@@ -63,7 +63,6 @@ export class touchevents implements OnDestroy {
                 }                
                 this.currentY = touch.clientY
                 event.preventDefault()
-                event.stopPropagation()
                 break
             
             case touchendname:

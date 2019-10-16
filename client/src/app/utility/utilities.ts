@@ -9,12 +9,3 @@ export function ismobile() {
     let matcher = new RegExp(/(iPhone|iPod|iPad|Android|webOS|BlackBerry|IEMobile|Opera Mini)/i)
     return matcher.test(navigator.userAgent)
 }
-
-export function disabletouchevents() {
-    let preventdefault = (event: TouchEvent) => {
-        event.preventDefault()
-    }
-    document.addEventListener(touchstartname, preventdefault)
-    document.addEventListener(touchmovename, preventdefault)
-    document.addEventListener(touchendname, preventdefault)
-}
