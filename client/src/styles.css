@@ -2,8 +2,10 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 :root {
-    --window-height: 758px;    
-    --window-width: 1349px;
+    --window-height: 768px;    
+    --window-width: 1366px;
+    --message-left: calc(50% - 40px);
+    --message-bot: 20%;
 }
 
 body {

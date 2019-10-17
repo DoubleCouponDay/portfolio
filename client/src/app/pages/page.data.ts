@@ -1,6 +1,7 @@
 import { applytransformtoeachnode } from '../elementtransformer';
 import { translatename, pixelunit } from '../animations/styleconstants';
 import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { elementrefargs } from '../utility/utility.data';
 
 export const firstpagenumber = 1
 export const websitespagenumber = 2
@@ -13,7 +14,7 @@ export const contentidentifier = 'content'
 export abstract class pagecomponent implements AfterViewInit  {
     private currentpageposition: number = 0
 
-    @ViewChild(contentidentifier, {static: true})
+    @ViewChild(contentidentifier, elementrefargs)
     content: ElementRef
 
     private castcontent: SVGElement

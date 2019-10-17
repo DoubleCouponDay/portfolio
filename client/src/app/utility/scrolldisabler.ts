@@ -16,7 +16,7 @@ class _scrolldisabler {
     }
 
     private onscrolling = (scroll: Event) => {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0)
         scroll.preventDefault()
         scroll.stopImmediatePropagation()
     }

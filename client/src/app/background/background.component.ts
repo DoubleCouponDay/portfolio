@@ -1,30 +1,23 @@
-import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit, AfterViewChecked } from '@angular/core';
 import { environment } from '../../environments/environment'
 import { scrolldisabler } from '../utility/scrolldisabler';
+import { LoadingService, loadstate } from '../services/loading.service';
 
 @Component({
   selector: 'app-background',
   templateUrl: './background.component.html',
   styleUrls: ['./background.component.css']
 })
-export class backgroundcomponent implements OnInit, AfterViewInit {
+export class backgroundcomponent implements OnInit {
 
-  @Output()
-  public backgroundloaded: EventEmitter<number> = new EventEmitter()
-
-  constructor() { 
+  constructor(private load: LoadingService) { 
   }
 
-  ngOnInit() {
-
-  }
-
-  ngAfterViewInit(): void {
-    let time = environment.production ? 3000 : 0
+  ngOnInit(): void {
+    let time = 3000
           
     setTimeout(() => {
-      this.backgroundloaded.emit()
-      scrolldisabler.togglescrolling(true)
+      this.load.emitloadedevent(loadstate.waitingforpress)      
     }, time)
   }  
 }

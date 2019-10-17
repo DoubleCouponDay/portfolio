@@ -18,8 +18,9 @@ import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import { MatSnackBar } from '@angular/material';
 import {snackbarservice} from 'src/app/services/snackbar.service';
-import { fadeout, togglefade } from 'src/app/animations/fadeout';
+import { fadeout, togglefade } from 'src/app/animations/fade';
 import { gratingsoundaddress } from 'src/app/audio/audio.data';
+import { elementrefargs } from 'src/app/utility/utility.data';
 
 const shadowcheckinterval = smoothtime / 5 
 
@@ -27,13 +28,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
     box: ElementRef
 
-    @ViewChild(boxgroupname, {static: true}) 
+    @ViewChild(boxgroupname, elementrefargs) 
     boxgroup: ElementRef
 
-    @ViewChild(topsidename, {static: true})
+    @ViewChild(topsidename, elementrefargs)
     boxtopside: ElementRef
 
-    @ViewChild(`${boxname}${wordname}`, {static: true})
+    @ViewChild(`${boxname}${wordname}`, elementrefargs)
     boxword: ElementRef
     
     private castbox: SVGElement 

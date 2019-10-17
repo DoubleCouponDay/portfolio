@@ -1,7 +1,9 @@
-import { Component, Output, OnInit, AfterContentChecked } from '@angular/core';
-import { fadeout } from './animations/fadeout';
+import { Component, Output, OnInit, AfterContentChecked, OnDestroy } from '@angular/core';
+import { fadeout } from './animations/fade'
 import { gratingsoundaddress, tabletsoundaddress, drawbridgesoundaddress } from './audio/audio.data';
 import { scrolldisabler } from './utility/scrolldisabler';
+import { loadstate, LoadingService } from './services/loading.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +11,7 @@ import { scrolldisabler } from './utility/scrolldisabler';
   styleUrls: ['./app.component.css'],
   animations: [fadeout]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'portfolio';
 
   @Output()
@@ -19,8 +21,11 @@ export class AppComponent implements OnInit {
   private sound2: HTMLAudioElement
   private sound3: HTMLAudioElement
 
-  constructor() {
+  private sub: Subscription
+
+  constructor(private load: LoadingService) {
     scrolldisabler.togglescrolling(false)
+    this.sub = load.subscribeloadedevent(this.onbackgroundloaded)
   }
 
   ngOnInit(): void {
@@ -30,9 +35,12 @@ export class AppComponent implements OnInit {
     })
   }
 
-  public onbackgroundloaded() {
-      this.loadingcomplete = true
-      this.cachesounds()
+  public onbackgroundloaded = (state: loadstate) => {
+    if(state !== loadstate.done) {
+      return
+    }
+    this.loadingcomplete = true
+    this.cachesounds()
   }
 
   private cachesounds() {
@@ -54,5 +62,9 @@ export class AppComponent implements OnInit {
     this.sound3.onloadend = () => {
       this.sound3 = null
     }
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe()
   }
 }

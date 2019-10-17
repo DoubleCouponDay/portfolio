@@ -6,6 +6,7 @@ import { rotatetablet90, anglename, flipkick, normalkick, curvename } from 'src/
 import { transformelement } from 'src/app/elementtransformer';
 import { PagingService } from 'src/app/services/paging.service';
 import { rotationtime, rotatetablet90withkick, reset360 } from 'src/app/animations/rotatetablet';
+import { elementrefargs } from 'src/app/utility/utility.data';
 
 @Component({
   selector: 'g[app-tablet]',
@@ -35,7 +36,7 @@ export class TabletComponent implements OnInit {
     })
   }
 
-  @ViewChild(tabletname, {static: true})
+  @ViewChild(tabletname, elementrefargs)
   private tabletelement: ElementRef
 
   private castelement: SVGElement

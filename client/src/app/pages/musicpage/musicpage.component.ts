@@ -1,12 +1,13 @@
-import { Component,  OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import {  pagecomponent, lastpagenumber, page } from '../page.data';
 import {  inputopacityname } from 'src/app/animations/styleconstants';
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
-import { togglefade } from 'src/app/animations/fadeout';
+import { togglefade } from 'src/app/animations/fade';
 import { resetmouse } from 'src/app/animations/mousechanger';
 import { contentidentifier } from '../page.data'
+import { elementrefargs } from 'src/app/utility/utility.data';
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -15,7 +16,7 @@ import { contentidentifier } from '../page.data'
 })
 export class MusicpageComponent extends pagecomponent implements AfterViewInit, OnDestroy, page {
 
-  @ViewChild(contentidentifier, {static: true})
+  @ViewChild(contentidentifier, elementrefargs)
   content: ElementRef
 
   private castcontent2: SVGElement
