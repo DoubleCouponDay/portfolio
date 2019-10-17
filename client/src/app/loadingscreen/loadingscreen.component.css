@@ -2,9 +2,9 @@
     font-size: 20px;
     font-family: monospace;
     position: absolute;
-    bottom: var(--message-bot);
-    text-align: left;
-    left: calc(49% - 40px);
+    bottom: 20%;
+    text-align: center;
+    left: var(--message-left);
 }
 
 .bouncing-ball {
@@ -20,7 +20,7 @@
 
 .button {
     position: absolute;
-    left: calc(48% - 40px);
+    left: var(--message-left);
     bottom: 22%;
 }
 

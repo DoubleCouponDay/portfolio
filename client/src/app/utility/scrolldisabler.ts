@@ -3,6 +3,7 @@ import { passiveeventargs } from './utilities';
 const scrollname = 'scroll'
 
 class _scrolldisabler {
+
     public togglescrolling(shouldscroll: boolean) {
         switch(shouldscroll) {
             case false:
@@ -16,7 +17,7 @@ class _scrolldisabler {
     }
 
     private onscrolling = (scroll: Event) => {
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 100)
         scroll.preventDefault()
         scroll.stopImmediatePropagation()
     }
