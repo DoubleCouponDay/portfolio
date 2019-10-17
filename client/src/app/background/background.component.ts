@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit } from '@angular/core';
 import { environment } from '../../environments/environment'
+import { scrolldisabler } from '../utility/scrolldisabler';
 
 @Component({
   selector: 'app-background',
@@ -23,6 +24,7 @@ export class backgroundcomponent implements OnInit, AfterViewInit {
           
     setTimeout(() => {
       this.backgroundloaded.emit()
+      scrolldisabler.togglescrolling(true)
     }, time)
   }  
 }

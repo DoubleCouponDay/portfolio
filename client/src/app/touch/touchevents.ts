@@ -1,10 +1,8 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
 import { OnDestroy } from '@angular/core';
 import {snackbarservice} from '../services/snackbar.service';
+import { passiveeventargs } from '../utility/utilities';
 
-const listenoptions: AddEventListenerOptions = {
-    passive: false //prevents chrome from ignoring scroll disables    
-}
 
 export class touchevents implements OnDestroy {
     private elements: SVGElement[]
@@ -21,9 +19,9 @@ export class touchevents implements OnDestroy {
         this.elements = interactables
 
         interactables.forEach((item) => {
-            item.addEventListener(touchstartname, this.ontouchoverride, listenoptions)
-            item.addEventListener(touchmovename, this.onmoveoverride, listenoptions)
-            item.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
+            item.addEventListener(touchstartname, this.ontouchoverride, passiveeventargs)
+            item.addEventListener(touchmovename, this.onmoveoverride, passiveeventargs)
+            item.addEventListener(touchendname, this.onreleaseoverride, passiveeventargs)
         })
     }
 
@@ -47,8 +45,8 @@ export class touchevents implements OnDestroy {
             case touchstartname:
                 this.buttonheld = true
                 convertedtype = mousedownname      
-                document.addEventListener(touchmovename, this.onmoveoverride, listenoptions) //because a drag action may leave the boundaries of the element
-                document.addEventListener(touchendname, this.onreleaseoverride, listenoptions)
+                document.addEventListener(touchmovename, this.onmoveoverride, passiveeventargs) //because a drag action may leave the boundaries of the element
+                document.addEventListener(touchendname, this.onreleaseoverride, passiveeventargs)
                 this.currentY = touch.clientY
                 break
 
@@ -68,8 +66,8 @@ export class touchevents implements OnDestroy {
             case touchendname:
                 this.buttonheld = false
                 convertedtype = mouseupname                
-                document.removeEventListener(touchmovename, this.onmoveoverride, listenoptions)
-                document.removeEventListener(touchendname, this.onreleaseoverride, listenoptions)
+                document.removeEventListener(touchmovename, this.onmoveoverride, passiveeventargs)
+                document.removeEventListener(touchendname, this.onreleaseoverride, passiveeventargs)
                 break
         }
 

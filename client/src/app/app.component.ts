@@ -1,6 +1,7 @@
 import { Component, Output, OnInit, AfterContentChecked } from '@angular/core';
 import { fadeout } from './animations/fadeout';
 import { gratingsoundaddress, tabletsoundaddress, drawbridgesoundaddress } from './audio/audio.data';
+import { scrolldisabler } from './utility/scrolldisabler';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,8 @@ export class AppComponent implements OnInit {
   private sound2: HTMLAudioElement
   private sound3: HTMLAudioElement
 
-  constructor()
-  {
-
+  constructor() {
+    scrolldisabler.togglescrolling(false)
   }
 
   ngOnInit(): void {
