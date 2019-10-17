@@ -1,5 +1,5 @@
 .content-page {
-    transform: translate(1330px, 700px);
+    transform: translate(1330px, 670px);
     width: 904px;
     clip-path: url('#overflow-container');
 }
