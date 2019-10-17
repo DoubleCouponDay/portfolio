@@ -25,7 +25,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   private animator: AnimationFactory
 
-  contentlength = 0
+  contentlength = 10
 
   constructor(pagingservice: PagingService, builder: AnimationBuilder) {
     super()

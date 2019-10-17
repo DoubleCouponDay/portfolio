@@ -1,5 +1,11 @@
 
 .music-player {
-    transform: scale(2) translate(960px, 25px);
-    height: 100px;    
+    height: 100%; 
+    width: 100%;
+}
+
+.iframe-container {
+    width: 770px;
+    height: 100px;
+    transform: scale(2) translate(-120px);
 }
