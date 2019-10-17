@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, OnDestr
 import { maximumtranslation, scrollmultiplier, mintranslationX, nomovementtimer, volumestate, mintranslationY, buttonidentifier, movementcalculation } from './scrollview.data';
 import { SubSink } from 'subsink';
 import { transformelement } from 'src/app/elementtransformer';
-import { translatename, pixelunit } from 'src/app/animations/styleconstants';
+import { translatename, pixelunit } from 'src/app/animations/animation.data';
 import { generatedraggableaudio } from 'src/app/audio/generatedraggableaudio';
 import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';

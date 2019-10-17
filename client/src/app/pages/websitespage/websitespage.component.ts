@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChildren } from '@angular/core';
 import { applytransformtoeachnode } from 'src/app/elementtransformer';
-import { pixelunit, translatename } from 'src/app/animations/styleconstants';
+import { pixelunit, translatename } from 'src/app/animations/animation.data';
 import { scrollitemclass, pagecomponent, page } from '../page.data';
 
 @Component({

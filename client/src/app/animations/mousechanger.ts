@@ -1,4 +1,4 @@
-import { dragicon, defaulticon } from './styleconstants';
+import { dragicon, defaulticon } from './animation.data';
 
 export function changetodragicon() {
     document.documentElement.style.cursor = dragicon

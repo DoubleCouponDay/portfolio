@@ -1,5 +1,5 @@
 import { animation, style, animate, sequence } from "@angular/animations";
-import { rotatename, degreesunit, inputtimename } from './styleconstants';
+import { rotatename, degreesunit, inputtimename } from './animation.data';
 
 export const rotationtime = 6800
 export const anglename = 'angle'

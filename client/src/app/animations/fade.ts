@@ -1,12 +1,10 @@
 import { AnimationTriggerMetadata, trigger, transition, animate, style, query, animation, AnimationQueryOptions } from '@angular/animations'
-import { inputopacityname, inputtimename } from './styleconstants';
+import { inputopacityname, inputtimename, loadingscreentime } from './animation.data';
 import { smoothtime } from './movetocursorvertically';
 
 const options: AnimationQueryOptions = {
     optional: true
 }
-
-const defaultfadetime = '800ms'
 
 export const fadeout = trigger(
     "fadeout", [
@@ -15,7 +13,7 @@ export const fadeout = trigger(
             query(
                 "*",
                 animate(
-                    defaultfadetime,
+                    loadingscreentime,
                     style({
                         opacity: 0
                     })
@@ -32,7 +30,7 @@ export const fadein = trigger(
             ':enter', [
                 style({ opacity: 0}),                            
                 animate(
-                    defaultfadetime,
+                    loadingscreentime,
                     style({
                         opacity: 1
                     })

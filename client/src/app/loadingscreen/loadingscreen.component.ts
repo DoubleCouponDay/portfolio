@@ -4,7 +4,9 @@ import { LoadingService, loadstate } from '../services/loading.service';
 import { Subscription } from 'rxjs';
 import { scrolldisabler } from '../utility/scrolldisabler';
 import { elementrefargs } from '../utility/utility.data';
-import { fadein, fadeout } from '../animations/fade';
+import { fadein, fadeout, togglefade } from '../animations/fade';
+import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactory } from '@angular/animations';
+import { inputopacityname } from '../animations/animation.data';
 
 @Component({
   selector: 'app-loadingscreen',
@@ -21,6 +23,8 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('circle', elementrefargs)
   circle: ElementRef
 
+
+
   @ViewChild('button', elementrefargs)
   button: ElementRef
 
@@ -29,8 +33,12 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
   private sub: Subscription
 
-  constructor(private loading: LoadingService) {
+  private fadefactory: AnimationFactory
+  private fadeanimator: AnimationPlayer
+
+  constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.sub = this.loading.subscribeloadedevent(this.onloaded)
+    this.fadefactory = animationfactory.build(togglefade)    
   }
 
   ngAfterViewInit() {
@@ -39,7 +47,7 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
       this.ontouch,
       this.ontouch,
       this.ballcontainer.nativeElement,
-      this.circle.nativeElement
+      this.circle.nativeElement,
     )
   }
 
@@ -58,6 +66,14 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
       return
     }
     this.shouldpress = true
+
+    let inputparams: any = {}
+    inputparams[inputopacityname] = 0
+
+    this.fadeanimator = this.fadefactory.create(this.circle.nativeElement, {
+      params: inputparams
+    })
+    this.fadeanimator.play()
   }
 
   ngOnDestroy() {

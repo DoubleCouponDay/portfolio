@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { scalename, translatename, pixelunit, inputtimename, inputopacityname } from 'src/app/animations/styleconstants';
+import { scalename, translatename, pixelunit, inputtimename, inputopacityname } from 'src/app/animations/animation.data';
 import { nooccurrence } from 'src/app/global.data';
 import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
 import { AnimationFactory, AnimationBuilder, AnimationPlayer } from '@angular/animations';

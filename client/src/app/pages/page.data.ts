@@ -1,5 +1,5 @@
 import { applytransformtoeachnode } from '../elementtransformer';
-import { translatename, pixelunit } from '../animations/styleconstants';
+import { translatename, pixelunit } from '../animations/animation.data';
 import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { elementrefargs } from '../utility/utility.data';
 

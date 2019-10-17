@@ -1,5 +1,5 @@
 import { animation, animate, state, trigger, style, query, AnimationStyleMetadata, useAnimation } from '@angular/animations';
-import { inputtimename } from './styleconstants';
+import { inputtimename } from './animation.data';
 
 export const inputtransformname = 'inputtransform'
 export const smoothtime = 500

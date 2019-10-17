@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
 import {  pagecomponent, lastpagenumber, page } from '../page.data';
-import {  inputopacityname } from 'src/app/animations/styleconstants';
+import {  inputopacityname } from 'src/app/animations/animation.data';
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';

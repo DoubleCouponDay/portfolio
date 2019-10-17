@@ -1,4 +1,4 @@
-import { colourhighlight } from './styleconstants';
+import { colourhighlight } from './animation.data';
 import { elementAt } from 'rxjs/operators';
 import { isnullorundefined } from '../utility/utilities';
 
