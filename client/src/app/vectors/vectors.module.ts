@@ -9,6 +9,7 @@ import { PortfolioblockComponent } from './blocks/portfolioblock/portfolioblock.
 import { WebsitesblockComponent } from './blocks/websitesblock/websitesblock.component';
 import { SoftwareblockComponent } from './blocks/softwareblock/softwareblock.component';
 import { MusicblockComponent } from './blocks/musicblock/musicblock.component';
+import { FlagComponent } from './flag/flag.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MusicblockComponent } from './blocks/musicblock/musicblock.component';
     PortfolioblockComponent,
     WebsitesblockComponent,
     SoftwareblockComponent,
-    MusicblockComponent
+    MusicblockComponent,
+    FlagComponent
   ],
   imports: [
     CommonModule,

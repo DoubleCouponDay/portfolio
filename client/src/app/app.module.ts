@@ -11,6 +11,7 @@ import { backgroundcomponent } from './background/background.component';
 import { VectorsModule } from './vectors/vectors.module';
 import { MatSnackBarModule } from '@angular/material';
 import {snackbarservice} from './services/snackbar.service';
+import { FlagComponent } from './background/flag/flag.component';
 
 @NgModule({
   declarations: [
