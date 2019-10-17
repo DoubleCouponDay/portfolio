@@ -23,8 +23,6 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('circle', elementrefargs)
   circle: ElementRef
 
-
-
   @ViewChild('button', elementrefargs)
   button: ElementRef
 
