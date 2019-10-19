@@ -1,4 +1,10 @@
-.flag-component {
+.flag-position {
+    position: absolute;
+    left: 80%; 
+
+}
+
+.flag-container {
     width:100%;
     height: 100%;
 }
@@ -31,11 +37,9 @@
     border-radius: 100%;
 }
 
-/* the test */
+/* the text */
 .flag-text h1 span {
-    padding: 0.5em 0.1em 0.5em 0;
-    background-color: #e74c3c;
+    padding: 1em 0.3em 1em 0;
+    background-color: #bf0c00;
     margin-left: -1px;
-    font-family: arial;
-    color: #e74c3c;
 }
