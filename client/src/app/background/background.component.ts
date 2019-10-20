@@ -20,7 +20,6 @@ export class backgroundcomponent implements OnInit {
   }  
 
   onimageloaded = (event: ProgressEvent) => {
-    console.log('today?')
     this.load.emitloadedevent(loadstate.waitingforpress)      
   }
 }

@@ -34,8 +34,10 @@
 }
 
 /* the text */
-.flag-text h1 span {
-    padding: 1em 0.8em 1em 0;
+.flag-text span {
+    padding: 2em 0.8em 1em 0;
     background-color: #bf0c00;
     margin-left: -2px;
+    position: absolute;
+    bottom: -70px;
 }

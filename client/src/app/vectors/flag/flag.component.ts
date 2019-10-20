@@ -1,53 +1,38 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectorRef, Output } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
+import { slideinfinite, topstatename, slidetime, botstatename } from 'src/app/animations/slide';
 
-const flagsize = 30
-const spanname = 'span'
-
+const flagsize = 18
+const leftpad = 20
 
 @Component({
   selector: 'g[app-flag]',
   templateUrl: './flag.component.html',
-  styleUrls: ['./flag.component.css']
+  styleUrls: ['./flag.component.css'],
+  animations: [slideinfinite]
 })
-/** credit due to: https://codepen.io/html5andblog/pen/yaYEAx */
 export class FlagComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('cloth', elementrefargs)
   cloth: ElementRef
+  private castcloth: HTMLElement
 
-  tickid: number
+  @Output()
+  initiateslide = botstatename
 
-  constructor() { }
+  private intervalid: number
+
+  constructor(private changer: ChangeDetectorRef) {
+    this.intervalid = window.setInterval(() => {
+      this.initiateslide = (this.initiateslide === topstatename) ? botstatename : topstatename      
+    }, slidetime)
+  }
 
   ngAfterViewInit() {
-    this.startanimation()
-  }
-
-  private startanimation() {    
-    this.tickid = setInterval(this.movecloth)
-  }
-
-  private movecloth = () => {
-    let castcloth = <HTMLElement>this.cloth.nativeElement
-    let clothparts = castcloth.getElementsByClassName(spanname)
-
-    for(let i = 0; i < clothparts.length; i++) {
-      let currentpart = clothparts[i]      
-      currentpart.textContent.trim()
-      currentpart.innerHTML = ''
-      this.addspans(currentpart)      
-    }
-  }
-
-  private addspans = (currentclothpart: Element) => {
-    for(let i = 0; i < flagsize; i++) {
-      let newspan = document.createElement(spanname)
-      currentclothpart.appendChild(newspan)
-    }  
+    this.castcloth = <HTMLElement>this.cloth.nativeElement                
   }
 
   ngOnDestroy() {
-    clearInterval(this.tickid)
+    window.clearInterval(this.intervalid)
   }
 }
