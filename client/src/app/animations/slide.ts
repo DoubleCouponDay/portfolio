@@ -1,12 +1,11 @@
 import { animation, animate, style, stagger, transition, state, trigger, query, AnimationAnimateMetadata } from '@angular/animations';
 import { spanname, defaultstate } from './animation.data';
 
-const wavedistance = 20
+const slidedistance = 15
 export const topstatename = 'translatedtop'
 export const botstatename = 'translatedbot'
 const topstatevalue = `translate(0px, 0px)`
-const botstatevalue = `translate(0px, ${wavedistance}px)`
-const delay = 200
+const botstatevalue = `translate(0px, ${slidedistance}px)`
 export const slidetime = 2000
 
 function gettransformstyle(statevalue: string): AnimationAnimateMetadata {
@@ -18,20 +17,22 @@ function gettransformstyle(statevalue: string): AnimationAnimateMetadata {
     )
 }
 
+export enum slidestate {
+    translatedbot = '1',
+    translatedtop = '2'
+}
+
+
 export const slideinfinite = trigger(
-    'slideinfinite',
-    [
-        state(topstatename, style({transform: topstatevalue})),
-        state(botstatename, style({transform: botstatevalue})),
-        transition(`${topstatename} => ${botstatename}`, 
-            query(spanname, [
-                stagger(delay, gettransformstyle(botstatevalue))
-            ])
+    'slideinfinite', [        
+        state(slidestate.translatedtop, style({transform: topstatevalue})),
+        state(slidestate.translatedbot, style({transform: botstatevalue})),
+        transition(`${slidestate.translatedtop} => ${slidestate.translatedbot}`,   
+            gettransformstyle(botstatevalue)           
         ),
-        transition(`${botstatename} => ${topstatename}`, 
-            query(spanname, [
-                stagger(delay, gettransformstyle(topstatevalue))
-            ])
-        ),
+        transition(`${slidestate.translatedbot} => ${slidestate.translatedtop}`, 
+            gettransformstyle(topstatevalue)
+        )
     ]
 )
+
