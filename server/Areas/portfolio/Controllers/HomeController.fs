@@ -1,4 +1,4 @@
-﻿namespace server.Controllers
+﻿module server.Controllers
 
 open System
 open System.Collections.Generic

@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Controllers
+﻿module WebApplication1.Controllers
 
 open System
 open Microsoft.AspNetCore.Mvc

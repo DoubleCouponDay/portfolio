@@ -67,3 +67,5 @@ typings/
 
 # next.js build output
 .next
+server/credentials.json
+server/.vs/portfolio/v16/.suo
