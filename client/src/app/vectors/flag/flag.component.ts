@@ -24,7 +24,6 @@ export class FlagComponent implements AfterViewInit, OnDestroy {
 
   constructor(changer: ChangeDetectorRef) {    
     this.segmentdata = new Array<flagsegment>()
-    // changer.detach()
 
     for(let i = 0; i < flaglength; i++) {
       let newitem: flagsegment = {
@@ -32,10 +31,7 @@ export class FlagComponent implements AfterViewInit, OnDestroy {
         intervalid: 0
       }
       this.segmentdata.push(newitem)
-      // changer.markForCheck()
     }
-    // changer.reattach()
-    // changer.detectChanges()
   }
 
   ngAfterViewInit() {

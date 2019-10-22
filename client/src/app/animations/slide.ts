@@ -6,7 +6,7 @@ export const topstatename = 'translatedtop'
 export const botstatename = 'translatedbot'
 const topstatevalue = `translate(0px, 0px)`
 const botstatevalue = `translate(0px, ${slidedistance}px)`
-export const slidetime = 2000
+export const slidetime = 1500
 
 function gettransformstyle(statevalue: string): AnimationAnimateMetadata {
     return animate(
@@ -21,7 +21,6 @@ export enum slidestate {
     translatedbot = '1',
     translatedtop = '2'
 }
-
 
 export const slideinfinite = trigger(
     'slideinfinite', [        
