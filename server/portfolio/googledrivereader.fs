@@ -32,7 +32,7 @@ type public drivereader() =
     static member val public get = new drivereader()
         with get
 
-    member private x.Scopes = [| DriveService.Scope.DriveFile |] 
+    member private x.Scopes = [| DriveService.Scope.DriveReadonly |] 
     member private x.ApplicationName = "googledrivereader"
 
     member public x.readrandomdeserttrack(): unit =
@@ -53,7 +53,7 @@ type public drivereader() =
         let verytrue = new Nullable<bool>(true)
         let listRequest = googledrive.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)
-        listRequest.Fields <- "files(id, name)"
+        listRequest.Fields <- "files(*)"
         listRequest.Spaces <- "drive"
         listRequest.Corpora <- "allDrives"
         listRequest.Q <- "name = '" + playlistname + "'"
@@ -65,12 +65,21 @@ type public drivereader() =
         let files = listRequest.Execute().Files
 
         if files.Count = 0 then
-            Console.WriteLine("query failed!")
-        
+            let message = "query failed!"
+            Console.WriteLine(message)
+            failwith message
+
         for file in files do
-            Console.Write(file.Name + " ")
-            Console.Write(file.ModifiedTime)
-            Console.WriteLine()
+            Console.Write(file.Name)
+            Console.Write("")
+            Console.Write("")
+            Console.Write("")
+        
+        
+
+    member private x.findplaylistfile() =
         ()
 
+    member private x.takerandomlinefromplaylist() =
+        ()
            

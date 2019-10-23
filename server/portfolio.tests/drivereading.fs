@@ -6,6 +6,5 @@ open portfolio.googledrivereader
 [<Fact>]
 let can_read_random_track() = 
     let test1 = drivereader.get.readrandomdeserttrack()
-    Assert.True(true)
     ()
 
