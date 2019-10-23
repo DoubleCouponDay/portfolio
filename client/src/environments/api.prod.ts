@@ -1,5 +1,5 @@
-import {portfolioapi} from './api'
+import { portfolioapi } from './environment.data';
 
 export const api: portfolioapi = {
-    getrandomtrack: "https://www.samueljenks.me/tracks/getrandomtrack"
+    getrandomtrack: "https://www.samueljenks.me/tracks/getrandomdeserttrack"
 }

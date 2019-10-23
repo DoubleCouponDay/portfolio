@@ -1,4 +1,4 @@
-import { animation, animate, style, stagger, transition, state, trigger, query, AnimationAnimateMetadata } from '@angular/animations';
+import { animation, animate, style, stagger, transition, state, trigger, query } from '@angular/animations';
 import { spanname, defaultstate } from './animation.data';
 
 const slidedistance = 15
@@ -8,7 +8,7 @@ const topstatevalue = `translate(0px, 0px)`
 const botstatevalue = `translate(0px, ${slidedistance}px)`
 export const slidetime = 1500
 
-function gettransformstyle(statevalue: string): AnimationAnimateMetadata {
+export function gettransformstyle(statevalue: string) {
     return animate(
         `${slidetime}ms`,
         style({
