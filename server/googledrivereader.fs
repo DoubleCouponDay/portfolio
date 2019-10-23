@@ -26,31 +26,28 @@ let secretspath = "secrets.json"
 
 type secrets = JsonProvider<secretspath>
 
+let reader = secrets.Load(secretspath)
+
 type public googledrivereader() =
     static member val public get = new googledrivereader()
         with get
 
-    static member private Scopes = [| DriveService.Scope.DriveFile |] 
-    static member private ApplicationName = "googledrivereader"
-    static member private lockobject = new Object()
+    member private x.Scopes = [| DriveService.Scope.DriveFile |] 
+    member private x.ApplicationName = "googledrivereader"
 
-    static member public readrandomdeserttrack() =
-        let privatekey: string = lock googledrivereader.lockobject (fun _ ->
-            use stream = new StreamReader(secretspath)
-            let reader = secrets.Load(secretspath)
-            reader.Driveprivatekey            
-        )
+    member public x.readrandomdeserttrack() =
+        let privatekey: string = reader.Driveprivatekey
         let certificate = new X509Certificate2(credentialspath, privatekey);
 
         let mutable initializer = new ServiceAccountCredential.Initializer(serviceaccountemail)        
-        initializer.Scopes <- googledrivereader.Scopes
+        initializer.Scopes <- x.Scopes
         initializer.User <- serviceaccountemail
         initializer <- initializer.FromCertificate(certificate)
         let credential = new ServiceAccountCredential(initializer)
 
         let baseservice = new BaseClientService.Initializer()
         baseservice.HttpClientInitializer <- credential
-        baseservice.ApplicationName <- googledrivereader.ApplicationName
+        baseservice.ApplicationName <- x.ApplicationName
         let googledrive = new DriveService(baseservice)
 
         let verytrue = new Nullable<bool>(true)

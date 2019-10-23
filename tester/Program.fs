@@ -5,6 +5,6 @@ open portfolio.googledrivereader
 
 [<EntryPoint>]
 let main argv =
-    let test1 = googledrivereader.readrandomdeserttrack()
+    let test1 = googledrivereader.get.readrandomdeserttrack()
     Console.ReadLine()
     0 
