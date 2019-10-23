@@ -168,6 +168,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       let fadein = this.fadefactory.create(chosenshadow, {
         params: fadeinparams
       })
+
       fadein.play()
 
       nativeboxparts.forEach((currentelement) => {
@@ -179,7 +180,8 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
           let fadeinparams: any = {}
           fadeinparams[inputopacityname] = '0'
-    
+          fadeinparams[inputtimename] = shadowfadetime
+
           let fadeout = this.fadefactory.create(currentshadow, {
             params: fadeinparams
           })
