@@ -11,6 +11,7 @@ import { backgroundcomponent } from './background/background.component';
 import { VectorsModule } from './vectors/vectors.module';
 import { MatSnackBarModule } from '@angular/material';
 import {snackbarservice} from './services/snackbar.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {snackbarservice} from './services/snackbar.service';
     BrowserAnimationsModule,
     PagesModule,
     VectorsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    HttpClientModule
   ],
   providers: [snackbarservice],
   bootstrap: [AppComponent]
