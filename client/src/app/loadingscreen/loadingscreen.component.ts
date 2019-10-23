@@ -6,7 +6,8 @@ import { scrolldisabler } from '../utility/scrolldisabler';
 import { elementrefargs } from '../utility/utility.data';
 import { fadein, fadeout, togglefade } from '../animations/fade';
 import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactory } from '@angular/animations';
-import { inputopacityname } from '../animations/animation.data';
+import { inputopacityname, inputtimename } from '../animations/animation.data';
+import { smoothtime } from '../animations/movetocursorvertically';
 
 @Component({
   selector: 'app-loadingscreen',
@@ -67,9 +68,10 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
     let inputparams: any = {}
     inputparams[inputopacityname] = 0
+    inputparams[inputtimename] = smoothtime
 
     this.fadeanimator = this.fadefactory.create(this.circle.nativeElement, {
-      params: inputparams
+      params: inputparams,
     })
     this.fadeanimator.play()
   }

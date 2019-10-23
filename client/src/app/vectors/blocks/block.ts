@@ -23,6 +23,7 @@ import { gratingsoundaddress } from 'src/app/audio/audio.data';
 import { elementrefargs } from 'src/app/utility/utility.data';
 
 const shadowcheckinterval = smoothtime / 5 
+const shadowfadetime = 300
 
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
@@ -162,6 +163,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
 
       let fadeinparams: any = {}
       fadeinparams[inputopacityname] = '1'
+      fadeinparams[inputtimename] = shadowfadetime
 
       let fadein = this.fadefactory.create(chosenshadow, {
         params: fadeinparams
@@ -173,12 +175,12 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
               currentelement.id === chosenshadow.id) { //assuming the shadows are in order
             return
           }
-          let currentsvg = <SVGElement>currentelement
+          let currentshadow = <SVGElement>currentelement
 
           let fadeinparams: any = {}
           fadeinparams[inputopacityname] = '0'
     
-          let fadeout = this.fadefactory.create(currentsvg, {
+          let fadeout = this.fadefactory.create(currentshadow, {
             params: fadeinparams
           })
           fadeout.play()

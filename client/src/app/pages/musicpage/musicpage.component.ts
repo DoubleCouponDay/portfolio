@@ -59,17 +59,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.pagealreadydisplaying = true
     this.castcontent2.style.opacity = '1'
   }
-
-  private animatecontentfade(state: number) {
-    let params: any = {}
-    params[inputopacityname] = state
-
-    let animation = this.animator.create(this.castcontent2, {
-      params: params
-    })
-
-    animation.play()
-  }
   
   ngOnDestroy() {
     this.sink.unsubscribe()

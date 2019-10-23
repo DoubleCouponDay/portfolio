@@ -40,10 +40,10 @@ export const fadein = trigger(
     ]
 )
 
-/** parameteres: inputopacity */
+/** parameters: inputopacity, inputtime */
 export const togglefade = animation(
     animate(
-        `${smoothtime}ms`,
+        `{{ ${inputtimename} }}ms`,
         style({
             opacity: `{{ ${inputopacityname} }}`
         })
