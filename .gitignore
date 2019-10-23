@@ -69,3 +69,6 @@ typings/
 .next
 server/credentials.json
 server/.vs/portfolio/v16/.suo
+server/portfolio-256800-2c7593f8c9a5.p12
+server/secrets.json
+tester/secrets.json
