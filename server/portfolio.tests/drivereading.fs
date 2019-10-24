@@ -10,5 +10,7 @@ type public drivereading(log: ITestOutputHelper) =
     [<Fact>]
     member x.can_read_random_track() =
         let test1 = drivereader.get.readrandomdeserttrack()
-        Assert.True(test1.Length <> 0L, "song length is not zero")
+        let (stream, filetype) = test1
+        Assert.True(stream.Length <> 0L, "song length is not zero")
+        Assert.True(String.IsNullOrEmpty(filetype) <> false, "filetype is not empty")
         ()

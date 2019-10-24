@@ -54,13 +54,9 @@ type Startup private () =
             app.UseHsts() |> ignore
 
         app.UseSpaStaticFiles()
+        app.UseCors()
 
         app.UseHttpsRedirection() |> ignore
-        app.UseMvc(fun routes ->
-            routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}")
-            |> ignore
-            ()
-
-        ) |> ignore     
+        app.UseMvc() |> ignore     
 
     member val Configuration : IConfiguration = null with get, set

@@ -1,7 +1,7 @@
-﻿module portfolio.controllers.constants
+﻿module portfolio.data
 
 [<Literal>]
-let public api = "api/"
+let public defaultapiroute = "api/[controller]/[action]"
 
 [<Literal>]
 let public jsoncontentmime = "application/json"

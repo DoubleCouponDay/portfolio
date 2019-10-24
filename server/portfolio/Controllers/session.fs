@@ -9,8 +9,9 @@ open portfolio.models.session
 open portfolio.controllers.constants
 open System.Collections.Generic
 open Newtonsoft.Json
+open portfolio.data
 
-[<Route(api + "session")>]
+[<Route(defaultapiroute)>]
 [<ApiController>]
 type sessioncontroller() =
     inherit ControllerBase()

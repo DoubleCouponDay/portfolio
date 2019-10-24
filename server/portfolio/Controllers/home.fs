@@ -15,11 +15,11 @@ type HomeController () =
     [<HttpGet>]
     member this.Index (): HttpResponseMessage =
         let output = new HttpResponseMessage(HttpStatusCode.OK)
-        output.Content = (new StringContent("server") :> HttpContent)
+        output.Content <- (new StringContent("server") :> HttpContent)
         output
 
     [<Route("error")>]        
     member this.Error () =
         let output = new HttpResponseMessage(HttpStatusCode.OK)
-        output.Content = (new StringContent("something went wrong!") :> HttpContent)
+        output.Content <- (new StringContent("something went wrong!") :> HttpContent)
         output
