@@ -1,4 +1,4 @@
-﻿module server.Controllers
+﻿namespace server.portfolio.Controllers
 
 open System
 open System.Collections.Generic

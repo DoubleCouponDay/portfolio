@@ -12,6 +12,7 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.SpaServices.AngularCli
 open Microsoft.AspNetCore.Cors.Infrastructure
+open portfolio.data
 
 type Startup private () =
     [<Literal>]

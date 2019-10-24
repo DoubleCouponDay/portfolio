@@ -21,14 +21,16 @@
     </None>
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
+    <Compile Include="googledrivereader.fs" />
+    <Compile Include="Areas\portfolio\portfolio.data.fs" />
     <Folder Include="Areas\portfolio\Models\" />
     <Compile Include="Areas\dragontrack\Models\session.fs" />
     <Compile Include="Areas\dragontrack\Controllers\audio\stream.fs" />
     <Compile Include="Areas\dragontrack\Controllers\audio\upload.fs" />
     <Compile Include="Areas\dragontrack\Controllers\constants.fs" />
     <Compile Include="Areas\dragontrack\Controllers\session.fs" />
+    <Compile Include="Areas\portfolio\Controllers\TracksController.fs" />
     <Compile Include="Areas\portfolio\Controllers\HomeController.fs" />
-    <Compile Include="googledrivereader.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

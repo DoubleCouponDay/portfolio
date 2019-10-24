@@ -31,6 +31,9 @@ let secretspath = "secrets.json"
 [<Literal>]
 let backslash = @"\"
 
+[<Literal>]
+let myfields = "files(*)"
+
 type secrets = JsonProvider<secretspath>
 
 let reader = secrets.Load(secretspath)
@@ -67,14 +70,15 @@ type public drivereader private() =
 
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): MemoryStream =    
+    member public x.readrandomdeserttrack(): (MemoryStream * string) =    
         if x.playlist = null then
             x.setplaylist()
 
         let chosenindex = x.rng.Next(x.playlist.Length)
         let chosenfilename = x.playlist.[chosenindex]
         let chosenfile = x.requestfilebyname(chosenfilename)
-        x.requestfilebyID(chosenfile.Id)
+        let stream = x.requestfilebyID(chosenfile.Id)
+        (stream, chosenfile.MimeType)
 
     member private x.setplaylist(): unit =
         let playlistfile = x.requestfilebyname(playlistname)
@@ -85,7 +89,7 @@ type public drivereader private() =
         let verytrue = new Nullable<bool>(true)
         let listRequest = x.service.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)
-        listRequest.Fields <- "files(id, name)"
+        listRequest.Fields <- myfields
         listRequest.Spaces <- "drive"
         listRequest.Corpora <- "allDrives"
         listRequest.Q <- "name = '" + filename + "'"
@@ -105,6 +109,7 @@ type public drivereader private() =
 
     member private x.requestfilebyID(id: string): MemoryStream = 
         let request = x.service.Files.Get(id)
+        request.Fields <- myfields
         let mutable output = new MemoryStream()
         let result = request.DownloadWithStatus(output)
 
