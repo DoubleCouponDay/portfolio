@@ -14,6 +14,7 @@ open portfolio.googleresponses
 open portfolio.globalhttpport
 open System.Linq
 open System.Collections.Generic
+open System.Text
 
 [<Literal>]
 let credentialspath = @"portfolio-256800-2c7593f8c9a5.p12"
@@ -66,25 +67,25 @@ type public drivereader private() =
 
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): Data.File =    
+    member public x.readrandomdeserttrack(): MemoryStream =    
         if x.playlist = null then
             x.setplaylist()
 
         let chosenindex = x.rng.Next(x.playlist.Length)
         let chosenfilename = x.playlist.[chosenindex]
-        x.requestfilebyname(chosenfilename)
+        let chosenfile = x.requestfilebyname(chosenfilename)
+        x.requestfilebyID(chosenfile.Id)
 
     member private x.setplaylist(): unit =
         let playlistfile = x.requestfilebyname(playlistname)
-        x.playlist = x.getplaylistlines(playlistfile)
-        |> ignore
+        x.playlist <- x.getplaylistlines(playlistfile)
         ()
         
     member private x.requestfilebyname(filename: string): Data.File =
         let verytrue = new Nullable<bool>(true)
         let listRequest = x.service.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)
-        listRequest.Fields <- "files(*)"
+        listRequest.Fields <- "files(id, name)"
         listRequest.Spaces <- "drive"
         listRequest.Corpora <- "allDrives"
         listRequest.Q <- "name = '" + filename + "'"
@@ -102,17 +103,30 @@ type public drivereader private() =
 
         files.Item(0)
 
+    member private x.requestfilebyID(id: string): MemoryStream = 
+        let request = x.service.Files.Get(id)
+        let mutable output = new MemoryStream()
+        let result = request.DownloadWithStatus(output)
+
+        if result.Exception <> null then
+            raise result.Exception
+
+        output
+
     member private x.getplaylistlines(playlist: Data.File): string[] =
-        let downloadlink = playlist.WebContentLink
-        use response = globalhttpport.get.port.GetAsync(downloadlink).Result        
-        use reader = new StreamReader(response.Content.ReadAsStreamAsync().Result)
-        let entire = reader.ReadToEnd()
-        entire.Split(Environment.NewLine)
-            .Select(fun currentline -> 
-                currentline.Split(backslash)
-                    .Last()
-            )
-            .ToArray()
+        let download = x.requestfilebyID(playlist.Id)
+        let entire = Encoding.ASCII.GetString(download.ToArray())
+        download.Dispose()
+
+        let output = 
+            entire.Split(Environment.NewLine)
+                .Select(fun currentline -> 
+                    currentline.Split(backslash)
+                        .Last()
+                )
+                .ToArray()
+
+        output
 
 
         
