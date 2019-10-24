@@ -1,5 +1,7 @@
 import { portfolioapi } from './environment.data';
 
+export const baseroute = ""
+
 export const api: portfolioapi = {
-    getrandomtrack: "https://www.samueljenks.me/tracks/getrandomdeserttrack"
+    getrandomtrack: `${baseroute}/tracks/getrandomdeserttrack`
 }

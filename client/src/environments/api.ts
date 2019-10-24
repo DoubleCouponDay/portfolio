@@ -1,5 +1,8 @@
-import { portfolioapi } from './environment.data';
+import { portfolioapi, randomdeserttrackroute } from './environment.data';
+
+export const baseroute = "localhost:4200"
 
 export const api: portfolioapi = {
-    getrandomtrack: "localhost:4200/tracks/getrandomdeserttrack"
+    getrandomtrack: `${baseroute}/${randomdeserttrackroute}`
 }
+
