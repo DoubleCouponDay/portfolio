@@ -10,7 +10,7 @@ export class MusicService {
 
   constructor(private http: HttpClient) { }
 
-  getrandomdeserttrack(): Observable<string> {
-    return this.http.get<string>(api.getrandomtrack)
+  getrandomdeserttrack(): Observable<any> {
+    return this.http.get<any>(api.getrandomtrack)
   }
 }

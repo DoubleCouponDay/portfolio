@@ -73,3 +73,5 @@ server/portfolio-256800-2c7593f8c9a5.p12
 server/secrets.json
 tester/secrets.json
 portfolio.tests/secrets.json
+server/.vs/portfolio/DesignTimeBuild/.dtbcache
+server/.vs/portfolio/v16/.suo
