@@ -3,13 +3,15 @@
     font-family: monospace;
     position: absolute;
     bottom: 20%;
-    text-align: center;
+    justify-content: right;
     left: var(--message-left);
 }
 
 .bouncing-ball {
-    width: 100px;
-    height: 100px;
+    width: 300px;
+    left: 37%;
+    position: absolute;
+    top: 40%;
 }
 
 .ball-container {
