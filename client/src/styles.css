@@ -4,7 +4,7 @@
 :root {
     --window-height: 768px;    
     --window-width: 1366px;
-    --message-left: calc(37% + 100px);
+    --message-left: calc(48% - 50px);
 }
 
 body {

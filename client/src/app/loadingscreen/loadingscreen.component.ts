@@ -61,8 +61,6 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   }
 
   onloaded = (state: loadstate) => {
-    return
-    
     if(state !== loadstate.waitingforpress) {
       return
     }
