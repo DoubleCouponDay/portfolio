@@ -1,9 +1,12 @@
+:root {
+    
+}
+
 .loading-message {
     font-size: 20px;
     font-family: monospace;
     position: absolute;
     bottom: 20%;
-    justify-content: right;
     left: var(--message-left);
 }
 
@@ -18,6 +21,7 @@
     width: 100%;
     height: 100%;
     background-color: white;
+    position: relative;
 }
 
 .button {
@@ -28,4 +32,30 @@
 
 .button-container {
     width: 100%;
+    position: relative;
+}
+
+@media screen and (max-width: 1000px) {
+    .bouncing-ball {
+        width: 35%;
+        left: 32%;
+    }    
+
+    .loading-message {
+        left: var(--onethousand-left);
+    }
+
+    .button-container {
+        left: var(--onethousand-left);
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .loading-message {
+        left: var(--sevensixeight-left);
+    }
+
+    .button-container {
+        left: var(--sevensixeight-left);
+    }
 }

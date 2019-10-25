@@ -4,7 +4,9 @@
 :root {
     --window-height: 768px;    
     --window-width: 1366px;
-    --message-left: calc(37% + 100px);
+    --message-left: calc(37% + 100px);    
+    --sevensixeight-left: calc(32%  + 30px);
+    --onethousand-left: 45%;
 }
 
 body {
@@ -23,5 +25,5 @@ body, html {
 
 @font-face {
     font-family: 'zcool';
-    src: url('./assets/zcool.ttf');
+    src: url('./assets/zcool.ttf');    
 }
