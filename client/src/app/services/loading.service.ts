@@ -9,6 +9,8 @@ export class LoadingService implements OnDestroy {
   private apploaded = new Subject<loadstate>()
   private onapploaded = this.apploaded.asObservable()
 
+  private state = loadstate.loading
+
   constructor() { }
 
   subscribeloadedevent(handler: (state: loadstate) => void) {
@@ -16,6 +18,10 @@ export class LoadingService implements OnDestroy {
   }
 
   emitloadedevent(state: loadstate) {
+    if(this.state === loadstate.done) {
+      return
+    }
+    this.state = state
     this.apploaded.next(state)
   }
 
