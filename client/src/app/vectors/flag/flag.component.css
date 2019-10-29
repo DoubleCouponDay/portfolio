@@ -9,11 +9,6 @@
     margin: 3.5em;
 }
 
-.flag-text::before, .flag-text::after {
-    content: "";
-    position: absolute;
-}
-
 /* the pole */
 .pole {
     width: 10px;
@@ -35,11 +30,14 @@
     position: absolute;
 }
 
-/* the text */
-.flag-text span {
+.flag-segment {
     padding: 2em 0.8em 1em 0;
     background-color: #bf0c00;
-    margin-left: -2px;
+    margin-left: 2px;
     position: absolute;
     bottom: -62px;
+}
+
+.cloth {
+    position: relative;
 }

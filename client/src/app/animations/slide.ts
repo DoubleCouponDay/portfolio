@@ -1,5 +1,4 @@
 import { animation, animate, style, stagger, transition, state, trigger, query } from '@angular/animations';
-import { spanname, defaultstate } from './animation.data';
 
 const slidedistance = 15
 export const topstatename = 'translatedtop'
