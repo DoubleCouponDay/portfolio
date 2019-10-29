@@ -14,8 +14,7 @@ export function transformelement(element: HTMLElement | SVGElement, transformkey
     }    
 }
 
-export function applytransformtoeachnode(nodes: NodeListOf<SVGElement | HTMLElement>, transformkey: string, transformvalue: string) {
-  
+export function applytransformtoeachnode(nodes: NodeListOf<SVGElement | HTMLElement>, transformkey: string, transformvalue: string) { 
   nodes.forEach((value, index) => {
     transformelement(value, transformkey, transformvalue)
   })

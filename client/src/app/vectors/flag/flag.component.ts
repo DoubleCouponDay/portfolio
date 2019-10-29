@@ -1,10 +1,10 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectorRef, Output } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
-import { slideinfinite, topstatename, slidetime, botstatename, slidestate } from 'src/app/animations/slide';
+import { slideinfinite, topstatename, swaptime, botstatename, slidestate } from 'src/app/animations/slide';
 import { flagsegment } from './flag.data';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 
-const delay = 300
+const delay = 600
 const flaglength = 18
 
 @Component({
@@ -36,32 +36,40 @@ export class FlagComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.castcloth = <HTMLElement>this.cloth.nativeElement                
-    let stagger = 0
+    let inputdelay = 0
 
     for(let i = 0; i < this.castcloth.children.length; i++) {
-      this.delaysegmentactivation(stagger, i)
-      stagger += delay
+      this.delaysegmentactivation(inputdelay, i)
+      inputdelay += delay
     }
   }
 
-  private delaysegmentactivation = (delay: number, segmentindex: number) => {
+  private delaysegmentactivation = (inputdelay: number, segmentindex: number) => {
     setTimeout(() => {
-      this.onsegmentdelayed(segmentindex)
-    }, delay)
+        this.onsegmentdelayed(segmentindex)
+    }, inputdelay)
   }
 
   private onsegmentdelayed = (segmentindex: number) => {    
     let currentsegment = this.segmentdata[segmentindex]
+    let countdown = swaptime
 
-    currentsegment.intervalid = window.setInterval(() => {      
-      currentsegment.expression = (currentsegment.expression === slidestate.translatedbot) ? slidestate.translatedtop : slidestate.translatedbot
-    }, slidetime)
+    let framecallback = (timestamp: number) => {    
+      countdown--
+
+      if(countdown <= 0) {
+        countdown = swaptime
+        currentsegment.expression = (currentsegment.expression === slidestate.translatedbot) ? slidestate.translatedtop : slidestate.translatedbot  
+      }      
+      currentsegment.intervalid = window.requestAnimationFrame(framecallback)      
+    }
+    currentsegment.intervalid = window.requestAnimationFrame(framecallback)    
   }
 
   ngOnDestroy() {
     for(let i = 0; i < this.segmentdata.length; i++) {
       let currentsegment = this.segmentdata[i]
-      window.clearInterval(currentsegment.intervalid)
+      window.cancelAnimationFrame(currentsegment.intervalid)
     }
   }
 }

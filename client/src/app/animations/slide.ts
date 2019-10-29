@@ -6,11 +6,12 @@ export const topstatename = 'translatedtop'
 export const botstatename = 'translatedbot'
 const topstatevalue = `translate(0px, 0px)`
 const botstatevalue = `translate(0px, ${slidedistance}px)`
-export const slidetime = 1500
+export const animatetime = 2000
+export const swaptime = 100
 
 export function gettransformstyle(statevalue: string) {
     return animate(
-        `${slidetime}ms`,
+        `${animatetime}ms`,
         style({
             transform: statevalue
         })

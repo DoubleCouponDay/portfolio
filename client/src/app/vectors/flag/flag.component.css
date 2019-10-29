@@ -15,22 +15,24 @@
 }
 
 /* the pole */
-.flag-text::before {
+.pole {
     width: 10px;
     height: 223px;
     top: -41px;
     left: -2px;
     background-color: #3c2f3d;
+    position: absolute;
 }
 
 /* the circle */
-.flag-text::after {
+.pole-top {
     width: 20px;
     height: 20px;
     top: -45px;
     left: -7px;
     background-color: #3c2f3d;
     border-radius: 100%;
+    position: absolute;
 }
 
 /* the text */
@@ -39,5 +41,5 @@
     background-color: #bf0c00;
     margin-left: -2px;
     position: absolute;
-    bottom: -70px;
+    bottom: -62px;
 }

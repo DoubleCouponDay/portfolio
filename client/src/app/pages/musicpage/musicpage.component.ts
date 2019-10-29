@@ -8,6 +8,7 @@ import { togglefade } from 'src/app/animations/fade';
 import { resetmouse } from 'src/app/animations/mousechanger';
 import { contentidentifier } from '../page.data'
 import { elementrefargs } from 'src/app/utility/utility.data';
+import { MusicService } from 'src/app/services/music.service';
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -24,17 +25,14 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
-  private animator: AnimationFactory
-
   contentlength = 10
 
-  constructor(pagingservice: PagingService, builder: AnimationBuilder) {
+  constructor(pagingservice: PagingService, stream: MusicService) {
     super()
     let sub = pagingservice.subscribepagechange(this.onpagechange)
     let sub2 = pagingservice.subscribepagecompletedmove(this.onpagechangecomplete)
     this.sink.add(sub)
     this.sink.add(sub2)
-    this.animator = builder.build(togglefade)
   }
 
   ngAfterViewInit() {
