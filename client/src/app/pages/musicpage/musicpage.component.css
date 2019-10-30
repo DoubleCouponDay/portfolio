@@ -8,4 +8,5 @@
     width: 770px;
     height: 100px;
     transform: scale(2) translate(-120px);
+    max-width: 100%;
 }
