@@ -15,8 +15,9 @@ type streamcontroller() =
 
     [<HttpGet>]
     member this.randomdeserttrack(): FileStreamResult =
-        let (tracksstream, trackstype) = drivereader.get.readrandomdeserttrack()
-        let output = new FileStreamResult(tracksstream, trackstype)
+        let track = drivereader.get.readrandomdeserttrack()
+        let output = new FileStreamResult(track.stream, track.filetype)
+        output.FileDownloadName <- track.filename
         output
 
 

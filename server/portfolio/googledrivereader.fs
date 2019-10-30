@@ -15,6 +15,7 @@ open portfolio.globalhttpport
 open System.Linq
 open System.Collections.Generic
 open System.Text
+open portfolio.models
 
 [<Literal>]
 let credentialspath = @"portfolio-256800-2c7593f8c9a5.p12"
@@ -70,7 +71,7 @@ type public drivereader private() =
 
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): (MemoryStream * string) =    
+    member public x.readrandomdeserttrack(): streamresponse =    
         if x.playlist = null then
             x.setplaylist()
 
@@ -78,7 +79,7 @@ type public drivereader private() =
         let chosenfilename = x.playlist.[chosenindex]
         let chosenfile = x.requestfilebyname(chosenfilename)
         let stream = x.requestfilebyID(chosenfile.Id)
-        (stream, chosenfile.MimeType)
+        new streamresponse(stream, chosenfilename, chosenfile.MimeType)
 
     member private x.setplaylist(): unit =
         let playlistfile = x.requestfilebyname(playlistname)

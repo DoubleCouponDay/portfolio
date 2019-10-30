@@ -23,6 +23,7 @@ type Startup private () =
         this.Configuration <- configuration
 
     member this.addcustomorigins (builder: CorsPolicyBuilder) = 
+        builder.AllowAnyOrigin() |> ignore
         ()        
 
     // This method gets called by the runtime. Use this method to add services to the container.

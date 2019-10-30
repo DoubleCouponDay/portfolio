@@ -1,4 +1,4 @@
-﻿module portfolio.models.session
+﻿namespace portfolio.models
 
 open System
 open System.IO

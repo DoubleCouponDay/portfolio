@@ -3,12 +3,13 @@
 open Google.Apis.Http
 open System.Threading.Tasks
 open System
+open System.Diagnostics
 
 type public unsuccessfulhandler() =
     interface IHttpUnsuccessfulResponseHandler with
         member x.HandleResponseAsync(args: HandleUnsuccessfulResponseArgs): Task<bool> =
             Task.Run(fun _ -> 
-                Console.WriteLine(args.Response.ReasonPhrase)
+                Debug.Assert(false, args.Response.ReasonPhrase)
                 false
             )
 
