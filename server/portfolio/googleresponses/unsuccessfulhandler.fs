@@ -9,7 +9,7 @@ type public unsuccessfulhandler() =
     interface IHttpUnsuccessfulResponseHandler with
         member x.HandleResponseAsync(args: HandleUnsuccessfulResponseArgs): Task<bool> =
             Task.Run(fun _ -> 
-                Debug.Assert(false, args.Response.ReasonPhrase)
+                failwith args.Response.ReasonPhrase
                 false
             )
 

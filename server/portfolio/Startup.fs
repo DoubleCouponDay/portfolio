@@ -22,10 +22,10 @@ type Startup private () =
         Startup() then
         this.Configuration <- configuration
 
-    member this.addcustomorigins (builder: CorsPolicyBuilder) = 
+    member private this.addcustomorigins (builder: CorsPolicyBuilder) = 
         builder.WithOrigins([|
-            "localhost:4200";
-            "localhost:9876";
+            "http://localhost:4200";
+            "http://localhost:9876";
             "dcdgoportfolio.z26.web.core.windows.net";
             "www.samueljenks.me";
             "moonmachinestorage.z26.web.core.windows.net";

@@ -8,7 +8,12 @@ import { api } from '../../environments/api'
 })
 export class MusicService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.getrandomdeserttrack()
+      .subscribe((data) => {
+        console.log(data)
+      })
+  }
 
   getrandomdeserttrack(): Observable<any> {
     return this.http.get<any>(api.getrandomtrack)

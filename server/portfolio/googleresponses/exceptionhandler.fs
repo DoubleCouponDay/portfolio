@@ -10,6 +10,6 @@ type exceptionhandler() =
     interface IHttpExceptionHandler with
         member x.HandleExceptionAsync (args: HandleExceptionArgs) : Task<bool> = 
             Task.Run(fun _ -> 
-                Debug.Assert(false, args.Exception.Message)
+                failwith args.Exception.Message
                 false
             )
