@@ -6,9 +6,9 @@ import {strictEqual, notStrictEqual} from 'assert'
 import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 
-const streamtimeout = 30000
+const streamtimeout = 60000
 
-describe('TestService', () => {
+describe('musicservice', () => {
     let service: MusicService
     let subs: SubSink
 

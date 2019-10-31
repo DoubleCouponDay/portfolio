@@ -23,7 +23,14 @@ type Startup private () =
         this.Configuration <- configuration
 
     member this.addcustomorigins (builder: CorsPolicyBuilder) = 
-        builder.AllowAnyOrigin() |> ignore
+        builder.WithOrigins([|
+            "localhost:4200";
+            "localhost:9876";
+            "dcdgoportfolio.z26.web.core.windows.net";
+            "www.samueljenks.me";
+            "moonmachinestorage.z26.web.core.windows.net";
+            "www.moonmachine.biz"
+        |]) |> ignore
         ()        
 
     // This method gets called by the runtime. Use this method to add services to the container.
