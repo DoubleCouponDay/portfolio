@@ -39,7 +39,7 @@ type Startup private () =
         services.AddCors(
             fun options ->
                 options.AddPolicy(
-                    "portfolio",
+                    corspolicyname,
                     this.addcustomorigins
                 )
                 ()
@@ -54,10 +54,11 @@ type Startup private () =
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts() |> ignore
 
-        app.UseSpaStaticFiles()
-        app.UseCors()
+        app.UseSpaStaticFiles()            
 
-        app.UseHttpsRedirection() |> ignore
-        app.UseMvc() |> ignore     
+        app.UseCors(corspolicyname)
+            .UseHttpsRedirection()
+            .UseMvc()
+        |> ignore
 
     member val Configuration : IConfiguration = null with get, set

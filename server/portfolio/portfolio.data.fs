@@ -8,3 +8,6 @@ let public jsoncontentmime = "application/json"
 
 [<Literal>]
 let public datakey = "data"
+
+[<Literal>]
+let public corspolicyname = "azure_storage_client_side"

@@ -5,7 +5,7 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.AspNetCore.Routing
 open System.Runtime.Caching
 open Microsoft.AspNetCore.Mvc.ViewEngines
-open portfolio.models.session
+open portfolio.models
 open portfolio.controllers.constants
 open System.Collections.Generic
 open Newtonsoft.Json

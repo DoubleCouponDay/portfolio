@@ -1,11 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick } from '@angular/core/testing';
 import { MusicService } from './music.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SubSink } from 'subsink';
+import {strictEqual, notStrictEqual} from 'assert'
+import { isnullorundefined } from '../utility/utilities';
+import { assertNotNull } from '@angular/compiler/src/output/output_ast';
+
+const streamtimeout = 30000
 
 describe('TestService', () => {
     let service: MusicService
     let subs: SubSink
+
+    let ontesterror = (context: any) => {
+        console.log(context)
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -18,27 +27,23 @@ describe('TestService', () => {
         subs = new SubSink()
     });
 
-    it('should be created', () => {
-    const service: MusicService = TestBed.get(MusicService)
-    expect(service).toBeTruthy()
-    });
+    it('should create a service', () => {
+        const service: MusicService = TestBed.get(MusicService)        
+        expect(service).toBeTruthy()
+    })
 
-    it('should stream music', () => {
-        let hasdata = false
+    it('should stream music', (done: DoneFn) => {
         let onrandomtrack = (data: any) => {
+            expect(data).toBeTruthy()
             console.log(data)
-            hasdata = true
+            done()
         }
 
         let sub1 = service.getrandomdeserttrack()
-        .subscribe(onrandomtrack)
-
-        let sub2 = sub1.add(() => {
-            expect(hasdata).toBeTruthy()
-        })
-        subs.add(sub1, sub2)
-                    
-    });
+            .subscribe(onrandomtrack, ontesterror)   
+        
+        subs.add(sub1)
+    }, streamtimeout)
 
     afterEach(() => {
         subs.unsubscribe()
