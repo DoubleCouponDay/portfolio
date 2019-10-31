@@ -7,6 +7,7 @@ open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
 open portfolio.data
 open portfolio.googledrivereader
+open Microsoft.Net.Http.Headers
 
 [<Route(defaultapiroute)>]
 [<ApiController>]
@@ -14,11 +15,11 @@ type streamcontroller() =
     inherit ControllerBase()
 
     [<HttpGet>]
-    member this.randomdeserttrack(): FileStreamResult =
+    member this.randomdeserttrack(): ActionResult =
         let track = drivereader.get.readrandomdeserttrack()
-        let output = new FileStreamResult(track.stream, track.filetype)
-        output.FileDownloadName <- track.filename
-        output
+        let output = new OkObjectResult(track.stream)
+        output.ContentTypes.Add(binarycontentmime)
+        output :> ActionResult
 
 
 

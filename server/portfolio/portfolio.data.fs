@@ -11,3 +11,6 @@ let public datakey = "data"
 
 [<Literal>]
 let public corspolicyname = "azure_storage_client_side"
+
+[<Literal>]
+let public binarycontentmime = "application/octet-stream"
