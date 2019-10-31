@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
 import { api } from '../../environments/api'
 
 @Injectable({
@@ -9,13 +9,14 @@ import { api } from '../../environments/api'
 export class MusicService {
 
   constructor(private http: HttpClient) {
-    this.getrandomdeserttrack()
-      .subscribe((data) => {
-        console.log(data)
-      })
+
   }
 
-  getrandomdeserttrack(): Observable<any> {
-    return this.http.get<any>(api.getrandomtrack)
+  getrandomdeserttrack(): Observable<HttpEvent<Blob>> {
+    let request = new HttpRequest<Blob>("GET", api.getrandomtrack, null, {
+      responseType: "blob",
+      reportProgress: true
+    })
+    return this.http.request<Blob>(request)
   }
 }

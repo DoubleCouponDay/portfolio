@@ -9,6 +9,8 @@ import { resetmouse } from 'src/app/animations/mousechanger';
 import { contentidentifier } from '../page.data'
 import { elementrefargs } from 'src/app/utility/utility.data';
 import { MusicService } from 'src/app/services/music.service';
+import { LoadingService, loadstate } from 'src/app/services/loading.service';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -27,12 +29,19 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   contentlength = 10
 
-  constructor(pagingservice: PagingService, stream: MusicService) {
+  private _audiocontext: AudioContext
+  private _mediastreamtrack: MediaStreamTrack
+  private _mediastream: MediaStream
+  private _mediastreamsource: MediaStreamAudioSourceNode
+
+  constructor(paging: PagingService, private streamer: MusicService, loading: LoadingService) {
     super()
-    let sub = pagingservice.subscribepagechange(this.onpagechange)
-    let sub2 = pagingservice.subscribepagecompletedmove(this.onpagechangecomplete)
+    let sub = paging.subscribepagechange(this.onpagechange)
+    let sub2 = paging.subscribepagecompletedmove(this.onpagechangecomplete)
+    let sub3 = loading.subscribeloadedevent(this.onapploaded)
     this.sink.add(sub)
     this.sink.add(sub2)
+    this.sink.add(sub3)
   }
 
   ngAfterViewInit() {
@@ -56,6 +65,19 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     }
     this.pagealreadydisplaying = true
     this.castcontent2.style.opacity = '1'
+  }
+
+  private onapploaded = (state: loadstate) => {
+    if(state !== loadstate.done) {
+      return
+    }
+    this.streamer.getrandomdeserttrack()
+      .subscribe((progress: HttpEvent<Blob>) => {
+          switch(progress.type) {
+            case HttpEventType.DownloadProgress:
+              progress.
+          }
+      })
   }
   
   ngOnDestroy() {

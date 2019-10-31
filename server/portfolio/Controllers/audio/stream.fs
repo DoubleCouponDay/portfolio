@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Mvc
 open portfolio.data
 open portfolio.googledrivereader
 open Microsoft.Net.Http.Headers
+open portfolio.models
 
 [<Route(defaultapiroute)>]
 [<ApiController>]
@@ -18,6 +19,7 @@ type streamcontroller() =
     member this.randomdeserttrack(): ActionResult =
         let track = drivereader.get.readrandomdeserttrack()
         let output = new OkObjectResult(track.stream)
+        output.ContentTypes.Clear()
         output.ContentTypes.Add(binarycontentmime)
         output :> ActionResult
 
