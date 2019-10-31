@@ -18,7 +18,7 @@ type streamcontroller() =
     [<HttpGet>]
     member this.randomdeserttrack(): ActionResult =
         let track = drivereader.get.readrandomdeserttrack()
-        let output = new OkObjectResult(track.stream)
+        let output = new OkObjectResult(track)
         output.ContentTypes.Clear()
         output.ContentTypes.Add(binarycontentmime)
         output :> ActionResult

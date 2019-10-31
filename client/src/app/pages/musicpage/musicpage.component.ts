@@ -11,6 +11,7 @@ import { elementrefargs } from 'src/app/utility/utility.data';
 import { MusicService } from 'src/app/services/music.service';
 import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { api } from 'src/environments/api';
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -42,6 +43,9 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.sink.add(sub)
     this.sink.add(sub2)
     this.sink.add(sub3)
+    this._audiocontext = new AudioContext()
+    this._mediastream = new MediaStream()
+    this._mediastreamsource = this._audiocontext.createMediaStreamSource(this._mediastream)
   }
 
   ngAfterViewInit() {
@@ -72,11 +76,12 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.streamer.getrandomdeserttrack()
-      .subscribe((progress: HttpEvent<Blob>) => {
-          switch(progress.type) {
-            case HttpEventType.DownloadProgress:
-              progress.
-          }
+      .subscribe((event: HttpEvent<Blob>) => {
+        switch(event.type) {
+          case HttpEventType.Response:
+            let streamaudio = new Audio(api.getrandomtrack)
+            this._audiocontext.createMediaElementSource(streamaudio)
+        }
       })
   }
   
