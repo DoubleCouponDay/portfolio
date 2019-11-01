@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpRequest, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent } from '@angular/common/http';
 import { api } from '../../environments/api'
+import { streamresponse } from '../audio/audio.data';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ export class MusicService {
 
   }
 
-  getrandomdeserttrack(): Observable<HttpEvent<Blob>> {
-    let request = new HttpRequest<Blob>("GET", api.getrandomtrack, null, {
-      responseType: "blob",
-      reportProgress: true
+  getrandomdeserttrack(): Observable<any> {
+    let request = new HttpRequest<ArrayBuffer>("GET", api.getrandomtrack, null, {
+      responseType: "arraybuffer",
+      reportProgress: false
     })
-    return this.http.request<Blob>(request)
+    return this.http.request<any>(request)
   }
 }

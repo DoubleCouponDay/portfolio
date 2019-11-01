@@ -9,6 +9,7 @@ open portfolio.data
 open portfolio.googledrivereader
 open Microsoft.Net.Http.Headers
 open portfolio.models
+open Newtonsoft.Json
 
 [<Route(defaultapiroute)>]
 [<ApiController>]
@@ -18,9 +19,8 @@ type streamcontroller() =
     [<HttpGet>]
     member this.randomdeserttrack(): ActionResult =
         let track = drivereader.get.readrandomdeserttrack()
-        let output = new OkObjectResult(track)
-        output.ContentTypes.Clear()
-        output.ContentTypes.Add(binarycontentmime)
+        let output = new OkObjectResult(track.stream)
+        output.ContentTypes.Add(track.filetype)
         output :> ActionResult
 
 
