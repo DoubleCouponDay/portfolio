@@ -9,6 +9,7 @@
     <PackageReference Include="FSharp.Data" Version="3.3.2" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.41.1.1734" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
     <PackageReference Include="System.IO" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Caching" Version="4.6.0" />

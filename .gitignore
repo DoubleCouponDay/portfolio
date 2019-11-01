@@ -5,6 +5,8 @@
 **/lib
 **/libs
 **/dist
+**/*.p12
+**/secrets.json
 
 # Logs
 logs
