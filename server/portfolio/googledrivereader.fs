@@ -18,7 +18,7 @@ open System.Text
 open portfolio.models
 
 [<Literal>]
-let credentialspath = @"portfolio-256800-2c7593f8c9a5.p12"
+let credentialspath = @"portfolio-ffdfea565994.p12"
 
 [<Literal>]
 let playlistname = "wilderness.m3u"
