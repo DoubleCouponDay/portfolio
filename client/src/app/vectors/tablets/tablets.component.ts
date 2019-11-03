@@ -32,6 +32,8 @@ export class TabletsComponent implements OnInit, OnDestroy {
   tablet4rotation: number
 
   private sink = new SubSink()
+
+  private gearssound: HTMLAudioElement
   
   constructor(private _pagingservice: PagingService) { 
     this.tablet1data = {
@@ -52,6 +54,9 @@ export class TabletsComponent implements OnInit, OnDestroy {
     this.applyfirstpagestate()
     let sub1 = _pagingservice.subscribepagechange(this.onpagechange)
     this.sink.add(sub1)
+
+    this.gearssound = new Audio(drawbridgesoundaddress)
+    this.gearssound.load()    
   }
 
   ngOnInit() {
@@ -129,7 +134,6 @@ export class TabletsComponent implements OnInit, OnDestroy {
   }
 
   private playgearsaudio() {
-    let gearssound = new Audio(drawbridgesoundaddress)
     gearssound.play()
   }
 

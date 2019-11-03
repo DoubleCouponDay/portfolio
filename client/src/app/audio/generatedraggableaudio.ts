@@ -15,6 +15,7 @@ export class generatedraggableaudio {
 
     constructor(private pathtoaudio: string) {
         this.scrollaudio = new Audio(pathtoaudio) 
+        this.scrollaudio.load()
     }
 
     playaudio() {   
