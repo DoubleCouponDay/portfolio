@@ -1,6 +1,7 @@
 
 <div class="ball-container" #ballcontainer>
-    <img src="assets/bouncingball.gif" class="bouncing-ball" #circle />
+    <img src="assets/bouncingball.gif" class="bouncing-ball" #circle
+        (load)="onanimationloaded($event)" />
 </div>
 
 <div *ngIf="shouldpress === true" class="button-container" @fadein>

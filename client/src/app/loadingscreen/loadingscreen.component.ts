@@ -18,14 +18,12 @@ import { smoothtime } from '../animations/movetocursorvertically';
 export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   private touches: touchevents
 
-  @ViewChild('ballcontainer', elementrefargs)
-  ballcontainer: ElementRef
+  @ViewChild('ballcontainer', elementrefargs) ballcontainer: ElementRef
 
-  @ViewChild('circle', elementrefargs)
-  circle: ElementRef
+  @ViewChild('circle', elementrefargs) circle: ElementRef
+  private nativecircle: HTMLElement
 
-  @ViewChild('button', elementrefargs)
-  button: ElementRef
+  @ViewChild('button', elementrefargs) button: ElementRef
 
   @Output()
   public shouldpress = false
@@ -41,6 +39,8 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.nativecircle = <HTMLElement>this.circle.nativeElement
+    this.nativecircle.style.opacity = "0"
     this.touches = new touchevents( //prevents panning past the loading screen
       this.ontouch,
       this.ontouch,
@@ -74,6 +74,10 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
       params: inputparams,
     })
     this.fadeanimator.play()
+  }
+
+  onanimationloaded = (input: Event) => {
+    this.nativecircle.style.opacity = "1"
   }
 
   ngOnDestroy() {
