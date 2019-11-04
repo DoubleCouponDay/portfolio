@@ -134,7 +134,7 @@ export class TabletsComponent implements OnInit, OnDestroy {
   }
 
   private playgearsaudio() {
-    gearssound.play()
+    this.gearssound.play()
   }
 
   ngOnDestroy() {

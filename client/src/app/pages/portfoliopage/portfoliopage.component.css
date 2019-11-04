@@ -1,12 +1,14 @@
 .content-page {
     transform: translate(1330px, 670px);
-    width: 904px;
+    width: 860px;
     clip-path: url('#overflow-container');
+    height: 1000px;
 }
 
 .small-image {
     width:300px;   
     user-select: all;
+    display: block;
 }
 
 .content-text {
@@ -15,6 +17,7 @@
     font-weight: 400;
     font-style: normal;
     fill: #888881;
+    color: #888881;
     stroke: none;    
     display: block;
     user-select: none;
@@ -33,4 +36,16 @@
     text-decoration: underline;
     font-size: 60px;
     fill: #888881;
+    color:  #888881;
+    font-family: 'zcool';
+    font-weight: 400;
+    font-style: normal;
+}
+
+.portfolio-page-content {
+    clip-path: none;
+}
+
+.portrait-image {
+    margin: auto;
 }
