@@ -14,8 +14,7 @@ export class generatedraggableaudio {
     private throttleinput = false
 
     constructor(private pathtoaudio: string) {
-        this.scrollaudio = new Audio(pathtoaudio) 
-        this.scrollaudio.load()
+        this.scrollaudio = new Audio(pathtoaudio)         
     }
 
     playaudio() {   

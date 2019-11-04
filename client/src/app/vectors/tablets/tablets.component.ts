@@ -56,7 +56,6 @@ export class TabletsComponent implements OnInit, OnDestroy {
     this.sink.add(sub1)
 
     this.gearssound = new Audio(drawbridgesoundaddress)
-    this.gearssound.load()    
   }
 
   ngOnInit() {

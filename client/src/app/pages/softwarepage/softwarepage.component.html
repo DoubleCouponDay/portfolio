@@ -1,5 +1,60 @@
 <svg>
-    <g class="content-page" #content>
+    <foreignObject class="content-page" #content>
+        <xhtml:div class="scroll-box">
+            <div class="scroll-item">
+                <a href="assets/ttsmod.jpg"
+                    target="_blank"
+                    rel="noreferrer noopener">
+
+                    <img src="assets/ttsmod.jpg" 
+                        class="small-image scroll-image" />
+                </a>  
+                
+                <p class="content-text">
+                    Text To Speech Mod
+                </p>
+
+                <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=641860452&searchtext=text+to+speech+mod"
+                    class="link scroll-link"
+                    target="_blank"
+                    rel="noreferrer noopener">
+                    <span class="link">Link</span>
+                </a>
+
+                <p class="content-text">
+                    It sounds like the CEO of space engineers (sort of). Written in C Sharp;
+                </p>
+            </div>
+
+            <div class="scroll-item">
+                    <a href="assets/wav2byte.png"
+                        target="_blank"
+                        rel="noreferrer noopener">
+    
+                        <img src="assets/wav2byte.png" 
+                            class="small-image scroll-image" />
+                    </a>  
+                    
+                    <p class="content-text">
+                        Wav 2 Byte Array
+                    </p>
+    
+                    <a href="https://github.com/DoubleCouponDay/WavToByteArray"
+                        class="link scroll-link"
+                        target="_blank"
+                        rel="noreferrer noopener">
+                        <span class="link">Link</span>
+                    </a>
+    
+                    <p class="content-text">
+                        Desktop program that converts a .wav file to an array of bytes. 
+                        Written using WPF, C Sharp.
+                    </p>
+                </div>
+        </div>
+    </foreignObject>
+
+    <!-- <g class="content-page" #content>
         <g class="scroll-box">
             <g class="scroll-item">
                 <a href="assets/ttsmod.jpg">
@@ -39,7 +94,7 @@
                 </text>
             </g>
         </g>
-    </g>
+    </g> -->
 
     <g app-scrollview class="scroll-view" (scrollbuttonmoved)="onscroll($event)"></g>
 </svg>

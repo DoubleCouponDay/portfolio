@@ -18,13 +18,13 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": false,
             "assets": [
               "src/favicon.ico",
               "src/assets"              
             ],
             "styles": [
-              "src/styles.css"
+              "src/normalize.css",
+              "src/styles.css"              
             ],
             "scripts": []
           },

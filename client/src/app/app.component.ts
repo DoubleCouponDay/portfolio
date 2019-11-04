@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css', '../normalize.css'],
+  styleUrls: ['./app.component.css'],
   animations: [fadeout]
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -16,10 +16,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   @Output()
   public loadingcomplete: boolean = false
-
-  private sound1: HTMLAudioElement
-  private sound2: HTMLAudioElement
-  private sound3: HTMLAudioElement
 
   private sub: Subscription
 

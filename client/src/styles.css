@@ -1,6 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
-
 :root {
     --window-height: 768px;    
     --window-width: 1366px;
@@ -26,4 +24,9 @@ body, html {
 @font-face {
     font-family: 'zcool';
     src: url('./assets/zcool.ttf');    
+}
+
+p {
+    margin-block-end: 0px;
+    margin-block-start: 0px;
 }
