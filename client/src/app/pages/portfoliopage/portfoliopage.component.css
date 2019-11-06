@@ -3,9 +3,15 @@
 .portfolio-page-content {
     clip-path: none;
     width: 860px;
+    margin-left: 50px;    
 }
 
 .portrait-image {
     margin: auto;
     user-select: none;
+}
+
+.portfolio-text {
+    margin-bottom: 20px;
+    text-align: center;
 }

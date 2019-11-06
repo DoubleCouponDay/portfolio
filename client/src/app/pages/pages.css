@@ -1,6 +1,7 @@
 
 .scroll-image {
     float: left;
+    margin: 0 20px 20px 0;
 }
 
 .scroll-link {
@@ -17,8 +18,7 @@
 
 .small-image {
     width: 300px;  
-    display: block;        
-    margin: 0 20px 20px 0;
+    display: block;            
 }
 
 .content-text {

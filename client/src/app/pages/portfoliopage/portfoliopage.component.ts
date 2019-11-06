@@ -4,7 +4,7 @@ import { pagecomponent, page } from '../page.data';
 @Component({
   selector: 'svg:svg[app-portfoliopage]',
   templateUrl: './portfoliopage.component.html',
-  styleUrls: ['./portfoliopage.component.css', '../pages.css']
+  styleUrls: ['../pages.css', './portfoliopage.component.css']
 })
 export class PortfoliopageComponent implements page {
 }
