@@ -23,7 +23,7 @@ export class generatedraggableaudio {
             this.resetaudio()
             return            
         }  
-        this.scrollaudio = new Audio(this.pathtoaudio) 
+        this.scrollaudio.currentTime = 0
         this.throttleinput = true
         let playstate = this.scrollaudio.play()
 
@@ -51,7 +51,8 @@ export class generatedraggableaudio {
         this.volumescurrentmode = volumestate.decreasing  
 
         this.fadeoutaudio(() => {
-            this.throttleinput = false    
+            this.scrollaudio.currentTime = 0
+            this.throttleinput = false                
 
             this.timeoutIDs.forEach((value) => {
                 clearTimeout(value)
