@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectorRef, Output } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
-import { slideinfinite, topstatename, swaptime, botstatename, slidestate } from 'src/app/animations/slide';
+import { slideinfinite, topstatename, swaptime, botstatename, slidestate, animatetime } from 'src/app/animations/slide';
 import { flagsegment } from './flag.data';
 import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 
@@ -22,54 +22,51 @@ export class FlagComponent implements AfterViewInit, OnDestroy {
   @Output()
   segmentdata: flagsegment[]
 
-  constructor(changer: ChangeDetectorRef) {    
-    this.segmentdata = new Array<flagsegment>()
+  constructor() {    
+    this.segmentdata = new Array<flagsegment>(flaglength) 
 
     for(let i = 0; i < flaglength; i++) {
       let newitem: flagsegment = {
         expression: slidestate.translatedtop,
         intervalid: 0
       }
-      this.segmentdata.push(newitem)
+      this.segmentdata[i] = newitem
     }
   }
 
   ngAfterViewInit() {
+    this.delayanimationsteps()
+  }
+
+  private delayanimationsteps = () => {
     this.castcloth = <HTMLElement>this.cloth.nativeElement                
     let inputdelay = 0
 
     for(let i = 0; i < this.castcloth.children.length; i++) {
-      this.delaysegmentactivation(inputdelay, i)
+      let currentsegment = this.segmentdata[i]  
+
+      setTimeout(() => {      
+          this.intervalsegmentactivation(currentsegment)
+      }, inputdelay)
+
       inputdelay += delay
-    }
+    }    
   }
 
-  private delaysegmentactivation = (inputdelay: number, segmentindex: number) => {
-    setTimeout(() => {
-        this.onsegmentdelayed(segmentindex)
-    }, inputdelay)
+  private intervalsegmentactivation = (currentsegment: flagsegment) => {
+    currentsegment.intervalid = window.setInterval(() => {
+      currentsegment.expression = this.getcurrentsegmentexpression(currentsegment)
+    }, animatetime)
   }
 
-  private onsegmentdelayed = (segmentindex: number) => {    
-    let currentsegment = this.segmentdata[segmentindex]
-    let countdown = swaptime
-
-    let framecallback = (timestamp: number) => {    
-      countdown--
-
-      if(countdown <= 0) {
-        countdown = swaptime
-        currentsegment.expression = (currentsegment.expression === slidestate.translatedbot) ? slidestate.translatedtop : slidestate.translatedbot  
-      }      
-      currentsegment.intervalid = window.requestAnimationFrame(framecallback)      
-    }
-    currentsegment.intervalid = window.requestAnimationFrame(framecallback)    
+  private getcurrentsegmentexpression(currentsegment: flagsegment) {
+    return currentsegment.expression === slidestate.translatedbot ? slidestate.translatedtop : slidestate.translatedbot
   }
 
   ngOnDestroy() {
     for(let i = 0; i < this.segmentdata.length; i++) {
       let currentsegment = this.segmentdata[i]
-      window.cancelAnimationFrame(currentsegment.intervalid)
+      window.clearInterval(currentsegment.intervalid)
     }
   }
 }
