@@ -6,7 +6,7 @@ import { scrollitemclass, pagecomponent, page } from '../page.data';
 @Component({
   selector: 'svg:svg[app-softwarepage]',
   templateUrl: './softwarepage.component.html',
-  styleUrls: ['./softwarepage.component.css', '../portfoliopage/portfoliopage.component.css' ]
+  styleUrls: ['./softwarepage.component.css', '../pages.css']
 })
 export class softwarepageComponent extends pagecomponent implements page {
 

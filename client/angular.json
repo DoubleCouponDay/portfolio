@@ -26,7 +26,8 @@
               "src/normalize.css",
               "src/styles.css"              
             ],
-            "scripts": []
+            "scripts": [],
+            "aot": true
           },
           "configurations": {
             "development": {

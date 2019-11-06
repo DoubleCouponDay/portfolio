@@ -51,7 +51,8 @@ export class TabletsComponent implements OnInit, OnDestroy {
     this.tablet4data = {
       page: MusicpageComponent
     }
-    this.applyfirstpagestate()
+    // this.applyfirstpagestate()
+    this.applysecondpagestate()
     let sub1 = _pagingservice.subscribepagechange(this.onpagechange)
     this.sink.add(sub1)
 

@@ -1,0 +1,50 @@
+
+.scroll-image {
+    float: left;
+}
+
+.scroll-link {
+    margin-left: auto;
+}
+
+.content-page {
+    transform: translate(1330px, 670px);
+    width: 790px;
+    clip-path: url('#overflow-container');
+    height: 1000px;
+    user-select: none;
+}
+
+.small-image {
+    width: 300px;  
+    display: block;        
+    margin: 0 20px 20px 0;
+}
+
+.content-text {
+    font-family: 'zcool';
+    font-size: 40px;
+    font-weight: 400;
+    font-style: normal;
+    fill: #888881;
+    color: #888881;
+    stroke: none;    
+    display: block;
+    user-select: none;
+    width: 760px;
+}
+
+.scroll-item {
+    margin-bottom: 40px;
+}
+
+.link {
+    text-decoration: underline;
+    font-size: 60px;
+    fill: #888881;
+    color:  #888881;
+    font-family: 'zcool';
+    font-weight: 400;
+    font-style: normal;
+    user-select: none;
+}

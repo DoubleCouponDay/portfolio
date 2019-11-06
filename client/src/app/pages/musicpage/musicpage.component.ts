@@ -18,7 +18,7 @@ import { isnullorundefined } from 'src/app/utility/utilities';
 @Component({
   selector: 'svg:svg[app-musicpage]',
   templateUrl: './musicpage.component.html',
-  styleUrls: ['./musicpage.component.css', '../portfoliopage/portfoliopage.component.css']
+  styleUrls: ['./musicpage.component.css', '../pages.css']
 })
 export class MusicpageComponent extends pagecomponent implements AfterViewInit, OnDestroy, page {
 

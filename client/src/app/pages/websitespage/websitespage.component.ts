@@ -6,11 +6,11 @@ import { scrollitemclass, pagecomponent, page } from '../page.data';
 @Component({
   selector: 'svg:svg[app-websitespage]',
   templateUrl: './websitespage.component.html',
-  styleUrls: ['./websitespage.component.css', '../portfoliopage/portfoliopage.component.css']
+  styleUrls: ['./websitespage.component.css', '../pages.css']
 })
 export class websitespageComponent extends pagecomponent implements page {
   
-  contentlength = 50
+  contentlength = 80
 
   constructor() {
     super()

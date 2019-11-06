@@ -1,63 +1,85 @@
 <svg>
-    <g class="content-page" #content>
-        <g class="scroll-item">
-            <a href="assets/moonmachine.png">
-                <image href="assets/moonmachine.png" class="small-image" x="0" dy="1.2em" />
-            </a>
+    <foreignObject class="content-page" #content>
+        <xhtml:div class="scroll-box">
+            <div class="scroll-item">
+                <a href="assets/moonmachine.png"
+                    target="_blank"
+                    rel="noreferrer noopener">
 
-            <text class="content-text" y="0">
-                <tspan x="320" dy="1.2em">Moon Machine</tspan>
-
-                <a href="https://www.moonmachine.biz">
-                    <tspan x="650" class="link">Link</tspan>
+                    <img src="assets/moonmachine.png" 
+                        class="small-image scroll-image" />
                 </a>
-                <tspan x="320" dy="1.2em">An automated trading</tspan>
-                <tspan x="320" dy="1.2em">plaform. Written in</tspan>
-                <tspan x="320" dy="1.2em">Angular, Typescript, </tspan>
-                <tspan x="0" dy="1.2em">Aspnet core, C Sharp. Deployment</tspan>
-                <tspan x="0" dy="1.2em">tool written in F Sharp. Serverless</tspan>
-                <tspan x="0" dy="1.2em">functions written in Typescript, Node.</tspan>
-            </text>
-        </g>
 
-        <g class="scroll-item">
-            <a href="assets/dragontrack.png">
-                <image href="assets/dragontrack.png" class="small-image" x="0" dy="1.2em" y="460" />
-            </a>            
+                <p class="content-text">
+                    Moon Machine
+                </p>
 
-            <text class="content-text" y="460">
-                <tspan dy="1.2em" x="320">Dragontrack</tspan>
-
-                <a dy="1.2em" href="https://github.com/doublecouponday/dragontrack" x="0">
-                    <tspan class="link" x="650">Link</tspan>
+                <a href="https://www.moonmachine.biz"
+                    class="link scroll-link"
+                    target="_blank"
+                    rel="noreferrer noopener">
+                    Link
                 </a>
-                <tspan dy="1.2em" x="320">A peer to peer music</tspan>
-                <tspan dy="1.2em" x="320">streaming room. Written</tspan>
-                <tspan dy="1.2em" x="320">in Angular, Typescript,</tspan>
-                <tspan dy="1.2em" x="320">Aspnetnet core, C</tspan>
-                <tspan dy="1.2em" x="0">Sharp.</tspan>
-            </text>
-        </g>
 
-        <g class="scroll-item">
-            <a href="assets/luggate.png">
-                <image href="assets/luggate.png" 
-                    class="small-image"
-                    x="0" dy="1.2em" y="800" />
-            </a>
-            
-            <text class="content-text" y="800">
-                <tspan x="320" dy="1.2em">Hotel site</tspan>
+                <p class="content-text">
+                    An automated trading platform. Written in Angular, Typescript, Aspnet core, C Sharp, Entity Framework, Postgres.
+                    Deployment tool written in F Sharp. Serverless functions written in Node, Typesccript.
+                </p>
+            </div>
 
-                <a dy="1.2em" href="https://dcdgoluggatehotel.z26.web.core.windows.net">
-                    <tspan class="link" x="650">Link</tspan>
+            <div class="scroll-item">
+                <a href="assets/dragontrack.png"
+                    target="_blank"
+                    rel="noreferrer noopener">
+
+                    <img src="assets/dragontrack.png" 
+                        class="small-image scroll-image" />
                 </a>
-                <tspan x="320" dy="1.2em">A candidate for the</tspan>
-                <tspan x="320" dy="1.2em">Luggate Hotel's</tspan>
-                <tspan x="0" dy="1.2em">website. Written with minimal javascript.</tspan>
-            </text>
-        </g>
-    </g>
+
+                <p class="content-text">
+                    Dragontrack
+                </p>
+
+                <a href="https://dragontrack.samueljenks.me"
+                    class="link scroll-link"
+                    target="_blank"
+                    rel="noreferrer noopener">
+                    Link
+                </a>
+
+                <p class="content-text">
+                    A peer to peer music streaming lobby. 
+                    Written in Angular, Typescript, Aspnet core, CSharp.
+                </p>
+            </div>
+
+            <div class="scroll-item">
+                <a href="assets/luggate.png"
+                    target="_blank"
+                    rel="noreferrer noopener">
+
+                    <img src="assets/luggate.png" 
+                        class="small-image scroll-image" />
+                </a>
+
+                <p class="content-text">
+                    Luggate Hotel
+                </p>
+
+                <a href="https://dcdgoluggatehotel.z26.web.core.windows.net"
+                    class="link scroll-link"
+                    target="_blank"
+                    rel="noreferrer noopener">
+                    Link
+                </a>
+
+                <p class="content-text">
+                    A candidate for the Luggate Hotel's website.
+                    Written with minimal javascript.
+                </p>
+            </div>
+        </div>
+    </foreignObject>
 
     <g app-scrollview class="scroll-view" (scrollbuttonmoved)="onscroll($event)"></g>
 </svg>
