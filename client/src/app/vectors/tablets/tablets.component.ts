@@ -133,6 +133,7 @@ export class TabletsComponent implements OnInit, OnDestroy {
   }
 
   private playgearsaudio() {
+    this.gearssound.currentTime = 0
     this.gearssound.play()
   }
 

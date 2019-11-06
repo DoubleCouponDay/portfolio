@@ -87,7 +87,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   // private onerror = (event: Event | string, source?: string, lineno?: number, colno?: number, error?: Error) => {
-    private onerror = (error: DOMException) => {
+  private onerror = (error: DOMException) => {
     console.log(error)
   }
 
