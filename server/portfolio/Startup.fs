@@ -11,6 +11,7 @@ open Microsoft.AspNetCore.Cors.Infrastructure
 open portfolio.data
 open portfolio.controllers.audio
 open Microsoft.AspNetCore.Http
+open System
 
 type Startup private () =
     [<Literal>]
@@ -36,11 +37,6 @@ type Startup private () =
         // Add framework services.
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
 
-        services.AddSpaStaticFiles(fun configuration -> 
-            configuration.RootPath <- staticfilespath
-            ()
-        )
-
         services.AddCors(
             fun options ->
                 options.AddPolicy(
@@ -50,7 +46,10 @@ type Startup private () =
                 ()
         ) |> ignore
 
-        services.AddSignalR() |> ignore
+        let signalrbuilder = services.AddSignalR(fun options -> 
+            options.EnableDetailedErrors <- true
+        )
+        ()
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
@@ -62,7 +61,6 @@ type Startup private () =
       
         app.UseDefaultFiles() |> ignore
         app.UseStaticFiles() |> ignore
-        app.UseSpaStaticFiles()            
 
         app.UseSignalR(fun routes -> 
             routes.MapHub<stream>(new PathString("/stream"))

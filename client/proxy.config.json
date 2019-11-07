@@ -1,6 +1,6 @@
 {
-    "/api": {
-        "target": "http://localhost:51514",
+    "/stream": {
+        "target": "http://localhost:60257",
         "secure": false
     }
 }

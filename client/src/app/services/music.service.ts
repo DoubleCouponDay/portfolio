@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent, HttpEventType } from '@angular/common/http';
 import { api, baseroute } from '../../environments/api'
-import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber } from '@aspnet/signalr'
+import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType } from '@aspnet/signalr'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
 import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
@@ -32,7 +32,10 @@ export class MusicService implements OnDestroy {
     let builder = new HubConnectionBuilder()
     
     this.connection = builder.configureLogging(LogLevel.Information)
-      .withUrl(baseroute + streamhublabel)
+      .withUrl(baseroute + streamhublabel, {
+        skipNegotiation: true,
+        transport: HttpTransportType.WebSockets,
+      })
       .build()
 
     this.subscriber = {
