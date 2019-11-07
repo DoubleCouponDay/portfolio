@@ -2,9 +2,6 @@
 :root {
     --window-height: 768px;    
     --window-width: 1366px;
-    --message-left: calc(37% + 100px);    
-    --sevensixeight-left: calc(32%  + 20px);
-    --onethousand-left: 45%;
 }
 
 body {

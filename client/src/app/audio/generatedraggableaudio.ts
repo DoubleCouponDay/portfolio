@@ -27,7 +27,6 @@ export class generatedraggableaudio {
         this.throttleinput = true
         this.audio.volume = this.inputmaxvolume
         let playstate = this.audio.play()
-        console.log(this.audio.volume)
         this.volumescurrentmode = volumestate.decreasing
         this.fadeoutaudio()
 
