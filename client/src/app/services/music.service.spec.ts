@@ -27,22 +27,34 @@ describe('musicservice', () => {
         subs = new SubSink()
     });
 
-    it('should create a service', () => {
-        const service: MusicService = TestBed.get(MusicService)        
+    let createaservicetest = ():MusicService => {
+        let service:MusicService = TestBed.get(MusicService)   
         expect(service).toBeTruthy()
+        return service
+    }
+
+    it('should create a service', createaservicetest)
+
+    it('should negotiate a transport', (done: DoneFn) => {
+        let service = createaservicetest()
+        service.startconnection()
+            .then((connectionresult) => {
+                expect(connectionresult.outcome).toBeTruthy()
+                done()
+            })
     })
 
     it('should stream music', (done: DoneFn) => {
-        let onrandomtrack = (data: any) => {
-            expect(data).toBeTruthy()
-            console.log(data)
-            done()
-        }
+        // let onrandomtrack = (data: any) => {
+        //     expect(data).toBeTruthy()
+        //     console.log(data)
+        //     done()
+        // }
 
-        let sub1 = service.getrandomdeserttrack()
-            .subscribe(onrandomtrack, ontesterror)   
+        // let sub1 = service.getrandomdeserttrack()
+        //     .subscribe(onrandomtrack, ontesterror)   
         
-        subs.add(sub1)
+        // subs.add(sub1)
     }, streamtimeout)
 
     afterEach(() => {

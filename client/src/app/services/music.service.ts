@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent, HttpEventType } from '@angular/common/http';
 import { api, baseroute } from '../../environments/api'
-import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType } from '@aspnet/signalr'
+import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
 import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
@@ -27,13 +27,14 @@ export class MusicService implements OnDestroy {
   private subscriber: IStreamSubscriber<number>
 
   private subs = new SubSink()
+  private weirdsubscription: ISubscription<number>
 
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
     
     this.connection = builder.configureLogging(LogLevel.Information)
       .withUrl(baseroute + streamhublabel, {
-        skipNegotiation: true,
+        skipNegotiation: false,
         transport: HttpTransportType.WebSockets,
       })
       .build()
@@ -44,23 +45,41 @@ export class MusicService implements OnDestroy {
       error: console.error,
       complete: this.onstreamcomplete
     }
-
-    this.connection.start()
-      .catch(console.error)
-      .then(() => {
-        this.getrandomdeserttrack()
-          .subscribe(this.subscriber)
-        })
-
     this.audiocontext = new AudioContext()
     this.audiosource = this.audiocontext.createBufferSource()
     this.audiosource.connect(this.audiocontext.destination)
 
-    this.subs.add(loading.subscribeloadedevent(this.onapploaded))
+    this.subs.add(
+      loading.subscribeloadedevent(this.onapploaded)
+    )
+  }
+
+  public startconnection(): Promise<{outcome: boolean, error?: Error}> {
+    return this.connection.start()
+      .then(() => {
+        return {
+          outcome:true
+        }
+      })
+      .catch((inputerror: Error) => {
+        console.error(inputerror)
+        let output = {
+          outcome: false,
+          error: inputerror
+        }
+        return output
+      })       
   }
   
-  private getrandomdeserttrack(): IStreamResult<number> {
-    return this.connection.stream<number>(randomdeserttrackroute)      
+  /** can only be called once */
+  public playrandomdeserttrack(): boolean {
+    if(this.currentdownloadedbytes >= 0 ||
+      this.connection.state === HubConnectionState.Disconnected) {
+      return false
+    }
+    let stream = this.connection.stream<number>(randomdeserttrackroute)    
+    this.weirdsubscription = stream.subscribe(this.subscriber)   
+    return true 
   }
   
   private onmusicdownloaded = (chunk: number) => {    
@@ -110,5 +129,6 @@ export class MusicService implements OnDestroy {
     this.audiosource.stop()
     this.connection.stop()
     this.subs.unsubscribe()
+    this.weirdsubscription.dispose()
   }
 }
