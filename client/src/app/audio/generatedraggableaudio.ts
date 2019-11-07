@@ -1,6 +1,6 @@
 import { volumestate, millisecondspoint } from '../pages/scrollview/scrollview.data';
 import { isnullorundefined } from '../utility/utilities';
-import { maxvolume, volumedecrement, volumeincrement } from './audio.data';
+import {  volumedecrement, volumeincrement } from './audio.data';
 import { nooccurrence } from '../global.data';
 
 export class generatedraggableaudio {
@@ -9,25 +9,25 @@ export class generatedraggableaudio {
 
     private volumescurrentmode = volumestate.stable
 
-    private scrollaudio: HTMLAudioElement
+    private audio: HTMLAudioElement
 
     private throttleinput = false
 
-    constructor(private pathtoaudio: string) {
-        this.scrollaudio = new Audio(pathtoaudio)         
+    constructor(pathtoaudio: string, private inputmaxvolume: number) {
+        this.audio = new Audio(pathtoaudio)    
     }
 
     playaudio() {   
         if(this.throttleinput === true) {
-            this.scrollaudio.volume = 1
+            this.audio.volume = this.inputmaxvolume
             this.resetaudio()
             return            
         }  
-        this.scrollaudio.currentTime = 0
+        this.audio.currentTime = 0
         this.throttleinput = true
-        let playstate = this.scrollaudio.play()
-
-        this.scrollaudio.volume = 1
+        this.audio.volume = this.inputmaxvolume
+        let playstate = this.audio.play()
+        console.log(this.audio.volume)
         this.volumescurrentmode = volumestate.decreasing
         this.fadeoutaudio()
 
@@ -51,7 +51,7 @@ export class generatedraggableaudio {
         this.volumescurrentmode = volumestate.decreasing  
 
         this.fadeoutaudio(() => {
-            this.scrollaudio.currentTime = 0
+            this.audio.currentTime = 0
             this.throttleinput = false                
 
             this.timeoutIDs.forEach((value) => {
@@ -64,8 +64,8 @@ export class generatedraggableaudio {
     /** invoke after movement detection */
     private fadeoutaudio(onfaded?: () => void) {  
         let id = setTimeout(() => {
-            if(this.scrollaudio.volume >= volumedecrement) {        
-                this.scrollaudio.volume -= volumedecrement
+            if(this.audio.volume >= volumedecrement) {        
+                this.audio.volume -= volumedecrement
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
                     this.fadeoutaudio()  
@@ -73,9 +73,9 @@ export class generatedraggableaudio {
             }
 
             else {
-                this.scrollaudio.volume = 0        
+                this.audio.volume = 0        
                 this.volumescurrentmode = volumestate.stable
-                this.scrollaudio.pause()
+                this.audio.pause()
                 this.throttleinput = false
 
                 if(isnullorundefined(onfaded) === true) {
@@ -89,8 +89,8 @@ export class generatedraggableaudio {
 
     private fadeupaudio() {
         let id = setTimeout(() => {
-            if(this.scrollaudio.volume <= maxvolume - volumeincrement) { //prevents out of bounds exc
-                this.scrollaudio.volume += volumeincrement
+            if(this.audio.volume <= this.inputmaxvolume - volumeincrement) { //prevents out of bounds exc
+                this.audio.volume += volumeincrement
 
                 if(this.volumescurrentmode === volumestate.increasing) {
                     this.fadeupaudio()
@@ -98,7 +98,7 @@ export class generatedraggableaudio {
             }
 
             else {
-                this.scrollaudio.volume = 1
+                this.audio.volume = this.inputmaxvolume
                 this.volumescurrentmode = volumestate.stable
             }      
         })

@@ -55,7 +55,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private boxresetfactory: AnimationFactory
     private fadefactory: AnimationFactory
   
-    blocksoundplayer = new generatedraggableaudio(gratingsoundaddress)
+    blocksoundplayer = new generatedraggableaudio(gratingsoundaddress, 0.5)
   
     entirepage: HTMLElement = document.documentElement
   
@@ -84,7 +84,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       let sub3 = _pagingservice.subscribepagechange(this.onpagechanged)
       this.sink.add(sub1)
       this.sink.add(sub2)
-      this.sink.add(sub3)        
+      this.sink.add(sub3)   
     }    
       
     ngAfterViewInit() {

@@ -152,6 +152,4 @@ export class TabletComponent implements OnInit {
       transformelement(this.castelement, scalename, "1")
     }
   }
-
-
 }

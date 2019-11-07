@@ -8,6 +8,7 @@ import { fadein, fadeout, togglefade } from '../animations/fade';
 import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactory } from '@angular/animations';
 import { inputopacityname, inputtimename } from '../animations/animation.data';
 import { smoothtime } from '../animations/movetocursorvertically';
+import { aetherpingsoundaddress } from '../audio/audio.data';
 
 @Component({
   selector: 'app-loadingscreen',
@@ -33,9 +34,12 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   private fadefactory: AnimationFactory
   private fadeanimator: AnimationPlayer
 
+  private entersound: HTMLAudioElement
+
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.sub = this.loading.subscribeloadedevent(this.onloaded)
     this.fadefactory = animationfactory.build(togglefade)    
+    this.entersound = new Audio(aetherpingsoundaddress)
   }
 
   ngAfterViewInit() {
@@ -52,12 +56,16 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
   ontouch = (event: MouseEvent) => {}
 
-  onbuttonpressed = (inputevent: Event) => {
+  onbuttondown = () => {
+    this.entersound.play()
+  }
+
+  onbuttonup = (inputevent: Event) => {
     if(this.shouldpress === false) {
       return
     }
     this.loading.emitloadedevent(loadstate.done)
-    scrolldisabler.togglescrolling(true)
+    scrolldisabler.togglescrolling(true)    
   }
 
   onloaded = (state: loadstate) => {
