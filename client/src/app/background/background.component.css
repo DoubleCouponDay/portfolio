@@ -1,8 +1,8 @@
 .sky {
-    width: auto;
-    height: 100vh;
+    width: 100%;
+    height: auto;
     min-width: var(--window-width);
-    min-height: var(--window-height);
+    min-height: calc(var(--window-height) / 2);
     position: absolute;
-    bottom: 400px;
+    bottom: 60%;
 }
