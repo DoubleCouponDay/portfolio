@@ -16,8 +16,6 @@ import { rotationtime } from 'src/app/animations/rotatetablet';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
-import { MatSnackBar } from '@angular/material';
-import {snackbarservice} from 'src/app/services/snackbar.service';
 import { fadeout, togglefade } from 'src/app/animations/fade';
 import { gratingsoundaddress } from 'src/app/audio/audio.data';
 import { elementrefargs } from 'src/app/utility/utility.data';

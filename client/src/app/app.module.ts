@@ -9,8 +9,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { PagesModule } from './pages/pages.module';
 import { backgroundcomponent } from './background/background.component';
 import { VectorsModule } from './vectors/vectors.module';
-import { MatSnackBarModule } from '@angular/material';
-import {snackbarservice} from './services/snackbar.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -26,10 +24,9 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     PagesModule,
     VectorsModule,
-    MatSnackBarModule,
     HttpClientModule
   ],
-  providers: [snackbarservice],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

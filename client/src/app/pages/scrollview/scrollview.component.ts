@@ -8,7 +8,6 @@ import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 import { changetodragicon, resetmouse } from 'src/app/animations/mousechanger';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { touchevents } from 'src/app/touch/touchevents';
-import {snackbarservice} from 'src/app/services/snackbar.service';
 import { tabletsoundaddress } from 'src/app/audio/audio.data';
 
 @Component({
@@ -34,7 +33,7 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   private highlighter: mousehighlighter
 
-  private scrapesoundgenerator = new generatedraggableaudio(tabletsoundaddress)
+  private scrapesoundgenerator = new generatedraggableaudio(tabletsoundaddress, 1.0)
   private touches: touchevents
 
   constructor(private mouseservice: mouseservice) { 
