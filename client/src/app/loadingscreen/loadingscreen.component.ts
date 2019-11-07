@@ -10,6 +10,8 @@ import { inputopacityname, inputtimename } from '../animations/animation.data';
 import { smoothtime } from '../animations/movetocursorvertically';
 import { aetherpingsoundaddress } from '../audio/audio.data';
 
+const shadowfilter = "url(#57Nu2Y3s56IqsQpTc4EMeWkbexdLrGOS)"
+
 @Component({
   selector: 'app-loadingscreen',
   templateUrl: './loadingscreen.component.html',
@@ -21,10 +23,10 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('ballcontainer', elementrefargs) ballcontainer: ElementRef
 
-  @ViewChild('circle', elementrefargs) circle: ElementRef
+  @ViewChild('circle', {static: false}) circle: ElementRef
   private nativecircle: HTMLElement
 
-  @ViewChild('button', elementrefargs) button: ElementRef
+  @ViewChild('button', {static: false}) button: ElementRef
 
   @Output()
   public shouldpress = false
@@ -44,26 +46,32 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.nativecircle = <HTMLElement>this.circle.nativeElement
-    this.nativecircle.style.opacity = "0"
     this.touches = new touchevents( //prevents panning past the loading screen
-      this.ontouch,
-      this.ontouch,
-      this.ontouch,
+      this.onbuttonup,
+      this.donothing,
+      this.donothing,
       this.ballcontainer.nativeElement,
       this.circle.nativeElement,
     )
   }
 
-  ontouch = (event: MouseEvent) => {}
+  donothing = (event: MouseEvent) => {}
 
-  onbuttondown = () => {
-    this.entersound.play()
+  onmouseover = (inputevent: Event) => {
+    let nativebutton = <HTMLElement>this.button.nativeElement
+    nativebutton.style.filter = shadowfilter
+  }
+
+  onbuttondown = (inputevent: Event) => {
+    let nativebutton = <HTMLElement>this.button.nativeElement //touch event could bypass onbutton down so I duplicate this line
+    nativebutton.style.filter = ""
   }
 
   onbuttonup = (inputevent: Event) => {
     if(this.shouldpress === false) {
       return
     }
+    this.entersound.play()
     this.loading.emitloadedevent(loadstate.done)
     scrolldisabler.togglescrolling(true)    
   }
