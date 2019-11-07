@@ -1,7 +1,7 @@
-import { portfolioapi } from './environment.data';
+import { portfolioapi, randomdeserttrackroute } from './environment.data';
 
-export const baseroute = "/api"
+export const baseroute = "https://samueljenks.azurewebsites.net"
 
 export const api: portfolioapi = {
-    getrandomtrack: `${baseroute}/tracks/getrandomdeserttrack`
+    getrandomtrack: `${randomdeserttrackroute}`
 }

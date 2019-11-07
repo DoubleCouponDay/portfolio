@@ -71,7 +71,7 @@ type public drivereader private() =
 
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): streamresponse =    
+    member public x.readrandomdeserttrack(): driveresponse =    
         if x.playlist = null then
             x.setplaylist()
 
@@ -79,7 +79,7 @@ type public drivereader private() =
         let chosenfilename = x.playlist.[chosenindex]
         let chosenfile = x.requestfilebyname(chosenfilename)
         let stream = x.requestfilebyID(chosenfile.Id)
-        new streamresponse(stream, chosenfilename, chosenfile.MimeType)
+        new driveresponse(stream, chosenfilename, chosenfile.MimeType)
 
     member private x.setplaylist(): unit =
         let playlistfile = x.requestfilebyname(playlistname)

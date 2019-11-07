@@ -9,8 +9,4 @@ export const drawbridgesoundaddress = 'assets/drawbridge.flac'
 export const tabletsoundaddress = 'assets/tabletscraping.mp3'
 export const aetherpingsoundaddress = 'assets/aether-mining.flac'
 
-export interface streamresponse {
-    stream: ArrayBuffer,
-    filename: string,
-    filetype: string
-}
+export const samplerate = 44100

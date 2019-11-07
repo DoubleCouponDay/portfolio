@@ -1,18 +1,16 @@
 namespace portfolio
 
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.HttpsPolicy;
 open Microsoft.AspNetCore.Mvc
+
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
-open Microsoft.AspNetCore.SpaServices.AngularCli
 open Microsoft.AspNetCore.Cors.Infrastructure
+
 open portfolio.data
+open portfolio.controllers.audio
+open Microsoft.AspNetCore.Http
 
 type Startup private () =
     [<Literal>]
@@ -50,8 +48,9 @@ type Startup private () =
                     this.addcustomorigins
                 )
                 ()
-        )
-        |> ignore
+        ) |> ignore
+
+        services.AddSignalR() |> ignore
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
@@ -60,8 +59,14 @@ type Startup private () =
         else
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts() |> ignore
-
+      
+        app.UseDefaultFiles() |> ignore
+        app.UseStaticFiles() |> ignore
         app.UseSpaStaticFiles()            
+
+        app.UseSignalR(fun routes -> 
+            routes.MapHub<stream>(new PathString("/stream"))
+        ) |> ignore
 
         app.UseCors(corspolicyname)
             .UseHttpsRedirection()

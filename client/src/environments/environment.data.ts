@@ -6,4 +6,6 @@ export interface portfolioapi
     getrandomtrack: string
 }
 
-export const randomdeserttrackroute = `stream/randomdeserttrack`
+export const randomdeserttrackroute = `randomdeserttrack`
+export const streamhublabel = "/stream"
+export const apilabel = "/api"
