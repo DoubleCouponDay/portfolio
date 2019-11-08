@@ -46,7 +46,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     super.ngAfterViewInit()
   }
 
-
   private onpagechange = (pagenumber: number) => {
     if(pagenumber === lastpagenumber) {
       return
@@ -63,8 +62,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.pagealreadydisplaying = true
     this.castcontent2.style.opacity = '1'
   }
-
-
 
   ngOnDestroy() {
     this.sink.unsubscribe()    

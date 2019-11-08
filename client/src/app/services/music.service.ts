@@ -18,15 +18,19 @@ export class MusicService implements OnDestroy {
   private audiocontext: AudioContext
   private audiosource: AudioBufferSourceNode
 
-  private currentdownloadedbytes = 0
+  private bytesfields = 0
+
+  public get currentdownloadedbytes(): number {
+    return this.bytesfields
+  }
   private streamcompleted = false
   private apploaded = false
   private musicisplaying = false
 
   private connection: HubConnection
-  private subscriber: IStreamSubscriber<number>
 
   private subs = new SubSink()
+  private defaultsubscriber: IStreamSubscriber<number> 
   private weirdsubscription: ISubscription<number>
 
   constructor(loading: LoadingService) {
@@ -38,12 +42,12 @@ export class MusicService implements OnDestroy {
       })
       .build()
 
-    this.subscriber = {
+    this.defaultsubscriber = {
       next: this.onmusicdownloaded,
-      closed: null,
       error: console.error,
       complete: this.onstreamcomplete
     }
+
     this.audiocontext = new AudioContext()
     this.audiocontext.suspend()
     this.audiosource = this.audiocontext.createBufferSource()
@@ -71,19 +75,20 @@ export class MusicService implements OnDestroy {
       })       
   }
   
-  /** can only be called once */
-  public playrandomdeserttrack(): boolean {
+  /** can only be called once. returns false if service decided not a good time. */
+  public playrandomdeserttrack(ownsubscriber?: IStreamSubscriber<number>): boolean {
     if(this.currentdownloadedbytes >= 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
     let stream = this.connection.stream<number>(randomdeserttrackroute)    
-    this.weirdsubscription = stream.subscribe(this.subscriber)   
-    return true 
+    let chosensubscriber = ownsubscriber ?? this.defaultsubscriber    
+    this.weirdsubscription = stream.subscribe(chosensubscriber)
+    return true
   }
   
   private onmusicdownloaded = (chunk: number) => {    
-    this.currentdownloadedbytes++
+    this.bytesfields++
     let rawbuffer = new Float32Array([chunk])
     let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
     newbuffer.copyToChannel(rawbuffer, 1)   

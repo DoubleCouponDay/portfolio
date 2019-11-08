@@ -5,15 +5,15 @@ import { SubSink } from 'subsink';
 import {strictEqual, notStrictEqual} from 'assert'
 import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
+import { IStreamSubscriber } from '@aspnet/signalr';
 
 const streamtimeout = 60000
 
 describe('musicservice', () => {
     let service: MusicService
     let subs: SubSink
-
     let ontesterror = (context: any) => {
-        console.log(context)
+        console.error(context)
     }
 
     beforeEach(() => {
@@ -40,18 +40,23 @@ describe('musicservice', () => {
             })
     })
 
-    // it('should stream music', (done: DoneFn) => {
-    //     let onrandomtrack = (data: any) => {
-    //         expect(data).toBeTruthy()
-    //         console.log(data)
-    //         done()
-    //     }
+    it('should stream music', (done: DoneFn) => {
+        let streamisclosed = false
 
-    //     let sub1 = service.getrandomdeserttrack()
-    //         .subscribe(onrandomtrack, ontesterror)   
-        
-    //     subs.add(sub1)
-    // }, streamtimeout)
+        let subscriber: IStreamSubscriber<number> = {
+            next: () => {
+                expect(service.currentdownloadedbytes).toBeGreaterThan(0)
+            },
+            complete: () => {  
+                expect(streamisclosed).toBeTruthy()              
+                done()
+            },
+            error: console.error
+        }
+
+        let allowedtostream = service.playrandomdeserttrack(subscriber)   
+        expect(allowedtostream).toBeTruthy()
+    }, streamtimeout)
 
     afterEach(() => {
         subs.unsubscribe()
