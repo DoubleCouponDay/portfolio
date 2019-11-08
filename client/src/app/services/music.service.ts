@@ -7,6 +7,7 @@ import { streamhublabel, randomdeserttrackroute } from 'src/environments/environ
 import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
+import { isnullorundefined } from '../utility/utilities';
 
 const bytesneededtostart = 10_000_000
 
@@ -76,13 +77,13 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public playrandomdeserttrack(ownsubscriber?: IStreamSubscriber<number>): boolean {
+  public playrandomdeserttrack(customsubscriber?: IStreamSubscriber<number>): boolean {
     if(this.currentdownloadedbytes >= 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
     let stream = this.connection.stream<number>(randomdeserttrackroute)    
-    let chosensubscriber = ownsubscriber ?? this.defaultsubscriber    
+    let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }

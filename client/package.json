@@ -15,14 +15,15 @@
     "@angular/animations": "^8.2.2",
     "@angular/cdk": "^8.2.2",
     "@angular/common": "^8.2.2",
-    "@angular/compiler": "~8.2.0",
+    "@angular/compiler": "^8.2.13",
     "@angular/core": "^8.2.2",
     "@angular/forms": "~8.2.0",
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
     "@aspnet/signalr": "^1.1.4",
-    "@types/signalr": "^2.2.35",
+    "@ngtools/webpack": "^8.3.18",
+    "@types/assert": "^1.4.3",
     "assert": "^2.0.0",
     "rxjs": "~6.4.0",
     "subsink": "^1.0.0",
@@ -30,13 +31,13 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.802.0",
+    "@angular-devkit/build-angular": "^0.803.18",
     "@angular/cli": "~8.2.0",
-    "@angular/compiler-cli": "~8.2.0",
+    "@angular/compiler-cli": "^8.2.13",
     "@angular/language-service": "~8.2.0",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/signalr": "^2.2.35",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -48,6 +49,6 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "3.7"
+    "typescript": "^3.5.3"
   }
 }
