@@ -44,7 +44,7 @@ describe('musicservice', () => {
         .then(() => {
             let streamisclosed = false
 
-            let subscriber: IStreamSubscriber<number> = {
+            let subscriber: IStreamSubscriber<number[]> = {
                 next: () => {
                     expect(service.currentdownloadedbytes).toBeGreaterThan(0)
                 },
