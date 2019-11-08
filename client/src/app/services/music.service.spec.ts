@@ -6,15 +6,14 @@ import {strictEqual, notStrictEqual} from 'assert'
 import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 import { IStreamSubscriber } from '@aspnet/signalr';
+import { LoadingService } from './loading.service';
 
 const streamtimeout = 60000
 
 describe('musicservice', () => {
     let service: MusicService
+    let loader: LoadingService
     let subs: SubSink
-    let ontesterror = (context: any) => {
-        console.error(context)
-    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -22,8 +21,8 @@ describe('musicservice', () => {
                 HttpClientModule
             ]
         })
-        service = TestBed.get(MusicService);
-
+        service = TestBed.get(MusicService)
+        loader = TestBed.get(LoadingService)
         subs = new SubSink()
     });
 
@@ -41,21 +40,23 @@ describe('musicservice', () => {
     })
 
     it('should stream music', (done: DoneFn) => {
-        let streamisclosed = false
+        service.startconnection()
+        .then(() => {
+            let streamisclosed = false
 
-        let subscriber: IStreamSubscriber<number> = {
-            next: () => {
-                expect(service.currentdownloadedbytes).toBeGreaterThan(0)
-            },
-            complete: () => {  
-                expect(streamisclosed).toBeTruthy()              
-                done()
-            },
-            error: console.error
-        }
-
-        let allowedtostream = service.playrandomdeserttrack(subscriber)   
-        expect(allowedtostream).toBeTruthy()
+            let subscriber: IStreamSubscriber<number> = {
+                next: () => {
+                    expect(service.currentdownloadedbytes).toBeGreaterThan(0)
+                },
+                complete: () => {  
+                    expect(streamisclosed).toBeTruthy()              
+                    done()
+                },
+                error: console.error
+            }
+            let allowedtostream = service.loadrandomdeserttrack(subscriber)   
+            expect(allowedtostream).toBeTruthy()
+        })
     }, streamtimeout)
 
     afterEach(() => {

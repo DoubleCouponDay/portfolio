@@ -77,45 +77,49 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public playrandomdeserttrack(customsubscriber?: IStreamSubscriber<number>): boolean {
-    if(this.currentdownloadedbytes >= 0 ||
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number>): boolean {
+    if(this.currentdownloadedbytes > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
     let stream = this.connection.stream<number>(randomdeserttrackroute)    
+    console.log(`${randomdeserttrackroute} invoked`)
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
-  
+
   private onmusicdownloaded = (chunk: number) => {    
     this.bytesfields++
     let rawbuffer = new Float32Array([chunk])
     let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
-    newbuffer.copyToChannel(rawbuffer, 1)   
+    newbuffer.copyToChannel(rawbuffer, 0)   
     console.log('stream chunk received') 
 
     if(this.musicisreadytoplay() === false) {
       return
     }
-    this.play()
+    this.playrandomdeserttrack()
   }
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
-    console.log("stream completed!")
+    console.log("stream fully loaded!")
 
-    if(this.musicisreadytoplay() === false) {
-      return
-    }
-    this.play()
+    let intervalid = window.setInterval(() => {
+      if(this.musicisreadytoplay() === false) {
+        return
+      }
+      this.playrandomdeserttrack()
+      window.clearInterval(intervalid)
+    }, 500)
   }
 
   private onapploaded = (state: loadstate) => {
     if(state !== loadstate.done) {
       return
     }    
-    this.apploaded = true
+    this.apploaded = true    
   }
 
   private musicisreadytoplay(): boolean {
@@ -125,10 +129,8 @@ export class MusicService implements OnDestroy {
       this.musicisplaying === false
   }
 
-  private play = () => {
+  public playrandomdeserttrack = () => {
     this.audiosource.start()
-    this.audiosource.loop = true
-
   }
     
   ngOnDestroy() {

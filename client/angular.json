@@ -27,7 +27,7 @@
               "src/styles.css"              
             ],
             "scripts": [],
-            "aot": true
+            "aot": true,            
           },
           "configurations": {
             "development": {
@@ -81,7 +81,9 @@
             "production": {
               "browserTarget": "portfolio:build:production"
             }
-          }
+          },
+          "sourceMap": true
+
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -103,7 +105,8 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "sourceMap": true
           }
         },
         "lint": {

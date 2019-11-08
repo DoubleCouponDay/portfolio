@@ -38,6 +38,14 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     
     this.sink.add(sub)
     this.sink.add(sub2)
+
+    streamer.startconnection()
+      .then((result) => {
+        if(result.outcome === false) {
+          return
+        }
+        streamer.loadrandomdeserttrack()
+      })
   }
 
   ngAfterViewInit() {

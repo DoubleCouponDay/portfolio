@@ -17,6 +17,14 @@
             "request": "launch",
             "url": "http://localhost:9876",
             "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+              "webpack:/*": "${webRoot}/*",
+              "/./*": "${webRoot}/*",
+              "/src/*": "${webRoot}/*",
+              "/*": "*",
+              "/./~/*": "${webRoot}/node_modules/*"
+            }
         },
     ]
 }

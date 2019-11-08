@@ -28,8 +28,8 @@ type Startup private () =
 
     member private this.addcustomorigins (builder: CorsPolicyBuilder) = 
         builder.WithOrigins([|
-            "http://localhost:4200";
-            "http://localhost:9876";
+            "http://localhost:4200"; //local dev
+            "http://localhost:9876"; //test server
             "dcdgoportfolio.z26.web.core.windows.net";
             "www.samueljenks.me";
             "moonmachinestorage.z26.web.core.windows.net";
