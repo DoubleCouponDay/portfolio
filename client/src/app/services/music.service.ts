@@ -34,8 +34,7 @@ export class MusicService implements OnDestroy {
     
     this.connection = builder.configureLogging(LogLevel.Information)
       .withUrl(baseroute + streamhublabel, {
-        skipNegotiation: false,
-        transport: HttpTransportType.WebSockets,
+        transport: HttpTransportType.LongPolling,
       })
       .build()
 

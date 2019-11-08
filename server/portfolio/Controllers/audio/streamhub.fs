@@ -7,7 +7,7 @@ open portfolio.googledrivereader
 open System.Threading.Channels
 open System
 
-type stream() =
+type streamhub() =
     inherit Hub()
 
     override this.OnConnectedAsync() =
@@ -26,6 +26,8 @@ type stream() =
             while track.stream.CanRead do
                 input.Writer.WriteAsync(track.stream.ReadByte()) |> ignore
                 Console.WriteLine("sent a byte")
+
+            track.stream.Dispose()
         }
         task |> Async.Start
 
