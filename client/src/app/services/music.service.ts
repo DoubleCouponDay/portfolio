@@ -32,7 +32,7 @@ export class MusicService implements OnDestroy {
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
     
-    this.connection = builder.configureLogging(LogLevel.Information)
+    this.connection = builder.configureLogging(LogLevel.Warning)
       .withUrl(baseroute + streamhublabel, {
         transport: HttpTransportType.LongPolling,
       })
@@ -45,6 +45,7 @@ export class MusicService implements OnDestroy {
       complete: this.onstreamcomplete
     }
     this.audiocontext = new AudioContext()
+    this.audiocontext.suspend()
     this.audiosource = this.audiocontext.createBufferSource()
     this.audiosource.connect(this.audiocontext.destination)
 
