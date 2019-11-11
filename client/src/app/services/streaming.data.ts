@@ -9,9 +9,9 @@ export enum messagestate {
     response_badrequest,
 }
 
-export interface inputmessage {
+export interface streampartial {
     state: messagestate,
-    connection?: null
+    chunk?: Float32Array
 }
 
 export const chunksize = 256_000

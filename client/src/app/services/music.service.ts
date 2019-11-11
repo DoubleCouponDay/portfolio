@@ -4,7 +4,7 @@ import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { messagestate, workerfilepath } from './streaming.data';
+import { messagestate, workerfilepath, streampartial } from './streaming.data';
 
 const bytesneededtostart = 1_000_000
 
@@ -65,21 +65,35 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(onchunkreceived?: (chunk: number[]) => void): boolean {
+  public loadrandomdeserttrack(onchunkreceived?: (output: streampartial) => void): boolean {
     if(this.currentdownloadedbytes > 0 ||
       this.streamconnected === false) {
       return false
     }
-    this.thread2.onmessage = (message, )
+    this.thread2.onmessage = (output) => { this.onstream(output, onchunkreceived) }
     this.thread2.postMessage(messagestate.request_startstreaming)
     return true
   }
+  
+  private onstream = (output: MessageEvent, onchunkreceived?: (output: streampartial) => void) => {    
+    let castdata = <streampartial>output.data
 
-  private onmusicdownloaded = () => {    
-    this.bytesfields += chunk.length
-    let rawbuffer = new Float32Array(chunk)
-    let newbuffer = this.audiocontext.createBuffer(1, chunk.length, samplerate)
-    newbuffer.copyToChannel(rawbuffer, 0)   
+    switch(castdata.state) {
+      case messagestate.response_haveachunk:        
+        let chosenaction = isnullorundefined(onchunkreceived) ? this.onmusicdownloaded : onchunkreceived
+        chosenaction(castdata)
+        break
+
+      case messagestate.response_finishedtreaming:
+        this.onstreamcomplete()
+        break
+    }
+  }
+
+  private onmusicdownloaded = (output: streampartial) => {    
+    this.bytesfields += output.chunk.length
+    let newbuffer = this.audiocontext.createBuffer(1, output.chunk.length, samplerate)
+    newbuffer.copyToChannel(output.chunk, 0)   
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -89,6 +103,8 @@ export class MusicService implements OnDestroy {
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
+    this.cleanupthreadscallback()
+    this.thread2.terminate()
     console.log("stream fully loaded!")
 
     let intervalid = window.setInterval(() => {
@@ -115,10 +131,11 @@ export class MusicService implements OnDestroy {
   }
 
   public playrandomdeserttrack = () => {
+    this.musicisplaying = true
     this.audiosource.start()
   }
     
-  ngOnDestroy() {
+  ngOnDestroy() {    
     this.audiosource.stop()
     this.subs.unsubscribe()
     this.thread2.terminate()
