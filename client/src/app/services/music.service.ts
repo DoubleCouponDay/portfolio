@@ -1,17 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent, HttpEventType } from '@angular/common/http';
 import { api, baseroute } from '../../environments/api'
-import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
-import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
 import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { createWorker, ITypedWorker } from 'typed-web-workers'
-import { workerinput, workermessage } from './streaming.data';
+import { messagestate, workerfilepath } from './streaming.data';
 
-const bytesneededtostart = 2_000_000
+const bytesneededtostart = 1_000_000
 
 @Injectable({
   providedIn: 'root'
@@ -28,74 +23,59 @@ export class MusicService implements OnDestroy {
   private streamcompleted = false
   private apploaded = false
   private musicisplaying = false
-
-  private connection: HubConnection
+  private streamconnected = false
 
   private subs = new SubSink()
-  private defaultsubscriber: IStreamSubscriber<number[]> 
-  private weirdsubscription: ISubscription<number[]>
 
-  private thread2: ITypedWorker<workermessage, workermessage>
+  private thread2: Worker
 
   constructor(loading: LoadingService) {
-    let builder = new HubConnectionBuilder()
-    
-    this.connection = builder.configureLogging(LogLevel.Warning)
-      .withUrl(baseroute + streamhublabel, {
-        transport: HttpTransportType.LongPolling,
-      })
-      .build()
-
-    this.defaultsubscriber = {
-      next: this.onmusicdownloaded,
-      error: console.error,
-      complete: this.onstreamcomplete
-    }
-
-
-    this.subs.add(
-      loading.subscribeloadedevent(this.onapploaded)
-    )
+    let sub1 = loading.subscribeloadedevent(this.onapploaded)
+    this.subs.add(sub1)
   }
 
-  public startconnection(): Promise<{outcome: boolean, error?: Error}> {
-    return this.connection.start()
-      .then(() => {
-        return {
-          outcome:true
+  public startconnection(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if(this.streamconnected === true) {
+        reject("already connected")
+        return
+      }
+      this.thread2 = new Worker(workerfilepath)
+      this.thread2.onerror = console.error
+
+      this.thread2.onmessage = (message) => {
+        switch(message.data) {
+          case messagestate.response_connected:
+            resolve(true)
+            this.cleanupthreadscallback()
+            break
+
+          case messagestate.response_connectfailed:
+            resolve(false)
+            this.cleanupthreadscallback()
+            break          
         }
-      })
-      .catch((inputerror: Error) => {
-        console.error(inputerror)
-        let output = {
-          outcome: false,
-          error: inputerror
-        }
-        return output
-      })       
+      }
+      this.thread2.postMessage(messagestate.request_connecttoserver)        
+    })    
+  }
+
+  private cleanupthreadscallback() {
+    this.thread2.onmessage = null
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number[]>): boolean {
+  public loadrandomdeserttrack(onchunkreceived?: (chunk: number[]) => void): boolean {
     if(this.currentdownloadedbytes > 0 ||
-      this.connection.state === HubConnectionState.Disconnected) {
+      this.streamconnected === false) {
       return false
     }
-
-    let worker = (workerFunction: (input: workerinput, cb: (_: void, transfer?: ArrayBuffer) => void) => void {
-
-    } 
-    
-    let onMessage?: (output: void) => void)
-
-    let thread2 = createWorker<number, string>()
-    let stream = this.connection.stream<number[]>(randomdeserttrackroute)    
-    let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
-    this.weirdsubscription = stream.subscribe(chosensubscriber)
+    this.thread2.onmessage = (message, )
+    this.thread2.postMessage(messagestate.request_startstreaming)
     return true
   }
 
-  private onmusicdownloaded = (chunk: number[]) => {    
+  private onmusicdownloaded = () => {    
     this.bytesfields += chunk.length
     let rawbuffer = new Float32Array(chunk)
     let newbuffer = this.audiocontext.createBuffer(1, chunk.length, samplerate)
@@ -140,9 +120,7 @@ export class MusicService implements OnDestroy {
     
   ngOnDestroy() {
     this.audiosource.stop()
-    this.connection.stop()
     this.subs.unsubscribe()
-    this.weirdsubscription.dispose()
     this.thread2.terminate()
   }
 }

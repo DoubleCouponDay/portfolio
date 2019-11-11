@@ -40,8 +40,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.sink.add(sub2)
 
     streamer.startconnection()
-      .then((result) => {
-        if(result.outcome === false) {
+      .then((result: boolean) => {
+        if(result === false) {
           return
         }
         streamer.loadrandomdeserttrack()
