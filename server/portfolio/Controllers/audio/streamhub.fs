@@ -15,7 +15,7 @@ type streamhub() =
         Console.WriteLine("socket connected!")
         base.OnConnectedAsync()
 
-    member public this.randomdeserttrack(): ChannelReader<byte[]> =        
+    member public this.randomdeserttrack(): ChannelReader<byte[]> =
         let channel = Channel.CreateUnbounded<byte[]>()
         this.fillchannel(channel) |> ignore
         channel.Reader
@@ -25,11 +25,12 @@ type streamhub() =
             let track = drivereader.get.readrandomdeserttrack()
             let chunk = Array.create chunksize (new Byte())
 
-            while track.stream.CanRead do
+            while track.stream.Position < track.stream.Length do
                 track.stream.Read(chunk, 0, chunksize) |> ignore
                 input.Writer.WriteAsync(chunk) |> ignore
 
             input.Writer.TryComplete() |> ignore
+            track.stream.Dispose()
         }
         task |> Async.Start
 

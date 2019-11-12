@@ -37,19 +37,17 @@ describe('musicservice', () => {
                 expect(connectionresult.outcome).toBeTruthy()
                 done()
             })
-    })
+    }, streamtimeout)
 
+    /** only one streaming test can succeed at a time! the server just runs out of memory. */
     it('should stream music', (done: DoneFn) => {
         service.startconnection()
         .then(() => {
-            let streamisclosed = false
-
             let subscriber: IStreamSubscriber<number[]> = {
-                next: () => {
-                    expect(service.currentdownloadedbytes).toBeGreaterThan(0)
+                next: (chunk: number[]) => {
+                    expect(chunk.length).toBeGreaterThan(0)
                 },
-                complete: () => {  
-                    expect(streamisclosed).toBeTruthy()              
+                complete: () => {             
                     done()
                 },
                 error: console.error
