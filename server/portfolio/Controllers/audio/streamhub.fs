@@ -27,7 +27,8 @@ type streamhub() =
 
             while track.stream.Position < track.stream.Length do
                 track.stream.Read(chunk, 0, chunksize) |> ignore
-                input.Writer.WriteAsync(chunk) |> ignore
+                input.Writer.WriteAsync(chunk).AsTask() 
+                |> Async.AwaitTask
 
             input.Writer.TryComplete() |> ignore
             track.stream.Dispose()

@@ -49,7 +49,7 @@ export class MusicService implements OnDestroy {
       complete: this.onstreamcomplete
     }
 
-    this.audiocontext = new AudioContext()
+    this.audiocontext = new AudioContext()    
     this.audiocontext.suspend()
     this.audiosource = this.audiocontext.createBufferSource()
     this.audiosource.connect(this.audiocontext.destination)
@@ -82,19 +82,18 @@ export class MusicService implements OnDestroy {
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-    let stream = this.connection.stream<number[]>(randomdeserttrackroute)    
-    console.log(`${randomdeserttrackroute} invoked`)
+    let stream = this.connection.stream<number[]>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = (chunk: number[]) => {    
+  private onmusicdownloaded = (chunk: number[]) => {  
+    console.log('stream chunk received')   
     this.bytesfields += chunk.length
     let rawbuffer = new Float32Array(chunk)
     let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
-    newbuffer.copyToChannel(rawbuffer, 0)   
-    console.log('stream chunk received') 
+    newbuffer.copyToChannel(rawbuffer, 0)       
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -130,11 +129,14 @@ export class MusicService implements OnDestroy {
   }
 
   public playrandomdeserttrack = () => {
+    console.log("music playing")
+    this.audiocontext.resume()
     this.audiosource.start()
   }
     
-  ngOnDestroy() {
+  ngOnDestroy() {    
     this.audiosource.stop()
+    this.audiocontext.suspend()
     this.connection.stop()
     this.subs.unsubscribe()
     this.weirdsubscription.dispose()

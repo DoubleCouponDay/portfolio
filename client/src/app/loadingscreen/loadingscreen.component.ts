@@ -42,6 +42,7 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
     this.sub = this.loading.subscribeloadedevent(this.onloaded)
     this.fadefactory = animationfactory.build(togglefade)    
     this.entersound = new Audio(aetherpingsoundaddress)
+    this.entersound.volume = 0.7
   }
 
   ngAfterViewInit() {
