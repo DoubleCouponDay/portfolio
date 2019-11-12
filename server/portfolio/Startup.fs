@@ -70,7 +70,7 @@ type Startup private () =
             .UseSignalR(fun routing ->
                 routing.MapHub<streamhub>(new PathString("/stream"), fun options ->
                     options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
-                    options.TransportMaxBufferSize <- int64(chunksize)
+                    options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
                     options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
             ))
             .UseHttpsRedirection()

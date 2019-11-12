@@ -19,4 +19,7 @@ let public binarycontentmime = "application/octet-stream"
 let public chunksize = 256_000
 
 [<Literal>]
+let public maxsampleratebits = 3
+
+[<Literal>]
 let public availablememory = 1_000_000_000

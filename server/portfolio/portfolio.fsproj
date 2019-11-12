@@ -22,6 +22,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="portfolio.data.fs" />
+    <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\driveresponse.fs" />
     <Compile Include="Models\session.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
@@ -35,8 +36,6 @@
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <Content Update="credentials.json">
