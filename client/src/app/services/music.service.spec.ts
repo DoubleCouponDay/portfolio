@@ -7,9 +7,8 @@ import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 import { IStreamSubscriber } from '@aspnet/signalr';
 import { LoadingService } from './loading.service';
-import { messagestate } from './streaming.data';
 
-const streamtimeout = 60_000
+const streamtimeout = 60000
 
 describe('musicservice', () => {
     let service: MusicService
@@ -35,7 +34,7 @@ describe('musicservice', () => {
     it('should negotiate a transport', (done: DoneFn) => {
         service.startconnection()
             .then((connectionresult) => {
-                expect(connectionresult).toBeTruthy()
+                expect(connectionresult.outcome).toBeTruthy()
                 done()
             })
     })
@@ -43,11 +42,19 @@ describe('musicservice', () => {
     it('should stream music', (done: DoneFn) => {
         service.startconnection()
         .then(() => {
-            let allowedtostream = service.loadrandomdeserttrack((output) => {
-                expect(output.state).toEqual(messagestate.response_haveachunk)
-                expect(output.chunk).toBeTruthy()
-                done()
-            })   
+            let streamisclosed = false
+
+            let subscriber: IStreamSubscriber<number[]> = {
+                next: () => {
+                    expect(service.currentdownloadedbytes).toBeGreaterThan(0)
+                },
+                complete: () => {  
+                    expect(streamisclosed).toBeTruthy()              
+                    done()
+                },
+                error: console.error
+            }
+            let allowedtostream = service.loadrandomdeserttrack(subscriber)   
             expect(allowedtostream).toBeTruthy()
         })
     }, streamtimeout)
