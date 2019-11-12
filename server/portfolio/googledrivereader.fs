@@ -116,6 +116,7 @@ type public drivereader private() =
         if result.Exception <> null then
             raise result.Exception
 
+        output.Position <- 0L
         output
 
     member private x.getplaylistlines(playlist: Data.File): string[] =
