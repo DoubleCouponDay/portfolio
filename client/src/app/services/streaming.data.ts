@@ -16,4 +16,4 @@ export interface streampartial {
 
 export const chunksize = 256_000
 
-export const workerfilepath = "assets/audiostreamer.worker.js"
+export const workerfilepath = "assets/audiostreamer.js"

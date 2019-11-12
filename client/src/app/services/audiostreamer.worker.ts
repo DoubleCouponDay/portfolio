@@ -1,7 +1,3 @@
-/**
- * AUTHORS NOTE: THIS IS A STRONGLY TYPED DRAFT WHICH IS CONVERTED TO the assets/audiostreamer.worker.js FILE UPON NEW CHANGES.
- */
-
 import { HubConnection, LogLevel, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState, HubConnectionBuilder, IStreamResult } from '@aspnet/signalr'
 import { baseroute } from 'src/environments/api'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data'
