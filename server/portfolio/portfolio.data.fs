@@ -14,6 +14,3 @@ let public corspolicyname = "azure_storage_client_side"
 
 [<Literal>]
 let public binarycontentmime = "application/octet-stream"
-
-[<Literal>]
-let public chunksize = 256_000

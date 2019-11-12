@@ -8,10 +8,8 @@ import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { createWorker, ITypedWorker } from 'typed-web-workers'
-import { workerinput, workermessage } from './streaming.data';
 
-const bytesneededtostart = 2_000_000
+const bytesneededtostart = 10_000_000
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +17,8 @@ const bytesneededtostart = 2_000_000
 export class MusicService implements OnDestroy {
 
   private audiocontext: AudioContext
-  private audiosource: AudioBufferSourceNode  
+  private audiosource: AudioBufferSourceNode
+
   private bytesfields = 0
 
   public get currentdownloadedbytes(): number {
@@ -32,10 +31,8 @@ export class MusicService implements OnDestroy {
   private connection: HubConnection
 
   private subs = new SubSink()
-  private defaultsubscriber: IStreamSubscriber<number[]> 
-  private weirdsubscription: ISubscription<number[]>
-
-  private thread2: ITypedWorker<workermessage, workermessage>
+  private defaultsubscriber: IStreamSubscriber<number> 
+  private weirdsubscription: ISubscription<number>
 
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
@@ -52,6 +49,10 @@ export class MusicService implements OnDestroy {
       complete: this.onstreamcomplete
     }
 
+    this.audiocontext = new AudioContext()
+    this.audiocontext.suspend()
+    this.audiosource = this.audiocontext.createBufferSource()
+    this.audiosource.connect(this.audiocontext.destination)
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -76,30 +77,24 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number[]>): boolean {
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number>): boolean {
     if(this.currentdownloadedbytes > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-
-    let worker = (workerFunction: (input: workerinput, cb: (_: void, transfer?: ArrayBuffer) => void) => void {
-
-    } 
-    
-    let onMessage?: (output: void) => void)
-
-    let thread2 = createWorker<number, string>()
-    let stream = this.connection.stream<number[]>(randomdeserttrackroute)    
+    let stream = this.connection.stream<number>(randomdeserttrackroute)    
+    console.log(`${randomdeserttrackroute} invoked`)
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = (chunk: number[]) => {    
-    this.bytesfields += chunk.length
-    let rawbuffer = new Float32Array(chunk)
-    let newbuffer = this.audiocontext.createBuffer(1, chunk.length, samplerate)
+  private onmusicdownloaded = (chunk: number) => {    
+    this.bytesfields++
+    let rawbuffer = new Float32Array([chunk])
+    let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
     newbuffer.copyToChannel(rawbuffer, 0)   
+    console.log('stream chunk received') 
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -143,6 +138,5 @@ export class MusicService implements OnDestroy {
     this.connection.stop()
     this.subs.unsubscribe()
     this.weirdsubscription.dispose()
-    this.thread2.terminate()
   }
 }
