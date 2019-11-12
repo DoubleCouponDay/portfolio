@@ -1,13 +1,9 @@
-/**
- * AUTHORS NOTE: THIS IS A STRONGLY TYPED DRAFT WHICH IS CONVERTED TO the assets/audiostreamer.worker.js FILE UPON NEW CHANGES.
- */
+// import { HubConnection, LogLevel, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState, HubConnectionBuilder, IStreamResult } from '@aspnet/signalr'
+// import { baseroute } from 'src/environments/api'
+// import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data'
+// import { messagestate } from 'src/app/services/streaming.data'
 
-import { HubConnection, LogLevel, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState, HubConnectionBuilder, IStreamResult } from '@aspnet/signalr'
-import { baseroute } from 'src/environments/api'
-import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data'
-import { messagestate } from 'src/app/services/streaming.data'
-
-let connection: HubConnection
+let connection;
 
 let connected = false
 
@@ -17,17 +13,20 @@ const subscriber = {
     complete: onstreamcomplete
 }
 
-let stream: IStreamResult<number[]>
-let subscription: ISubscription<number[]>
+importScripts("main-es5.js")
+importScripts("main-es2015.js")
 
-addEventListener("message", (inputevent: MessageEvent) => {
+let stream;
+let subscription;
+
+addEventListener("message", (inputevent) => {
   switch(inputevent.data) {
     case messagestate.request_connecttoserver:
       startconnection()
         .then(() => {
           postMessage(messagestate.response_connected, baseroute)
         })
-        .catch((error: any) => {
+        .catch((error) => {
           console.error(error)
           postMessage(messagestate.response_connectfailed, baseroute)
         })
@@ -42,7 +41,7 @@ addEventListener("message", (inputevent: MessageEvent) => {
   }
 })
 
-function startconnection(): Promise<void> {
+function startconnection() {
     return new Promise((resolve, reject) => {
       if(connected === true) {
         resolve()
@@ -66,11 +65,11 @@ function startconnection(): Promise<void> {
 }
 
 function startstreaming() {
-    stream = connection.stream<number[]>(randomdeserttrackroute)
+    stream = connection.stream(randomdeserttrackroute)
     subscription = stream.subscribe(subscriber)
 }
 
-function onchunkdownloaded(chunk: number[]) {
+function onchunkdownloaded(chunk) {
   let buffer = new Float32Array(chunk)
   let response = {
     state: messagestate.response_haveachunk,
