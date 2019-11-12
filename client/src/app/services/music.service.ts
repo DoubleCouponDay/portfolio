@@ -9,7 +9,7 @@ import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
 
-const bytesneededtostart = 10_000_000
+const bytesneededtostart = 2_000_000
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +31,8 @@ export class MusicService implements OnDestroy {
   private connection: HubConnection
 
   private subs = new SubSink()
-  private defaultsubscriber: IStreamSubscriber<number> 
-  private weirdsubscription: ISubscription<number>
+  private defaultsubscriber: IStreamSubscriber<number[]> 
+  private weirdsubscription: ISubscription<number[]>
 
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
@@ -77,21 +77,21 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number>): boolean {
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number[]>): boolean {
     if(this.currentdownloadedbytes > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-    let stream = this.connection.stream<number>(randomdeserttrackroute)    
+    let stream = this.connection.stream<number[]>(randomdeserttrackroute)    
     console.log(`${randomdeserttrackroute} invoked`)
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = (chunk: number) => {    
-    this.bytesfields++
-    let rawbuffer = new Float32Array([chunk])
+  private onmusicdownloaded = (chunk: number[]) => {    
+    this.bytesfields += chunk.length
+    let rawbuffer = new Float32Array(chunk)
     let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
     newbuffer.copyToChannel(rawbuffer, 0)   
     console.log('stream chunk received') 

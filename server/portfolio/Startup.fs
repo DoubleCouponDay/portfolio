@@ -52,12 +52,9 @@ type Startup private () =
                     this.addcustomorigins
                 )
                 ()
-        ) |> ignore
-
-        let signalrbuilder = services.AddSignalR(fun options -> 
+        ).AddSignalR(fun options -> 
             options.EnableDetailedErrors <- new Nullable<bool>(true)
-        )
-        ()
+        ) |> ignore        
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
@@ -73,7 +70,7 @@ type Startup private () =
             .UseSignalR(fun routing ->
                 routing.MapHub<streamhub>(new PathString("/stream"), fun options ->
                 options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
-                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(30.0)
+                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
             ))
             .UseHttpsRedirection()
             .UseMvc() |> ignore

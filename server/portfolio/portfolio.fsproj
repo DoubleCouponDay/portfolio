@@ -24,7 +24,6 @@
     <Compile Include="portfolio.data.fs" />
     <Compile Include="Models\driveresponse.fs" />
     <Compile Include="Models\session.fs" />
-    <Compile Include="globalhttpport.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
     <Compile Include="googledrivereader.fs" />
