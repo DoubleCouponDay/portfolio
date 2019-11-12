@@ -69,8 +69,9 @@ type Startup private () =
             .UseCors(corspolicyname)
             .UseSignalR(fun routing ->
                 routing.MapHub<streamhub>(new PathString("/stream"), fun options ->
-                options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
-                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
+                    options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
+                    options.TransportMaxBufferSize <- int64(chunksize)
+                    options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
             ))
             .UseHttpsRedirection()
             .UseMvc() |> ignore
