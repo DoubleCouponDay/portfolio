@@ -152,8 +152,8 @@ export class MusicService implements OnDestroy {
     let currentbuffer = this.buffers[this.currentbufferplayed]
     this.currentbufferplayed++
     source.buffer = currentbuffer      
-    source.start()    
-    source.addEventListener("ended", this.playanewbuffer)
+    source.onended = this.playanewbuffer
+    source.start()        
   }
     
   ngOnDestroy() {    
