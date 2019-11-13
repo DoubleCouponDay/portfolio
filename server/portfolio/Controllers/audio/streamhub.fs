@@ -30,13 +30,14 @@ type streamhub() =
             let totalchunks = track.stream.Length / int64(chunksize)
 
             while track.stream.Position < track.stream.Length do
-                track.stream.Read(chunk, 0, chunksize) |> ignore
-                let mapped = chunk.Select(fun current -> int(current))                
-                let output = new streamresponse(mapped)
+                let output = new streamresponse()
 
                 if track.stream.Position = 0L then
                     output.totalchunks <- totalchunks
-                
+
+                track.stream.Read(chunk, 0, chunksize) |> ignore
+                let mapped = chunk.Select(fun current -> int(current))                
+                output.chunk <- mapped
                 input.Writer.WriteAsync(output).AsTask() 
                 |> Async.AwaitTask |> ignore
 
