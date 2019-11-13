@@ -86,7 +86,6 @@ export class MusicService implements OnDestroy {
       isnullorundefined(this.buffers)) {
       this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
     }     
-    console.log(`stream chunk received. can play: ${this.musicisreadytoplay()}`)   
     let rawbuffer = new Float32Array(response.chunk)
     let newbuffer = this.audiocontext.createBuffer(1, rawbuffer.length, 44100)
     
@@ -103,7 +102,6 @@ export class MusicService implements OnDestroy {
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
-    console.log(`stream fully loaded! can play: ${this.musicisreadytoplay()}`)
 
     if(this.musicisreadytoplay() === true) {
       this.playrandomdeserttrack()      
@@ -146,7 +144,6 @@ export class MusicService implements OnDestroy {
   public playrandomdeserttrack = () => {    
     this.musicisplaying = true        
     this.playanewbuffer()
-    console.log("music playing")
   }
 
   private playanewbuffer = () => {

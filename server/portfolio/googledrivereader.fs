@@ -71,9 +71,7 @@ type public drivereader private() =
     member val private rng = new Random()
 
     member public x.readrandomdeserttrack(): driveresponse =    
-        if x.playlist = null then
-            x.setplaylist()
-
+        x.setplaylist()
         let chosenindex = x.rng.Next(x.playlist.Length)
         let chosenfilename = x.playlist.[chosenindex]
         let chosenfile = x.requestfilebyname(chosenfilename)
