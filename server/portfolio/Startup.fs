@@ -16,6 +16,8 @@ open Microsoft.AspNetCore.SignalR
 
 open portfolio.data
 open portfolio.controllers.audio
+open Newtonsoft.Json.Serialization
+open Newtonsoft.Json
 
 
 type Startup private () =
@@ -43,7 +45,12 @@ type Startup private () =
     // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
         // Add framework services.
-        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2) |> ignore
+        services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0) |> ignore
+        
+        let handleserialisationproblem = new EventHandler<ErrorEventArgs>(fun input -> 
+            let message = JsonConvert.SerializeObject(input)
+            failwith message
+        )
 
         services.AddCors(
             fun options ->
@@ -51,10 +58,17 @@ type Startup private () =
                     corspolicyname,
                     this.addcustomorigins
                 )
+                ()                    
+            )
+            .AddSignalR(fun options -> 
+                options.EnableDetailedErrors <- new Nullable<bool>(true)
+            )
+            .AddNewtonsoftJsonProtocol(fun options -> 
+                options.PayloadSerializerSettings.ContractResolver <- new CamelCasePropertyNamesContractResolver()
+                options.PayloadSerializerSettings.Error <- handleserialisationproblem
                 ()
-        ).AddSignalR(fun options -> 
-            options.EnableDetailedErrors <- new Nullable<bool>(true)
-        ) |> ignore        
+            )
+        |> ignore       
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
@@ -64,16 +78,21 @@ type Startup private () =
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts() |> ignore
       
-        app.UseDefaultFiles()
-            .UseStaticFiles()
-            .UseCors(corspolicyname)
-            .UseSignalR(fun routing ->
-                routing.MapHub<streamhub>(new PathString("/stream"), fun options ->
+        app.UseDefaultFiles() |> ignore
+        app.UseStaticFiles() |> ignore
+        app.UseCors(corspolicyname) |> ignore
+
+        app.UseEndpoints(fun routing ->
+                routing.MapHub<streamhub>("/stream", fun options ->
                     options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
                     options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
                     options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
-            ))
-            .UseHttpsRedirection()
-            .UseMvc() |> ignore
+                    ()
+                ) |> ignore
+                ()
+            ) |> ignore
+
+        app.UseHttpsRedirection() |> ignore
+        app.UseMvc() |> ignore
 
     member val Configuration : IConfiguration = null with get, set
