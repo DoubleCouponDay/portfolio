@@ -87,7 +87,6 @@ export class MusicService implements OnDestroy {
       this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
     }     
     console.log(`stream chunk received. can play: ${this.musicisreadytoplay()}`)   
-    this.currentbufferdownloaded++
     let rawbuffer = new Float32Array(response.chunk)
     let newbuffer = this.audiocontext.createBuffer(1, rawbuffer.length, 44100)
     
