@@ -71,28 +71,22 @@ type Startup private () =
         |> ignore       
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    member this.Configure(app: IApplicationBuilder, env: IHostingEnvironment) =
-        if (env.IsDevelopment()) then
-            app.UseDeveloperExceptionPage() |> ignore
-        else
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts() |> ignore
-      
-        app.UseDefaultFiles() |> ignore
-        app.UseStaticFiles() |> ignore
-        app.UseCors(corspolicyname) |> ignore
-
+    member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =      
+        app.UseDefaultFiles()
+            .UseStaticFiles() 
+            .UseCors(corspolicyname)
+            .UseRouting()  |> ignore
+        
         app.UseEndpoints(fun routing ->
-                routing.MapHub<streamhub>("/stream", fun options ->
-                    options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
-                    options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
-                    options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
-                    ()
-                ) |> ignore
+            routing.MapHub<streamhub>("/stream", fun options ->
+                options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
+                options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
+                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
                 ()
             ) |> ignore
+            ()
+        ) |> ignore
 
         app.UseHttpsRedirection() |> ignore
-        app.UseMvc() |> ignore
 
     member val Configuration : IConfiguration = null with get, set
