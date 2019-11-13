@@ -45,8 +45,7 @@ export class MusicService implements OnDestroy {
       complete: this.onstreamcomplete
     }
 
-    this.audiocontext = new AudioContext()    
-    this.audiocontext.suspend()
+    this.audiocontext = new AudioContext()        
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -130,6 +129,7 @@ export class MusicService implements OnDestroy {
     if(state !== loadstate.done) {
       return
     }    
+    this.audiocontext.resume()
     this.apploaded = true    
   }
 
@@ -150,7 +150,6 @@ export class MusicService implements OnDestroy {
     let currentbuffer = this.buffers[this.currentbufferplayed]
     this.currentbufferplayed++
     source.buffer = currentbuffer            
-    this.audiocontext.resume()
     source.start()    
     this.musicisplaying = true    
     this.tryplayagain()
