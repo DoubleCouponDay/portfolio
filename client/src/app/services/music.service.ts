@@ -18,10 +18,6 @@ export class MusicService implements OnDestroy {
 
   /**stream */
   private streamcompleted = false
-
-  public get currentdownloadedchunks(): number {
-    return this.buffers.length
-  }
   private connection: HubConnection
   private currentbufferdownloaded = 0
   private defaultsubscriber: IStreamSubscriber<streamresponse> 
@@ -76,7 +72,7 @@ export class MusicService implements OnDestroy {
   
   /** can only be called once. returns false if service decided not a good time. */
   public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
-    if(this.currentdownloadedchunks > 0 ||
+    if(this.buffers.length > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
