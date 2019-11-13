@@ -20,7 +20,7 @@ open portfolio.models
 let credentialspath = @"portfolio-ffdfea565994.p12"
 
 [<Literal>]
-let playlistname = "wilderness.m3u"
+let playlistname = "test.m3u"
 
 [<Literal>]
 let serviceaccountemail = "server@portfolio-256800.iam.gserviceaccount.com"
@@ -124,12 +124,12 @@ type public drivereader private() =
 
         let output = 
             entire.Split(Environment.NewLine)
+                .Where(fun currentline -> currentline <> "")
                 .Select(fun currentline -> 
                     currentline.Split(backslash)
                         .Last()
                 )
                 .ToArray()
-
         output
 
 
