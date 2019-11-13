@@ -35,7 +35,7 @@ type streamhub() =
                 let output = new streamresponse(mapped)
 
                 if track.stream.Position = 0L then
-                    output.totalChunks <- totalchunks
+                    output.totalchunks <- totalchunks
                 
                 input.Writer.WriteAsync(output).AsTask() 
                 |> Async.AwaitTask |> ignore
