@@ -64,7 +64,6 @@ type Startup private () =
                 options.EnableDetailedErrors <- new Nullable<bool>(true)
             )
             .AddNewtonsoftJsonProtocol(fun options -> 
-                options.PayloadSerializerSettings.ContractResolver <- new CamelCasePropertyNamesContractResolver()
                 options.PayloadSerializerSettings.Error <- handleserialisationproblem
                 ()
             )
