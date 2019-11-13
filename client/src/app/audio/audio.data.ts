@@ -8,5 +8,3 @@ export const gratingsoundaddress = 'assets/stone-grinding.mp3'
 export const drawbridgesoundaddress = 'assets/drawbridge.flac'
 export const tabletsoundaddress = 'assets/tabletscraping.mp3'
 export const aetherpingsoundaddress = 'assets/aether-mining.flac'
-
-export const samplerate = 44100

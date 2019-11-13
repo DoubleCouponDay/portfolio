@@ -7,6 +7,7 @@ import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 import { IStreamSubscriber } from '@aspnet/signalr';
 import { LoadingService } from './loading.service';
+import { streamresponse } from './streaming.data';
 
 const streamtimeout = 60000
 
@@ -43,9 +44,9 @@ describe('musicservice', () => {
     it('should stream music', (done: DoneFn) => {
         service.startconnection()
         .then(() => {
-            let subscriber: IStreamSubscriber<number[]> = {
-                next: (chunk: number[]) => {
-                    expect(chunk.length).toBeGreaterThan(0)
+            let subscriber: IStreamSubscriber<streamresponse> = {
+                next: (chunk: streamresponse) => {
+                    expect(chunk.chunk.length).toBeGreaterThan(0)
                 },
                 complete: () => {             
                     done()

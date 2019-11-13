@@ -4,35 +4,35 @@ import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent, HttpEventType } from
 import { api, baseroute } from '../../environments/api'
 import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
-import { samplerate } from '../audio/audio.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-
-const bytesneededtostart = 2_000_000
+import { bytesneededtostart, playablebuffercount, streamresponse } from './streaming.data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MusicService implements OnDestroy {
-
-  private audiocontext: AudioContext
-  private audiosource: AudioBufferSourceNode
-
-  private bytesfields = 0
-
-  public get currentdownloadedbytes(): number {
-    return this.bytesfields
-  }
-  private streamcompleted = false
   private apploaded = false
-  private musicisplaying = false
-
-  private connection: HubConnection
-
   private subs = new SubSink()
-  private defaultsubscriber: IStreamSubscriber<number[]> 
-  private weirdsubscription: ISubscription<number[]>
+
+  /**stream */
+  private streamcompleted = false
+
+  public get currentdownloadedchunks(): number {
+    return this.buffers.length
+  }
+  private connection: HubConnection
+  private currentbufferdownloaded = 0
+  private defaultsubscriber: IStreamSubscriber<streamresponse> 
+  private weirdsubscription: ISubscription<streamresponse>
+
+  /**audio */
+  private musicisplaying = false
+  private audiocontext: AudioContext
+  private currentbufferplayed = 0
+  private buffers = new Array<AudioBuffer>()
+  private tryplayagain_intervalid = 0
 
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
@@ -51,8 +51,6 @@ export class MusicService implements OnDestroy {
 
     this.audiocontext = new AudioContext()    
     this.audiocontext.suspend()
-    this.audiosource = this.audiocontext.createBufferSource()
-    this.audiosource.connect(this.audiocontext.destination)
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -77,23 +75,31 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<number[]>): boolean {
-    if(this.currentdownloadedbytes > 0 ||
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
+    if(this.currentdownloadedchunks > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-    let stream = this.connection.stream<number[]>(randomdeserttrackroute)        
+    let stream = this.connection.stream<streamresponse>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = (chunk: number[]) => {  
+  private onmusicdownloaded = (response: streamresponse) => {  
+    if(response.totalchunks !== 0 &&
+      isnullorundefined(this.buffers)) {
+      this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
+    }     
     console.log('stream chunk received')   
-    this.bytesfields += chunk.length
-    let rawbuffer = new Float32Array(chunk)
-    let newbuffer = this.audiocontext.createBuffer(1, 1, samplerate)
-    newbuffer.copyToChannel(rawbuffer, 0)       
+    this.currentbufferdownloaded++
+    let rawbuffer = new Float32Array(response.chunk)
+    let newbuffer = this.audiocontext.createBuffer(1, rawbuffer.length, 44100)
+    
+    newbuffer.getChannelData(0)
+      .set(rawbuffer)
+    this.buffers[this.currentbufferdownloaded] = newbuffer
+    this.currentbufferdownloaded++
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -105,12 +111,22 @@ export class MusicService implements OnDestroy {
     this.streamcompleted = true
     console.log("stream fully loaded!")
 
-    let intervalid = window.setInterval(() => {
+    if(this.musicisreadytoplay() === true) {
+      this.playrandomdeserttrack()      
+    }
+    
+    else {
+      this.tryplayagain()
+    }
+  }
+
+  private tryplayagain = () => {
+    this.tryplayagain_intervalid = window.setInterval(() => {
       if(this.musicisreadytoplay() === false) {
         return
       }
-      this.playrandomdeserttrack()
-      window.clearInterval(intervalid)
+      window.clearInterval(this.tryplayagain_intervalid)
+      this.playrandomdeserttrack()      
     }, 500)
   }
 
@@ -122,20 +138,30 @@ export class MusicService implements OnDestroy {
   }
 
   private musicisreadytoplay(): boolean {
-    return (this.currentdownloadedbytes >= bytesneededtostart ||
-      this.streamcompleted === true) &&
-      this.apploaded === true &&
-      this.musicisplaying === false
+    let musicisnotplaying = this.musicisplaying === false    
+    let buffersleft = this.buffers.length - 1 - this.currentbufferplayed
+    let hasenoughbuffers = buffersleft >= playablebuffercount
+    let streamonitswayout = this.streamcompleted && buffersleft < playablebuffercount
+
+    return this.apploaded &&
+      musicisnotplaying &&
+      (hasenoughbuffers || streamonitswayout)     
   }
 
   public playrandomdeserttrack = () => {
-    console.log("music playing")
+    let source = this.audiocontext.createBufferSource()
+    source.connect(this.audiocontext.destination)
+    let currentbuffer = this.buffers[this.currentbufferplayed]
+    this.currentbufferplayed++
+    source.buffer = currentbuffer            
     this.audiocontext.resume()
-    this.audiosource.start()
+    source.start()    
+    this.musicisplaying = true    
+    this.tryplayagain()
+    console.log("music playing")
   }
     
   ngOnDestroy() {    
-    this.audiosource.stop()
     this.audiocontext.suspend()
     this.connection.stop()
     this.subs.unsubscribe()
