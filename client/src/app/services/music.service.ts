@@ -151,7 +151,7 @@ export class MusicService implements OnDestroy {
     source.connect(this.audiocontext.destination)
     let currentbuffer = this.buffers[this.currentbufferplayed]
     this.currentbufferplayed++
-    source.buffer = currentbuffer      
+    source.buffer = currentbuffer    
     source.onended = this.playanewbuffer
     source.start()        
   }

@@ -6,13 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Accord.Audio" Version="3.8.0" />
     <PackageReference Include="FSharp.Data" Version="3.3.2" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.42.0.1750" />
+    <PackageReference Include="LibFlacSharp" Version="1.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.0.0" />
-    <PackageReference Include="Microsoft.Net.Http" Version="2.2.29" />
-    <PackageReference Include="Microsoft.Owin.Cors" Version="4.0.1" />
+    <PackageReference Include="MP3Sharp" Version="1.0.5" />
+    <PackageReference Include="NAudio.Flac" Version="1.0.5702.29018" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.IO" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Caching" Version="4.6.0" />
@@ -24,8 +26,9 @@
     </None>
     <Compile Include="portfolio.data.fs" />
     <Compile Include="Models\streamresponse.fs" />
-    <Compile Include="Models\driveresponse.fs" />
+    <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />
+    <Compile Include="audiodecoder.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
     <Compile Include="googledrivereader.fs" />
