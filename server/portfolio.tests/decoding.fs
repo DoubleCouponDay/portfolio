@@ -18,14 +18,16 @@ type public the_decoders() =
 
     [<Fact>]
     member public this.can_decode_mp3() =
-        use stream = new MemoryStream()
-        use file = File.OpenRead("assets/sample.mp3")
-        file.CopyTo(stream)
-        let mime = MimeTypes.tryFind("mp3").Value
-        let input = new audiofile(stream, "", mime)
-        let output = context.decodeaudio(input)
-        outputstream <- output.stream
-        this.testoutput(input.stream)   
+        async {
+            use stream = new MemoryStream()
+            use file = File.OpenRead("assets/sample.mp3")
+            file.CopyTo(stream)
+            let mime = MimeTypes.tryFind("mp3").Value
+            let input = new audiofile(stream, "", mime)
+            let! output = context.decodeaudio(input)
+            outputstream <- output.stream
+            this.testoutput(input.stream)   
+        }
 
     [<Fact>]
     member public this.can_decode_wav() =
