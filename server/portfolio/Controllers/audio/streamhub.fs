@@ -25,7 +25,7 @@ type streamhub() =
 
     member private this.fillchannel(input: Channel<streamresponse>): unit =
         let task = async {
-            let track = drivereader.get.readrandomdeserttrack()
+            let! track = drivereader.get.readrandomdeserttrack()
             let chunk = Array.create chunksize (new byte())
             let totalchunks = track.stream.Length / int64(chunksize)
 

@@ -20,7 +20,7 @@ open portfolio.models
 let credentialspath = @"portfolio-ffdfea565994.p12"
 
 [<Literal>]
-let playlistname = "test.m3u"
+let playlistname = "wilderness.m3u"
 
 [<Literal>]
 let serviceaccountemail = "server@portfolio-256800.iam.gserviceaccount.com"
@@ -70,20 +70,26 @@ type public drivereader private() =
 
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): audiofile =    
-        x.setplaylist()
-        let chosenindex = x.rng.Next(x.playlist.Length)
-        let chosenfilename = x.playlist.[chosenindex]
-        let chosenfile = x.requestfilebyname(chosenfilename)
-        let stream = x.requestfilebyID(chosenfile.Id)
-        new audiofile(stream, chosenfilename, chosenfile.MimeType)
-
-    member private x.setplaylist(): unit =
-        let playlistfile = x.requestfilebyname(playlistname)
-        x.playlist <- x.getplaylistlines(playlistfile)
-        ()
+    member public x.readrandomdeserttrack(): Async<audiofile> =    
+        async {        
+            let! operation = x.setplaylist()
+            let chosenindex = x.rng.Next(x.playlist.Length)
+            let chosenfilename = x.playlist.[chosenindex]
+            let! chosenfile = x.requestfilebyname(chosenfilename)
+            let stream = x.requestfilebyID(chosenfile.Id)
+            return new audiofile(stream, chosenfilename, chosenfile.MimeType)
+        }
         
-    member private x.requestfilebyname(filename: string): Data.File =
+
+    member private x.setplaylist(): Async<unit> =
+        async {
+            let! playlistfile = 
+                x.requestfilebyname(playlistname)
+
+            x.playlist <- x.getplaylistlines(playlistfile)
+        }                
+        
+    member private x.requestfilebyname(filename: string): Async<Data.File> =
         let verytrue = new Nullable<bool>(true)
         let listRequest = x.service.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)
@@ -96,14 +102,19 @@ type public drivereader private() =
         
         listRequest.AddExceptionHandler(new exceptionhandler())
         listRequest.AddUnsuccessfulResponseHandler(new unsuccessfulhandler())
-        let files = listRequest.Execute().Files
 
-        if files.Count = 0 then
-            let message = "query failed!"
-            Console.WriteLine(message)
-            failwith message
+        async {
+            let! query = 
+                listRequest.ExecuteAsync() 
+                |> Async.AwaitTask
 
-        files.Item(0)
+            if query.Files.Count = 0 then
+                let message = "query failed!"
+                Console.WriteLine(message)
+                failwith message
+
+            return query.Files.Item(0)
+        }
 
     member private x.requestfilebyID(id: string): MemoryStream = 
         let request = x.service.Files.Get(id)
