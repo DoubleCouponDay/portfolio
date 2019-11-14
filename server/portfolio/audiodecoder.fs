@@ -1,6 +1,6 @@
 ﻿namespace portfolio.audiodecoder
 
-open NAudio.Flac
+open ManagedBass.Aac
 open MP3Sharp.Decoding
 open Accord.Audio
 open portfolio.models
@@ -31,16 +31,16 @@ type public audiodecoder =
 
     member private this.decodemp3(input: audiofile): audiofile =
         
-        ()
+        null
 
     member private this.decodeaac(input: audiofile): audiofile =
-        ()
+        null
 
     member private this.decodeflac(input: audiofile): audiofile =
-        ()
+        null
 
     member private this.decodeogg(input: audiofile): audiofile =
-        ()
+        null
 
 
 

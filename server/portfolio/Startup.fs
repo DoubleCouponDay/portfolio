@@ -10,8 +10,6 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Http
 
 open Microsoft.AspNetCore.Cors.Infrastructure
-open Microsoft.Owin.Cors
-open Owin
 open Microsoft.AspNetCore.SignalR
 
 open portfolio.data

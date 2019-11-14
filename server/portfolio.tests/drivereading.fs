@@ -5,7 +5,7 @@ open portfolio.googledrivereader
 open System
 open Xunit.Abstractions
 
-type public drivereading(log: ITestOutputHelper) = 
+type public the_drive_reader(log: ITestOutputHelper) = 
 
     [<Fact>]
     member x.can_read_random_track() =

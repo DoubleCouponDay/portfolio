@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="assets\sample.m4a" />
+    <Content Include="assets\sample.mp3" />
+    <Content Include="assets\sample.wav" />
+    <None Include="assets\sample.flac" />
+    <Compile Include="decoding.fs" />
     <Content Include="secrets.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
