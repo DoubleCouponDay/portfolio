@@ -4,44 +4,45 @@ open ManagedBass.Aac
 open MP3Sharp.Decoding
 open Accord.Audio
 open portfolio.models
+open portfolio.data
 
-type public audiodecoder =
-    private new() = new audiodecoder()
-    static member public get = new audiodecoder()    
+type public audiodecoder() =
+    member public this.decodeaudio(track: audiofile): audiofile =
+        match track.mimetype with
+            | wavtype ->
+                this.decodewav(track)
 
-    member public this.decodeaudio(input: audiofile): audiofile =
-        match input.filetype with
-            | "audio/mpeg" -> 
-                   this.decodemp3(input)
+            | mp3type -> 
+                this.decodemp3(track)
 
-            | "audio/aac" ->
-                this.decodeaac(input)
+            | m4atype ->
+                this.decodem4a(track)
 
-            | "audio/flac" ->
-                this.decodeflac(input)
+            | xflactype ->
+                this.decodeflac(track)
 
-            | "audio/x-flac" ->
-                this.decodeflac(input)
+            | flactype ->
+                this.decodeflac(track)
 
-            | "audio/ogg" ->
-                this.decodeogg(input)
+            | oggtype ->
+                this.decodeogg(track)
 
             | _ -> 
-                failwith (String.concat "" [|"filetype: "; input.filetype; "not known by decoder!"|])
+                failwith (String.concat "" [|"filetype: "; track.mimetype; "not known by decoder!"|])
 
-    member private this.decodemp3(input: audiofile): audiofile =
-        
+    member private this.decodemp3(track: audiofile): audiofile =        
         null
 
-    member private this.decodeaac(input: audiofile): audiofile =
+    member private this.decodem4a(track: audiofile): audiofile =
         null
 
-    member private this.decodeflac(input: audiofile): audiofile =
+    member private this.decodeflac(track: audiofile): audiofile =
         null
 
     member private this.decodeogg(input: audiofile): audiofile =
         null
 
-
+    member private this.decodewav(input: audiofile): audiofile =
+        null
 
 
