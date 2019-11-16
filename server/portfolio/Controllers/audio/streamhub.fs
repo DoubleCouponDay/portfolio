@@ -28,16 +28,13 @@ type streamhub() =
         async {
             let! track = drivereader.get.readrandomdeserttrack()
             let decoder = new audiodecoder()
+            let decoded = decoder.decodeaudio(track)
 
-            seq {
-                let decoded = decoder.decodeaudio(track)
+            for item in decoded do
+                input.Writer.TryWrite(item) |> ignore
+                GC.Collect()
 
-                for item in decoded do
-                    input.Writer.TryWrite(item)
-
-                input.Writer.TryComplete() |> ignore
-                track.stream.Dispose()                
-            } 
-            |> ignore
+            input.Writer.TryComplete() |> ignore
+            track.stream.Dispose()                
         }
         |> Async.Start

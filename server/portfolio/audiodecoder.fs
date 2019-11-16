@@ -69,8 +69,10 @@ type public audiodecoder() =
                     totalchunks.IsSome then
                     output.totalchunks <- int64(totalchunks.Value)
 
-                let currentchunk = Array.create chunksize (new byte())                        
+                let currentchunk = Array.create chunksize (new byte())       
+                let amountread = chosenstream.Read(currentchunk, 0, chunksize) |> ignore
                 output.chunk <- currentchunk
+                GC.Collect()
                 yield output
         }
 

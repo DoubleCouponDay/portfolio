@@ -23,7 +23,7 @@ let credentialspath = @"portfolio-ffdfea565994.p12"
 //let playlistname = "wilderness.m3u"
 
 [<Literal>]
-let playlistname = "test.mp3"
+let playlistname = "test.m3u"
 
 [<Literal>]
 let serviceaccountemail = "server@portfolio-256800.iam.gserviceaccount.com"
