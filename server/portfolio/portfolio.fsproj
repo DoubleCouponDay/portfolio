@@ -27,13 +27,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="portfolio.data.fs" />
-    <None Include="mime.data.fs" />
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />
-    <Compile Include="audiodecoder.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
+    <Compile Include="audiodecoder.fs" />
     <Compile Include="googledrivereader.fs" />
     <Compile Include="Controllers\audio\streamhub.fs" />
     <Compile Include="Controllers\audio\upload.fs" />

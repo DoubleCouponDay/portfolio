@@ -1,4 +1,4 @@
-﻿namespace portfolio.audiodecoder
+﻿module portfolio.audiodecoder
 
 open ManagedBass.Aac
 open MP3Sharp
@@ -8,13 +8,31 @@ open portfolio.data
 open System.Linq
 open System.Collections.Generic
 open System.IO
+open System
+
+[<Literal>]
+let public mp3type = "audio/mpeg"
+
+[<Literal>]
+let public wavtype = "audio/wav"
+
+[<Literal>]
+let public oggtype = "audio/ogg"
+
+[<Literal>]
+let public flactype = "audio/flac"
+
+[<Literal>]
+let public xflactype = "audio/x-flac"
+
+[<Literal>]
+let public m4atype = "audio/aac"
 
 type public audiodecoder() =
-    member public this.decodeaudio(track: audiofile): Async<audiofile> =
-        match track.mimetype with
-            //| wavtype ->
-            //    this.decodewav(track)
+    member public this.decodeaudio(track: audiofile): seq<streamresponse> =
+        track.stream.Position <- 0L
 
+        match track.mimetype with
             | mp3type -> 
                 this.decodemp3(track)
 
@@ -30,30 +48,34 @@ type public audiodecoder() =
             //| oggtype ->
             //    this.decodeogg(track)
 
+            | wavtype ->
+                this.readstreamtoend(track)
+
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.mimetype; "not known by decoder!"|])
 
-    member private this.decodemp3(track: audiofile): Async<audiofile> =        
-        async {        
-            let decoder = new MP3Stream(track.stream)
-            let buffer = new ResizeArray<byte[]>()
-            buffer.Capacity <- int32(decoder.Length)
-            decoder.Position <- 0L
+    member private this.readstreamtoend(track:audiofile, ?formattedstream: Stream): seq<streamresponse> =
+        let chosenstream: Stream = 
+            match formattedstream with
+            | None -> track.stream :> Stream
 
-            while decoder.Position < decoder.Length do
-                let formattedposition = int32(decoder.Position)
-                let! computation = decoder.AsyncRead(buffer.[formattedposition], 0, chunksize)
-                ()
+            | _ -> formattedstream.Value
 
-            let seed = [||] :> IEnumerable<byte>
+        seq {
+            while chosenstream.Position < chosenstream.Length do
+                let output = new streamresponse()
 
-            let combined = buffer.Aggregate<byte[], IEnumerable<byte>>(seed, fun currentitem sum ->
-                currentitem.Concat(sum)
-            )
-            let formatted = new MemoryStream(combined.ToArray())
-            let output = new audiofile(formatted, track.filename, track.mimetype)
-            return output
+                if track.stream.Position = 0L then
+                    output.totalchunks <- track.stream.Length / int64(chunksize)
+
+                let currentchunk = Array.create chunksize (new byte())                        
+                output.chunk <- currentchunk
+                yield output
         }
+
+    member private this.decodemp3(track: audiofile): seq<streamresponse> =        
+        let decoder = new MP3Stream(track.stream, chunksize)
+        this.readstreamtoend(track, decoder)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    Async.
@@ -63,8 +85,3 @@ type public audiodecoder() =
 
     //member private this.decodeogg(input: audiofile): Async<audiofile> =
     //    null
-
-    //member private this.decodewav(input: audiofile): Async<audiofile> =
-    //    null
-
-
