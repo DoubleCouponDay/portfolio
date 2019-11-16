@@ -10,45 +10,30 @@ open System.Collections.Generic
 open System.IO
 open System
 
-[<Literal>]
-let public mp3type = "audio/mpeg"
-
-[<Literal>]
-let public wavtype = "audio/wav"
-
-[<Literal>]
-let public oggtype = "audio/ogg"
-
-[<Literal>]
-let public flactype = "audio/flac"
-
-[<Literal>]
-let public xflactype = "audio/x-flac"
-
-[<Literal>]
-let public m4atype = "audio/aac"
-
 type public audiodecoder() =
     member public this.decodeaudio(track: audiofile): seq<streamresponse> =
         track.stream.Position <- 0L
 
         match track.mimetype with
-            | mp3type -> 
+            | "audio/mpeg" -> 
                 this.decodemp3(track)
 
-            //| m4atype ->
+            //| "audio/aac" ->
             //    this.decodem4a(track)
 
-            //| xflactype ->
+            //| "audio/x-flac" ->
             //    this.decodeflac(track)
 
-            //| flactype ->
+            //| "audio/flac" ->
             //    this.decodeflac(track)
 
-            //| oggtype ->
+            //| "audio/ogg" ->
             //    this.decodeogg(track)
 
-            | wavtype ->
+            | "audio/wav" ->
+                this.readstreamtoend(track)
+
+            | "audio/x-wav" ->
                 this.readstreamtoend(track)
 
             | _ -> 
