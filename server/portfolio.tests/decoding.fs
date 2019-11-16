@@ -9,6 +9,7 @@ open portfolio.models
 open System
 open System.Media
 open System.Collections.Generic
+open System.Linq
 
 type public the_decoders() =
     let context = new audiodecoder()    
@@ -37,7 +38,10 @@ type public the_decoders() =
         let mutable fetched = Array.create 0 0uy
 
         for item in sequence do
-            fetched <- Array.append fetched item.chunk
+            let convertedbackaaah = 
+                item.chunk.Select(fun current -> byte(current))
+                    .ToArray()
+            fetched <- Array.append fetched convertedbackaaah
 
         subject <- new MemoryStream(fetched)
 
@@ -54,4 +58,4 @@ type public the_decoders() =
         Assert.True(false)
 
     member private this.testoutput(unprocessedstream: MemoryStream) =
-        Assert.True(subject.Length > unprocessedstream.Length, "there are more raw pcm bytes than encoded bytes")
+        Assert.True(subject.Length > unprocessedstream.Length, "there are more raw pcm bytes than mp3 encoded bytes")
