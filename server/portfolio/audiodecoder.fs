@@ -54,19 +54,20 @@ type public audiodecoder() =
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.mimetype; "not known by decoder!"|])
 
-    member private this.readstreamtoend(track:audiofile, ?formattedstream: Stream): seq<streamresponse> =
-        let chosenstream: Stream = 
-            match formattedstream with
-            | None -> track.stream :> Stream
-
-            | _ -> formattedstream.Value
-
+    member private this.readstreamtoend(track:audiofile, ?formattedstream: Stream, ?totalchunks: int): seq<streamresponse> =
         seq {
+            let chosenstream: Stream = 
+                match formattedstream with
+                | None -> track.stream :> Stream
+
+                | _ -> formattedstream.Value
+
             while chosenstream.Position < chosenstream.Length do
                 let output = new streamresponse()
 
-                if track.stream.Position = 0L then
-                    output.totalchunks <- track.stream.Length / int64(chunksize)
+                if track.stream.Position = 0L &&
+                    totalchunks.IsSome then
+                    output.totalchunks <- int64(totalchunks.Value)
 
                 let currentchunk = Array.create chunksize (new byte())                        
                 output.chunk <- currentchunk
@@ -75,6 +76,11 @@ type public audiodecoder() =
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
         let decoder = new MP3Stream(track.stream, chunksize)
+
+        if decoder.IsEOF then
+            String.concat "" [|track.mimetype; " decoder: could not understand audio file '"; track.filename;"'"|]
+            |> failwith
+
         this.readstreamtoend(track, decoder)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
