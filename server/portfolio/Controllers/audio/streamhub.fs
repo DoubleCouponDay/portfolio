@@ -10,6 +10,7 @@ open portfolio.data
 open portfolio.models
 open Newtonsoft.Json
 open System.Linq
+open portfolio.audiodecoder
 
 type streamhub() =
     inherit Hub()
@@ -24,25 +25,19 @@ type streamhub() =
         channel.Reader
 
     member private this.fillchannel(input: Channel<streamresponse>): unit =
-        let task = async {
+        async {
             let! track = drivereader.get.readrandomdeserttrack()
-            let chunk = Array.create chunksize (new byte())
-            let totalchunks = track.stream.Length / int64(chunksize)
+            let decoder = new audiodecoder()
 
-            while track.stream.Position < track.stream.Length do
-                let output = new streamresponse()
+            seq {
+                let decoded = decoder.decodeaudio(track)
 
-                if track.stream.Position = 0L then
-                    output.totalchunks <- totalchunks
+                for item in decoded do
+                    input.Writer.TryWrite(item)
 
-                track.stream.Read(chunk, 0, chunksize) |> ignore
-                let mapped = chunk.Select(fun current -> int(current))                
-                output.chunk <- mapped
-                input.Writer.WriteAsync(output).AsTask() 
-                |> Async.AwaitTask |> ignore
-
-            input.Writer.TryComplete() |> ignore
-            track.stream.Dispose()
+                input.Writer.TryComplete() |> ignore
+                track.stream.Dispose()                
+            } 
+            |> ignore
         }
-        task |> Async.Start
-
+        |> Async.Start
