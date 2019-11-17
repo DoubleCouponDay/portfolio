@@ -2,7 +2,7 @@
 
 .portfolio-page-content {
     clip-path: none;
-    width: 860px;
+    width: 760px; 
     margin-left: 50px;    
 }
 
@@ -14,4 +14,5 @@
 .portfolio-text {
     margin-bottom: 20px;
     text-align: center;
+    width: 732px;
 }
