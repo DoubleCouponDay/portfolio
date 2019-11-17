@@ -30,14 +30,15 @@ type Startup private () =
         builder.WithOrigins([|
             "http://localhost:4200"; //local dev
             "http://localhost:9876"; //test server
-            "dcdgoportfolio.z26.web.core.windows.net";
-            "www.samueljenks.me";
-            "moonmachinestorage.z26.web.core.windows.net";
-            "www.moonmachine.biz"
+            "https://dcdgoportfolio.z26.web.core.windows.net";
+            "https://www.samueljenks.me";
+            "https://dragontrack.z26.web.core.windows.net";
+            "https://dragontrack.samueljenks.me"
         |]).AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials()
-            .Build()       
+            .SetPreflightMaxAge(TimeSpan.FromSeconds(60.0))
+
         |> ignore             
 
     // This method gets called by the runtime. Use this method to add services to the container.

@@ -27,7 +27,7 @@
               "src/styles.css"              
             ],
             "scripts": [],
-            "aot": true,            
+            "aot": true
           },
           "configurations": {
             "development": {
@@ -52,7 +52,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": false,
               "namedChunks": true,
@@ -61,7 +61,7 @@
               "deleteOutputPath": true,
               "progress": true,     
               "aot": true,         
-              "buildOptimizer": true,
+              "buildOptimizer": true,              
               "budgets": [
                 {
                   "type": "anyComponentStyle",
