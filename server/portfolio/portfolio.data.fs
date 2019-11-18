@@ -1,4 +1,4 @@
-﻿module portfoliodata
+﻿module portfolio.data
 
 [<Literal>]
 let public defaultapiroute = "api/[controller]/[action]"

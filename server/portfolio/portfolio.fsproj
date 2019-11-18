@@ -23,11 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="startupdata.fs" />
     <None Include="portfolio-ffdfea565994.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="portfoliodata.fs" />
+    <Compile Include="portfolio.data.fs" />
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />

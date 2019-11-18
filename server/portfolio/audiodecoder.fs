@@ -4,7 +4,7 @@ open ManagedBass.Aac
 open MP3Sharp
 open Accord.Audio
 open portfolio.models
-open portfoliodata
+open portfolio.data
 open System.Linq
 open System.Collections.Generic
 open System.IO

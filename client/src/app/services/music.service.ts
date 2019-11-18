@@ -35,15 +35,13 @@ export class MusicService implements OnDestroy {
     
     this.connection = builder.configureLogging(LogLevel.Warning)
       .withUrl(baseroute + streamhublabel, {
-        transport: HttpTransportType.WebSockets,
+        transport: HttpTransportType.LongPolling,
       })
       .build()
 
     this.defaultsubscriber = {
       next: this.onmusicdownloaded,
-      error: (error) => {
-        console.log(error)
-      },
+      error: console.error,
       complete: this.onstreamcomplete
     }
 
@@ -62,7 +60,7 @@ export class MusicService implements OnDestroy {
         }
       })
       .catch((inputerror: Error) => {
-        console.log(inputerror)
+        console.error(inputerror)
         let output = {
           outcome: false,
           error: inputerror
