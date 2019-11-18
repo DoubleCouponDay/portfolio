@@ -9,7 +9,7 @@ open portfolio.models
 open portfolio.controllers.constants
 open System.Collections.Generic
 open Newtonsoft.Json
-open portfoliodata
+open portfolio.data
 
 [<Route(defaultapiroute)>]
 [<ApiController>]
