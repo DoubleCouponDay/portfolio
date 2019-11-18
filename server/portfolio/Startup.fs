@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.AspNetCore.Http
+open Microsoft.Extensions.Hosting
 
 open Microsoft.AspNetCore.Cors.Infrastructure
 open Microsoft.AspNetCore.SignalR
@@ -45,6 +46,8 @@ type Startup private () =
     member this.ConfigureServices(services: IServiceCollection) =
         // Add framework services.
         services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0) |> ignore
+
+        services.AddControllers() |> ignore
         
         let handleserialisationproblem = new EventHandler<ErrorEventArgs>(fun input -> 
             let message = JsonConvert.SerializeObject(input)
@@ -70,10 +73,15 @@ type Startup private () =
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =      
+        if (env.IsDevelopment()) then
+            app.UseDeveloperExceptionPage() |> ignore
+
         app.UseDefaultFiles()
             .UseStaticFiles() 
             .UseCors(corspolicyname)
-            .UseRouting()  |> ignore
+            .UseRouting() 
+            .UseHttpsRedirection() 
+            .UseRouting() |> ignore
         
         app.UseEndpoints(fun routing ->
             routing.MapHub<streamhub>("/stream", fun options ->
@@ -82,9 +90,8 @@ type Startup private () =
                 options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
                 ()
             ) |> ignore
+            routing.MapControllers() |> ignore
             ()
         ) |> ignore
-
-        app.UseHttpsRedirection() |> ignore
 
     member val Configuration : IConfiguration = null with get, set
