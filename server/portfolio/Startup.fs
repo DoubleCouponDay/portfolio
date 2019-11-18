@@ -72,7 +72,6 @@ type Startup private () =
             )
             .AddNewtonsoftJsonProtocol(fun options -> 
                 options.PayloadSerializerSettings.Error <- handleserialisationproblem
-                options.PayloadSerializerSettings.ReferenceLoopHandling <- ReferenceLoopHandling.Error
                 ()
             )
         |> ignore       
@@ -87,7 +86,10 @@ type Startup private () =
         app.UseEndpoints(fun routing ->
             routing.MapHub<streamhub>("/stream", fun options ->
                 let longtimeout = TimeSpan.FromSeconds(60.0) //azure has a cap on web socket connections. edge doesnt support server sent events
-                options.Transports <- HttpTransportType.LongPolling 
+                options.Transports <- 
+                    HttpTransportType.WebSockets |||
+                    HttpTransportType.LongPolling ||| 
+                    HttpTransportType.ServerSentEvents 
 
                 options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
                 options.LongPolling.PollTimeout <- longtimeout
