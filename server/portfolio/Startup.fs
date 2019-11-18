@@ -16,7 +16,7 @@ open portfolio.data
 open portfolio.controllers.audio
 open Newtonsoft.Json.Serialization
 open Newtonsoft.Json
-open Microsoft.AspNetCore.Http.Connections
+
 
 type Startup private () =
     [<Literal>]
@@ -60,15 +60,7 @@ type Startup private () =
                 ()                    
             )
             .AddSignalR(fun options -> 
-                let largetimeout = new Nullable<TimeSpan>(TimeSpan.FromSeconds(60.0))
-                let large64 = new Nullable<int64>(100_000L)
-                let large = new Nullable<int>(100_000)
                 options.EnableDetailedErrors <- new Nullable<bool>(true)
-                options.KeepAliveInterval <- largetimeout
-                options.ClientTimeoutInterval <- largetimeout
-                options.HandshakeTimeout <- largetimeout
-                options.MaximumReceiveMessageSize <- large64
-                options.StreamBufferCapacity <- large                
             )
             .AddNewtonsoftJsonProtocol(fun options -> 
                 options.PayloadSerializerSettings.Error <- handleserialisationproblem
@@ -85,15 +77,9 @@ type Startup private () =
         
         app.UseEndpoints(fun routing ->
             routing.MapHub<streamhub>("/stream", fun options ->
-                let longtimeout = TimeSpan.FromSeconds(60.0) //azure has a cap on web socket connections. edge doesnt support server sent events
-                options.Transports <- 
-                    HttpTransportType.WebSockets |||
-                    HttpTransportType.LongPolling ||| 
-                    HttpTransportType.ServerSentEvents 
-
+                options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
                 options.TransportMaxBufferSize <- int64(chunksize + maxsampleratebits * 2)
-                options.LongPolling.PollTimeout <- longtimeout
-                options.WebSockets.CloseTimeout <- longtimeout
+                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
                 ()
             ) |> ignore
             ()
