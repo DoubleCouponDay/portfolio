@@ -1,7 +1,7 @@
 ﻿module decoding
 
 open Xunit
-open portfolio.data
+open portfoliodata
 open portfolio.audiodecoder
 open System.IO
 open FSharp.Data

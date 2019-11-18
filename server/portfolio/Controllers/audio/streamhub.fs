@@ -6,7 +6,7 @@ open System.Collections.Generic
 open portfolio.googledrivereader
 open System.Threading.Channels
 open System
-open portfolio.data
+open portfoliodata
 open portfolio.models
 open Newtonsoft.Json
 open System.Linq
