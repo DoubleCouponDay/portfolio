@@ -25,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    window.scrollTo(0, 100)
+    window.scrollTo(0, 0)
   }
 
   public onbackgroundloaded = (state: loadstate) => {
