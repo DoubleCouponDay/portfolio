@@ -20,7 +20,6 @@ class _scrolldisabler {
 
     private everymillisecond = () => {
         window.scrollTo(0, 0)
-        console.log("scroll reset")
 
         if(this.scrollingallowed === false) {
             this.intervalid = window.requestAnimationFrame(this.everymillisecond)
@@ -35,7 +34,6 @@ class _scrolldisabler {
     private onscrolling = (scroll: Event) => {
         scroll.preventDefault()        
         scroll.stopImmediatePropagation()
-        console.log('scrolling prevented')
     }
 }
 
