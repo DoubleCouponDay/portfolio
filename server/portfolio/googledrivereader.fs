@@ -47,12 +47,12 @@ let ApplicationName = "googledrivereader"
 
 type public drivereader private() =    
     let privatekey: string = reader.Driveprivatekey
-    let certificate = new X509Certificate2(credentialspath, privatekey, X509KeyStorageFlags.Exportable);
     let mutable initializer = new ServiceAccountCredential.Initializer(serviceaccountemail)        
 
     do
         initializer.Scopes <- Scopes
         initializer.User <- serviceaccountemail
+        let certificate = new X509Certificate2(credentialspath, privatekey, X509KeyStorageFlags.MachineKeySet)
         initializer <- initializer.FromCertificate(certificate)
 
     let credential = new ServiceAccountCredential(initializer)
