@@ -32,7 +32,6 @@ type streamhub() =
 
             for item in decoded do
                 input.Writer.TryWrite(item) |> ignore
-                GC.Collect()
 
             input.Writer.TryComplete() |> ignore
             track.stream.Dispose()                

@@ -80,9 +80,8 @@ type public drivereader private() =
             let chosenfilename = x.playlist.[chosenindex]
             let! chosenfile = x.requestfilebyname(chosenfilename)
             let stream = x.requestfilebyID(chosenfile.Id)
-            return new audiofile(stream, chosenfilename, chosenfile.MimeType)
-        }
-        
+            return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
+        }        
 
     member private x.setplaylist(): Async<unit> =
         async {
