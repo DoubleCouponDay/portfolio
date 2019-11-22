@@ -4,9 +4,15 @@ export const bytesneededtostart = 768_000
 export interface streamresponse {
     chunk: number[]
     totalchunks: number
+    bitdepth: number
+    samplerate: number
+    channels: number
 }
 
 export const playablebuffercount = 3
+
+export const peakint8bit = 127
+export const troughint8bit = -128
 
 export const peakint16bit = 32_767
 export const troughint16bit = -32_768

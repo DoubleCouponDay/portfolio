@@ -8,6 +8,7 @@ import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
 import { bytesneededtostart, playablebuffercount, streamresponse } from './streaming.data';
+import { bitrateconverter } from '../audio/bitrateconverter';
 
 @Injectable({
   providedIn: 'root'
@@ -86,8 +87,9 @@ export class MusicService implements OnDestroy {
       isnullorundefined(this.buffers)) {
       this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
     }     
+    bitrateconverter.converttowebaudio(response)
     let rawbuffer = new Float32Array(response.chunk)
-    let newbuffer = this.audiocontext.createBuffer(1, rawbuffer.length, 44100)
+    let newbuffer = this.audiocontext.createBuffer(response.channels, rawbuffer.length, response.samplerate)
     
     newbuffer.getChannelData(0)
       .set(rawbuffer)
@@ -153,7 +155,7 @@ export class MusicService implements OnDestroy {
     this.currentbufferplayed++
     source.buffer = currentbuffer    
     source.onended = this.playanewbuffer
-    // source.start()        
+    source.start()        
   }
     
   ngOnDestroy() {    
