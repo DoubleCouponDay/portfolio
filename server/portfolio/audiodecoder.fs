@@ -76,8 +76,8 @@ type public audiodecoder() =
                             if floatsigned >= middlepoint then 
                                 floatsigned / peak 
 
-                            else if floatsigned = 0 then
-                                trough
+                            else if floatsigned = 0.0 then
+                                webaudiotrough
                                 
                             else floatsigned / trough
                         websample
