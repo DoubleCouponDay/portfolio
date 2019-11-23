@@ -39,21 +39,21 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = peak16bit
-            let mutable trough: float = trough16bit
+            let mutable peak: float = unsignedpeak16bit
+            let mutable trough: float = signedtrough16bit
                 
             match initialresponse.bitdepth with
             | 8 -> 
-                peak <- peak8bit
-                trough <- trough8bit
+                peak <- unsignedpeak8bit
+                trough <- signedtrough8bit
 
             | 16 ->
-                peak <- peak16bit
-                trough <- trough16bit
+                peak <- unsignedpeak16bit
+                trough <- signedtrough16bit
 
             | 24 ->
-                peak <- peak24bit
-                trough <- trough16bit  
+                peak <- unsignedpeak24bit
+                trough <- signedtrough16bit  
     
             | _ -> 
 
@@ -70,21 +70,17 @@ type public audiodecoder() =
                 output.chunk <- currentchunk.Select(
                     fun currentbyte -> 
                         let asint = uint32(currentbyte) //assuming the data is unsigned!!!
-                        let signed = Convert.ToInt32(asint)
-                        let floatsigned = float(signed)
-                        let websample = 
-                            if floatsigned >= middlepoint then 
-                                floatsigned / peak 
-
-                            else if floatsigned = 0.0 then
-                                -1.0
-                                
-                            else floatsigned / -peak
-                        websample
+                        let floatsigned = float(asint)
+                        this.converttowebaudiorange(floatsigned, peak, trough)
                     ).ToArray()
                 
                 yield output
         }
+
+    member private this.converttowebaudiorange(value: float, max: float, min: float) =
+        let range = max - min
+        let percentagevalue = value / range
+        webaudiotrough + percentagevalue * webaudiorange
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
         //let decoder = new MP3Stream(track.stream, chunksize)
