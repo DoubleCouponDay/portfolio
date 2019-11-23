@@ -39,7 +39,7 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = peak8bitit
+            let mutable peak: float = peak8bit
             let mutable trough: float = trough8bit
                 
             match initialresponse.bitdepth with
@@ -57,7 +57,7 @@ type public audiodecoder() =
     
             | _ -> 
 
-            let middlepoint = peak / 2
+            let middlepoint = peak / 2.0
 
             while formattedstream.Position < formattedstream.Length do
                 if formattedstream.Position <> 0L then
@@ -72,7 +72,7 @@ type public audiodecoder() =
                         let asint = uint32(currentbyte) //assuming the data is unsigned!!!
                         let signed = Convert.ToInt32(asint)
                         let floatsigned = float(signed)
-                        let websample = if signed >= middlepoint then floatsigned / peak else floatsigned / trough
+                        let websample = if floatsigned >= middlepoint then floatsigned / peak else floatsigned / trough
                         websample
                     ).ToArray()
                 
