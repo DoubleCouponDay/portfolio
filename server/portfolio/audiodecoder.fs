@@ -72,7 +72,14 @@ type public audiodecoder() =
                         let asint = uint32(currentbyte) //assuming the data is unsigned!!!
                         let signed = Convert.ToInt32(asint)
                         let floatsigned = float(signed)
-                        let websample = if floatsigned >= middlepoint then floatsigned / peak else floatsigned / trough
+                        let websample = 
+                            if floatsigned >= middlepoint then 
+                                floatsigned / peak 
+
+                            else if floatsigned = 0 then
+                                trough
+                                
+                            else floatsigned / trough
                         websample
                     ).ToArray()
                 
