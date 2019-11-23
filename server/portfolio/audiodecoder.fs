@@ -39,45 +39,45 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
+            let mutable peak: float = peak8bitit
+            let mutable trough: float = trough8bit
+                
+            match initialresponse.bitdepth with
+            | 8 -> 
+                peak <- peak8bit
+                trough <- trough8bit
+
+            | 16 ->
+                peak <- peak16bit
+                trough <- trough16bit
+
+            | 24 ->
+                peak <- peak24bit
+                trough <- trough16bit  
+    
+            | _ -> 
+
+            let middlepoint = peak / 2
+
             while formattedstream.Position < formattedstream.Length do
                 if formattedstream.Position <> 0L then
                     output <- new streamresponse()
 
                 GC.Collect() //collect the byte array from previous iterations
-
                 let currentchunk = Array.create chunksize (new byte())       
                 formattedstream.Read(currentchunk, 0, chunksize) |> ignore  
-
-                let mutable peak: int = peakint24bit
-                let mutable trough: int = troughint24bit
-                                
-                match output.bitdepth with
-                | 8 -> 
-                    peak <- peakint8bit
-                    trough <- troughint8bit
-
-                | 16 ->
-                    peak <- peakint16bit
-                    trough <- troughint16bit
-
-                | 24 ->
-                    peak <- peakint24bit
-                    trough <- troughint16bit     
-                    
-                let middlepoint = peak / 2
 
                 output.chunk <- currentchunk.Select(
                     fun currentbyte -> 
                         let asint = uint32(currentbyte) //assuming the data is unsigned!!!
                         let signed = Convert.ToInt32(asint)
-                        let websample = if signed >= middlepoint then signed / peak else signed / trough
+                        let floatsigned = float(signed)
+                        let websample = if signed >= middlepoint then floatsigned / peak else floatsigned / trough
                         websample
                     ).ToArray()
                 
                 yield output
         }
-
-    member private this.getpercentage()
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
         //let decoder = new MP3Stream(track.stream, chunksize)

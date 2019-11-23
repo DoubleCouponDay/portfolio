@@ -1,20 +1,20 @@
 ﻿module audio.data
 
 [<Literal>]
-let peakint8bit = 127
+let peak8bit = 127.0
 
 [<Literal>]
-let troughint8bit = -128
+let trough8bit = -128.0
 
 [<Literal>]
-let peakint16bit = 32_767
+let peak16bit = 32_767.0
 
 [<Literal>]
-let troughint16bit = -32_768
+let trough16bit = -32_768.0
 
 [<Literal>]
-let peakint24bit = 8_388_607
+let peak24bit = 8_388_607.0
 
 [<Literal>]
-let troughint24bit = -8_388_608
+let trough24bit = -8_388_608.0
 

@@ -11,7 +11,7 @@ import { smoothtime } from '../animations/movetocursorvertically';
 import { aetherpingsoundaddress } from '../audio/audio.data';
 
 const shadowfilter = "url(#57Nu2Y3s56IqsQpTc4EMeWkbexdLrGOS)"
-const fixedloadtime = 3000
+const fixedloadtime = 4000
 
 @Component({
   selector: 'app-loadingscreen',
