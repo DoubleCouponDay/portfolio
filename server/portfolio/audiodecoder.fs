@@ -39,8 +39,8 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = peak8bit
-            let mutable trough: float = trough8bit
+            let mutable peak: float = peak16bit
+            let mutable trough: float = trough16bit
                 
             match initialresponse.bitdepth with
             | 8 -> 
@@ -57,7 +57,7 @@ type public audiodecoder() =
     
             | _ -> 
 
-            let middlepoint = peak / 2.0
+            let middlepoint = (peak + 1.0) / 2.0
 
             while formattedstream.Position < formattedstream.Length do
                 if formattedstream.Position <> 0L then
@@ -77,9 +77,9 @@ type public audiodecoder() =
                                 floatsigned / peak 
 
                             else if floatsigned = 0.0 then
-                                webaudiotrough
+                                -1.0
                                 
-                            else floatsigned / trough
+                            else floatsigned / -peak
                         websample
                     ).ToArray()
                 
