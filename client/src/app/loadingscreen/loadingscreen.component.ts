@@ -11,6 +11,7 @@ import { smoothtime } from '../animations/movetocursorvertically';
 import { aetherpingsoundaddress } from '../audio/audio.data';
 
 const shadowfilter = "url(#57Nu2Y3s56IqsQpTc4EMeWkbexdLrGOS)"
+const fixedloadtime = 3000
 
 @Component({
   selector: 'app-loadingscreen',
@@ -31,18 +32,16 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   @Output()
   public shouldpress = false
 
-  private sub: Subscription
-
   private fadefactory: AnimationFactory
   private fadeanimator: AnimationPlayer
 
   private entersound: HTMLAudioElement
 
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
-    this.sub = this.loading.subscribeloadedevent(this.onloaded)
     this.fadefactory = animationfactory.build(togglefade)    
     this.entersound = new Audio(aetherpingsoundaddress)
     this.entersound.volume = 0.7
+    setTimeout(() => {this.onloaded(loadstate.waitingforpress)}, fixedloadtime)
   }
 
   ngAfterViewInit() {
@@ -98,6 +97,5 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe()
   }
 }
