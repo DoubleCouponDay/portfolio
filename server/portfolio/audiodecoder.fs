@@ -10,6 +10,7 @@ open System.Collections.Generic
 open System.IO
 open System
 open WAVFileReader
+open audio.data
 
 type public audiodecoder() =
     member public this.decodeaudio(track: audiofile): seq<streamresponse> =
@@ -45,14 +46,38 @@ type public audiodecoder() =
                 GC.Collect() //collect the byte array from previous iterations
 
                 let currentchunk = Array.create chunksize (new byte())       
-                formattedstream.Read(currentchunk, 0, chunksize) |> ignore                
+                formattedstream.Read(currentchunk, 0, chunksize) |> ignore  
+
+                let mutable peak: int = peakint24bit
+                let mutable trough: int = troughint24bit
+                                
+                match output.bitdepth with
+                | 8 -> 
+                    peak <- peakint8bit
+                    trough <- troughint8bit
+
+                | 16 ->
+                    peak <- peakint16bit
+                    trough <- troughint16bit
+
+                | 24 ->
+                    peak <- peakint24bit
+                    trough <- troughint16bit     
+                    
+                let middlepoint = peak / 2
 
                 output.chunk <- currentchunk.Select(
-                    fun currentbyte -> int32(currentbyte))
-                    .ToArray()
+                    fun currentbyte -> 
+                        let asint = uint32(currentbyte) //assuming the data is unsigned!!!
+                        let signed = Convert.ToInt32(asint)
+                        let websample = if signed >= middlepoint then signed / peak else signed / trough
+                        websample
+                    ).ToArray()
                 
                 yield output
         }
+
+    member private this.getpercentage()
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
         //let decoder = new MP3Stream(track.stream, chunksize)
