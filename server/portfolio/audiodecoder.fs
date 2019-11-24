@@ -36,48 +36,47 @@ type public audiodecoder() =
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
-    member private this.readstreamtoend(initialresponse: streamresponse, formattedstream: Stream): seq<streamresponse> =
+    member private this.readstreamtoend(initialresponse: streamresponse, stream: Stream): seq<streamresponse> =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = unsignedpeak8bit
+            let mutable peak: float = unsignedpeak24bit
             let trough: float = 0.0
                 
-            //match initialresponse.bitdepth with
-            //| 8 -> 
-            //    peak <- unsignedpeak8bit
+            match initialresponse.bitdepth with
+            | 8 -> 
+                peak <- unsignedpeak8bit
 
-            //| 16 ->
-            //    peak <- unsignedpeak16bit
+            | 16 ->
+                peak <- unsignedpeak16bit
 
-            //| 24 ->
-            //    peak <- unsignedpeak24bit
+            | 24 ->
+                peak <- unsignedpeak24bit
     
-            //| _ -> 
-            //    ()
+            | _ -> 
+                ()
 
-            while formattedstream.Position < formattedstream.Length do
-                if formattedstream.Position <> 0L then
+            while stream.Position < stream.Length do
+                if stream.Position <> 0L then
                     output <- new streamresponse()
 
                 GC.Collect() //collect the byte array from previous iterations
-                let currentchunk = Array.create chunksize (new byte())       
-                formattedstream.Read(currentchunk, 0, chunksize) |> ignore  
+                let currentchunk = Array.create chunksize (new byte()) 
+                let amountread = stream.Read(currentchunk, 0, chunksize) //chunksize must be divisible by 8, 16, 24
 
-                output.chunk <- currentchunk.Select(
-                    fun currentbyte -> 
-                        let asint = uint32(currentbyte) //assuming the data is unsigned!!!
-                        let floatsigned = float(asint)
-                        this.converttowebaudiorange(floatsigned, peak, trough)
-                    ).ToArray()
-                
+                let formattedchunk = currentchunk.Select(fun currentbyte index ->
+                    if index % 2 <> 0 then
+                        return
+                    BitConverter.ToInt16(currentchunk, index)
+                )
+
                 yield output
         }
 
     member private this.converttowebaudiorange(value: float, max: float, min: float) =
         let range = max - min
         let percentagevalue = value / range
-        let output = webaudiotrough + percentagevalue * webaudiorange
+        let output = webaudiotrough + percentagevalue * webaudiorange        
         output
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
@@ -96,6 +95,8 @@ type public audiodecoder() =
         if reader.CanRead = false then
             failwith "the data of the wav file is unknown!"
 
+        let test = reader.ToSampleProvider()
+        test.
         let output = new streamresponse()
         output.bitdepth <- reader.WaveFormat.BitsPerSample
         output.samplerate <- reader.WaveFormat.SampleRate
