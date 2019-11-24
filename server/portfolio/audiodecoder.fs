@@ -33,7 +33,7 @@ type public audiodecoder() =
                 this.decodewav(track)
 
             | _ -> 
-                failwith (String.concat "" [|"filetype: "; track.fileextension; "not known by decoder!"|])
+                failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
     member private this.readstreamtoend(initialresponse: streamresponse, formattedstream: Stream): seq<streamresponse> =
         seq {
@@ -71,8 +71,6 @@ type public audiodecoder() =
                     ).ToArray()
                 
                 yield output
-
-            yield null
         }
 
     member private this.converttowebaudiorange(value: float, max: float, min: float) =

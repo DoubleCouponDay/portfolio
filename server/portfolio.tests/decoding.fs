@@ -13,13 +13,11 @@ open System.Linq
 
 type public the_decoders() =
     let context = new audiodecoder()    
-    let mutable subject: MemoryStream = null
-    let player = new SoundPlayer()
+    let mutable subject: float[] = null
 
     interface IDisposable with
         member this.Dispose() =
-            subject.Dispose()
-            player.Dispose()
+            ()
 
     [<Fact>]
     member public this.can_decode_mp3() =
@@ -35,15 +33,22 @@ type public the_decoders() =
         Assert.True(false)
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>) =
-        let mutable fetched = Array.create 0 0uy
+        let mutable accumulate = Array.create 0 0.0
+        let isfirstiteration = false
 
         for item in sequence do
-            let convertedbackaaah = 
-                item.chunk.Select(fun current -> byte(current))
-                    .ToArray()
-            fetched <- Array.append fetched convertedbackaaah
+            if isfirstiteration = false then
+                Assert.True(item.bitdepth <> 0, "a bit depth was returned")
+                Assert.True(item.channels <> 0, "channel count was returned")
+                Assert.True(item.samplerate <> 0, "a samplerate was returned")
+                Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
 
-        subject <- new MemoryStream(fetched)
+            for number in item.chunk do
+                Assert.True(number < 1.0 && number > -1.0, "number is a web audio sample")
+
+            accumulate <- Array.append accumulate item.chunk
+
+        subject <- accumulate
 
     [<Fact>]
     member public this.can_decode_flac() =
@@ -63,8 +68,8 @@ type public the_decoders() =
             use stream = new MemoryStream()
             use file = File.OpenRead("assets/sample.wav")
             file.CopyTo(stream)
-            let input = new audiofile(stream, "", ".wav")
-            let output = context.decodeaudio(input)
-            this.fetchentireoutput(output)
-            Assert.True(true)
+            let input = new audiofile(stream, "", "wav")
+            let output = context.decodeaudio(input)            
+            this.fetchentireoutput(output)            
+            Assert.True(subject <> null, "I got the full file")
         }
