@@ -13,7 +13,7 @@ open System.Linq
 
 type public the_decoders() =
     let context = new audiodecoder()    
-    let mutable subject: float[] = null
+    let mutable subject: float32[] = null
 
     interface IDisposable with
         member this.Dispose() =
@@ -33,7 +33,7 @@ type public the_decoders() =
         Assert.True(false)
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>) =
-        let mutable accumulate = Array.create 0 0.0
+        let mutable accumulate = Array.create 0 0.0F
         let mutable isfirstiteration = false
 
         for item in sequence do
@@ -45,7 +45,7 @@ type public the_decoders() =
                 isfirstiteration <- true
 
             for number in item.chunk do
-                Assert.True(number <= 1.0 && number >= -1.0, "number is a web audio sample")
+                Assert.True(number <= 1.0F && number >= -1.0F, "number is a web audio sample")
 
             accumulate <- Array.append accumulate item.chunk
 

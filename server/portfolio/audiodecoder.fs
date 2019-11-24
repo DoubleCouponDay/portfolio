@@ -40,8 +40,8 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = unsignedpeak24bit
-            let trough: float = 0.0
+            let mutable peak: float32 = unsignedpeak24bit
+            let trough: float32 = 0.0F
                 
             match initialresponse.bitdepth with
             | 8 -> 
@@ -52,6 +52,9 @@ type public audiodecoder() =
 
             | 24 ->
                 peak <- unsignedpeak24bit
+
+            | 32 ->
+                peak <- unsignedpeak32bit
     
             | _ -> 
                 ()
@@ -64,16 +67,49 @@ type public audiodecoder() =
                 let currentchunk = Array.create chunksize (new byte()) 
                 let amountread = stream.Read(currentchunk, 0, chunksize) //chunksize must be divisible by 8, 16, 24
 
-                let formattedchunk = currentchunk.Select(fun currentbyte index ->
-                    if index % 2 <> 0 then
-                        return
-                    BitConverter.ToInt16(currentchunk, index)
-                )
+                let formattedchunk: float32[] = 
+                    currentchunk.Select(fun item index -> 
+                            this.mapbytetoint(item, index, output, currentchunk)
+                        )
+
+                        .Where(fun item -> item.HasValue)
+                        .Select(fun item -> 
+                            this.converttowebaudiorange(
+                                float32(item.Value), peak, trough
+                            )
+                        )
+                        .ToArray()
 
                 yield output
         }
 
-    member private this.converttowebaudiorange(value: float, max: float, min: float) =
+    member private this.mapbytetoint(currentbyte: byte, index: int, response: streamresponse, currentchunk: byte[]): Nullable<float32> =
+        let divider = response.bitdepth / 8
+        
+        if index % divider <> 0 then
+            new Nullable<float32>()
+
+        else if response.bitdepth = 8 then
+            let output = float32(currentbyte)
+            new Nullable<float32>(output)
+
+        else if response.bitdepth = 16 then
+            let output = float32(BitConverter.ToInt16(currentchunk, index))
+            new Nullable<float32>(output)
+
+        else if response.bitdepth = 24 then
+            let bytes = currentchunk.Skip(index + 1).Take(3)
+            let output = float32(BitConverter.ToInt32(bytes.ToArray(), 0))
+            new Nullable<float32>(output)
+
+        else if response.bitdepth = 32 then
+            let output = float32(BitConverter.ToInt32(currentchunk, index))
+            new Nullable<float32>(output)
+
+        else
+            new Nullable<float32>()
+
+    member private this.converttowebaudiorange(value: float32, max: float32, min: float32) =
         let range = max - min
         let percentagevalue = value / range
         let output = webaudiotrough + percentagevalue * webaudiorange        
@@ -94,15 +130,29 @@ type public audiodecoder() =
         
         if reader.CanRead = false then
             failwith "the data of the wav file is unknown!"
-
-        let test = reader.ToSampleProvider()
-        test.
-        let output = new streamresponse()
+            
+        let mutable output = new streamresponse()
         output.bitdepth <- reader.WaveFormat.BitsPerSample
         output.samplerate <- reader.WaveFormat.SampleRate
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
-        this.readstreamtoend(output, reader)
+        let test = reader.ToSampleProvider()
+        let testarray = Array.create chunksize 0.0F
+        let mutable moredatatoread = true
+
+        seq {
+            while moredatatoread do 
+                GC.Collect()
+
+                if reader.Position <> 0L then
+                    output <- new streamresponse()
+
+                let test2 = test.Read(testarray, 0, chunksize)
+                moredatatoread <- if test2 = chunksize then true else false
+                output.chunk <- testarray
+                
+                yield output
+        }
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    Async.
