@@ -9,8 +9,9 @@ open System.Linq
 open System.Collections.Generic
 open System.IO
 open System
-open WAVFileReader
 open audio.data
+open NAudio
+open NAudio.Wave
 
 type public audiodecoder() =
     member public this.decodeaudio(track: audiofile): seq<streamresponse> =
@@ -39,21 +40,21 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = unsignedpeak24bit
+            let mutable peak: float = unsignedpeak8bit
             let trough: float = 0.0
                 
-            match initialresponse.bitdepth with
-            | 8 -> 
-                peak <- unsignedpeak8bit
+            //match initialresponse.bitdepth with
+            //| 8 -> 
+            //    peak <- unsignedpeak8bit
 
-            | 16 ->
-                peak <- unsignedpeak16bit
+            //| 16 ->
+            //    peak <- unsignedpeak16bit
 
-            | 24 ->
-                peak <- unsignedpeak24bit
+            //| 24 ->
+            //    peak <- unsignedpeak24bit
     
-            | _ -> 
-                ()
+            //| _ -> 
+            //    ()
 
             while formattedstream.Position < formattedstream.Length do
                 if formattedstream.Position <> 0L then
@@ -76,7 +77,8 @@ type public audiodecoder() =
     member private this.converttowebaudiorange(value: float, max: float, min: float) =
         let range = max - min
         let percentagevalue = value / range
-        webaudiotrough + percentagevalue * webaudiorange
+        let output = webaudiotrough + percentagevalue * webaudiorange
+        output
 
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
         //let decoder = new MP3Stream(track.stream, chunksize)
@@ -89,20 +91,17 @@ type public audiodecoder() =
         null
 
     member private this.decodewav(track: audiofile): seq<streamresponse> =
-        let clone = new MemoryStream(track.stream.ToArray())
-        let (formatchunk, datachunk) = WAVFileReader.ReadFile(track.stream)
+        let reader = new WaveFileReader(track.stream)
         
-        if formatchunk.DataFormat = AudioDataFormat.Unknown then
-            failwith "the data format of the wav file is unknown!"
+        if reader.CanRead = false then
+            failwith "the data of the wav file is unknown!"
 
-        track.stream <- clone //wavfilereader disposes my stream wtf
         let output = new streamresponse()
-        let bitrate = formatchunk.ByteRate * 8u
-        output.bitdepth <- int(bitrate / (uint32(formatchunk.Channels) * formatchunk.SampleRate))
-        output.samplerate <- int(formatchunk.SampleRate)
-        output.channels <- int(formatchunk.Channels)
-        output.totalchunks <- int64(datachunk.Size / uint32(chunksize))
-        this.readstreamtoend(output, track.stream)
+        output.bitdepth <- reader.WaveFormat.BitsPerSample
+        output.samplerate <- reader.WaveFormat.SampleRate
+        output.channels <- reader.WaveFormat.Channels
+        output.totalchunks <- reader.Length / int64(chunksize)
+        this.readstreamtoend(output, reader)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    Async.

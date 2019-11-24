@@ -34,7 +34,7 @@ type public the_decoders() =
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>) =
         let mutable accumulate = Array.create 0 0.0
-        let isfirstiteration = false
+        let mutable isfirstiteration = false
 
         for item in sequence do
             if isfirstiteration = false then
@@ -42,9 +42,10 @@ type public the_decoders() =
                 Assert.True(item.channels <> 0, "channel count was returned")
                 Assert.True(item.samplerate <> 0, "a samplerate was returned")
                 Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
+                isfirstiteration <- true
 
             for number in item.chunk do
-                Assert.True(number < 1.0 && number > -1.0, "number is a web audio sample")
+                Assert.True(number <= 1.0 && number >= -1.0, "number is a web audio sample")
 
             accumulate <- Array.append accumulate item.chunk
 
