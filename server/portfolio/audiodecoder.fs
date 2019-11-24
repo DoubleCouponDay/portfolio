@@ -39,25 +39,24 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = unsignedpeak16bit
-            let mutable trough: float = signedtrough16bit
+            let mutable peak: float = signedpeak24bit
+            let mutable trough: float = signedtrough24bit
                 
             match initialresponse.bitdepth with
             | 8 -> 
-                peak <- unsignedpeak8bit
+                peak <- signedpeak8bit
                 trough <- signedtrough8bit
 
             | 16 ->
-                peak <- unsignedpeak16bit
+                peak <- signedpeak16bit
                 trough <- signedtrough16bit
 
             | 24 ->
-                peak <- unsignedpeak24bit
+                peak <- signedpeak24bit
                 trough <- signedtrough16bit  
     
             | _ -> 
-
-            let middlepoint = (peak + 1.0) / 2.0
+                ()
 
             while formattedstream.Position < formattedstream.Length do
                 if formattedstream.Position <> 0L then
@@ -75,6 +74,8 @@ type public audiodecoder() =
                     ).ToArray()
                 
                 yield output
+
+            yield null
         }
 
     member private this.converttowebaudiorange(value: float, max: float, min: float) =
@@ -93,15 +94,20 @@ type public audiodecoder() =
         null
 
     member private this.decodewav(track: audiofile): seq<streamresponse> =
+        let clone = new MemoryStream(track.stream.ToArray())
         let (formatchunk, datachunk) = WAVFileReader.ReadFile(track.stream)
+        
+        if formatchunk.DataFormat = AudioDataFormat.Unknown then
+            failwith "the data format of the wav file is unknown!"
+
+        track.stream <- clone //wavfilereader disposes my stream wtf
         let output = new streamresponse()
-        output.bitdepth <- int(formatchunk.ByteRate * 8u / formatchunk.SampleRate)
+        let bitrate = formatchunk.ByteRate * 8u
+        output.bitdepth <- int(bitrate / (uint32(formatchunk.Channels) * formatchunk.SampleRate))
         output.samplerate <- int(formatchunk.SampleRate)
         output.channels <- int(formatchunk.Channels)
         output.totalchunks <- int64(datachunk.Size / uint32(chunksize))
-        let dataarray = datachunk.ToByteArray()
-        let formattedarray = new MemoryStream(dataarray)
-        this.readstreamtoend(output, formattedarray)
+        this.readstreamtoend(output, track.stream)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    Async.
