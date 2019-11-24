@@ -23,16 +23,16 @@ type public the_decoders() =
 
     [<Fact>]
     member public this.can_decode_mp3() =
-        async {
-            use stream = new MemoryStream()
-            use file = File.OpenRead("assets/sample.mp3")
-            file.CopyTo(stream)
-            let mime = MimeTypes.tryFind(".mp3").Value
-            let input = new audiofile(stream, "", mime)
-            let output = context.decodeaudio(input)
-            this.fetchentireoutput(output)
-            this.testoutput(stream)   
-        }
+        //async {
+        //    use stream = new MemoryStream()
+        //    use file = File.OpenRead("assets/sample.mp3")
+        //    file.CopyTo(stream)
+        //    let mime = MimeTypes.tryFind(".mp3").Value
+        //    let input = new audiofile(stream, "", mime)
+        //    let output = context.decodeaudio(input)
+        //    this.fetchentireoutput(output)
+        //}
+        Assert.True(false)
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>) =
         let mutable fetched = Array.create 0 0uy
@@ -57,5 +57,14 @@ type public the_decoders() =
     member public this.can_decode_m4a() =
         Assert.True(false)
 
-    member private this.testoutput(unprocessedstream: MemoryStream) =
-        Assert.True(subject.Length > unprocessedstream.Length, "there are more raw pcm bytes than mp3 encoded bytes")
+    [<Fact>]
+    member public this.can_decode_wav() =
+        async {
+            use stream = new MemoryStream()
+            use file = File.OpenRead("assets/sample.wav")
+            file.CopyTo(stream)
+            let input = new audiofile(stream, "", ".wav")
+            let output = context.decodeaudio(input)
+            this.fetchentireoutput(output)
+            Assert.True(true)
+        }

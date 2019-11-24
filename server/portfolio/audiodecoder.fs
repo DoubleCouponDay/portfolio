@@ -39,21 +39,18 @@ type public audiodecoder() =
         seq {
             let mutable output = initialresponse
 
-            let mutable peak: float = signedpeak24bit
-            let mutable trough: float = signedtrough24bit
+            let mutable peak: float = unsignedpeak24bit
+            let trough: float = 0.0
                 
             match initialresponse.bitdepth with
             | 8 -> 
-                peak <- signedpeak8bit
-                trough <- signedtrough8bit
+                peak <- unsignedpeak8bit
 
             | 16 ->
-                peak <- signedpeak16bit
-                trough <- signedtrough16bit
+                peak <- unsignedpeak16bit
 
             | 24 ->
-                peak <- signedpeak24bit
-                trough <- signedtrough16bit  
+                peak <- unsignedpeak24bit
     
             | _ -> 
                 ()

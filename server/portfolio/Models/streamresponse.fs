@@ -2,6 +2,7 @@
 
 open System.Collections.Generic
 
+[<AllowNullLiteral>]
 type public streamresponse() =
     member val public chunk: float[] = null with get, set
     member val public totalchunks: int64 = 0L with get, set
