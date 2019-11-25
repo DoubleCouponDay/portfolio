@@ -25,6 +25,7 @@
     "@ngtools/webpack": "^8.3.18",
     "@types/assert": "^1.4.3",
     "assert": "^2.0.0",
+    "audio-buffer-from": "^1.1.1",
     "rxjs": "~6.4.0",
     "subsink": "^1.0.0",
     "tslib": "^1.10.0",

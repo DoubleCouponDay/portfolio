@@ -136,7 +136,7 @@ type public audiodecoder() =
         output.samplerate <- reader.WaveFormat.SampleRate
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
-        let test = reader.ToSampleProvider()
+        let samplegiver = reader.ToSampleProvider()
         let testarray = Array.create chunksize 0.0F
         let mutable moredatatoread = true
 
@@ -147,8 +147,8 @@ type public audiodecoder() =
                 if reader.Position <> 0L then
                     output <- new streamresponse()
 
-                let test2 = test.Read(testarray, 0, chunksize)
-                moredatatoread <- if test2 = chunksize then true else false
+                let countread = samplegiver.Read(testarray, 0, chunksize)
+                moredatatoread <- if countread = chunksize then true else false
                 output.chunk <- testarray
                 
                 yield output

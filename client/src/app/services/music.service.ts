@@ -7,7 +7,7 @@ import { streamhublabel, randomdeserttrackroute } from 'src/environments/environ
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { bytesneededtostart, playablebuffercount, streamresponse } from './streaming.data';
+import { playablebuffercount, streamresponse } from './streaming.data';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,11 @@ export class MusicService implements OnDestroy {
   private currentbufferplayed = 0
   private buffers = new Array<AudioBuffer>()
   private tryplayagain_intervalid = 0
+
+  private totalchunks = 0
+  private channels = 0
+  private samplerate = 0
+  private bitdepth = 0
 
   constructor(loading: LoadingService) {
     let builder = new HubConnectionBuilder()
@@ -82,12 +87,16 @@ export class MusicService implements OnDestroy {
   }
 
   private onmusicdownloaded = (response: streamresponse) => {  
-    if(response.totalchunks !== 0 &&
-      isnullorundefined(this.buffers)) {
+    if(response.totalchunks !== 0) { //the first chunk has metadata
       this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
+      this.totalchunks = response.totalchunks
+      this.samplerate = response.samplerate
+      this.bitdepth = response.bitdepth
+      this.channels = response.channels
     }     
     let rawbuffer = new Float32Array(response.chunk)
-    let newbuffer = this.audiocontext.createBuffer(response.channels, rawbuffer.length, response.samplerate)
+    let audiolength = response.chunk.length / this.samplerate
+    let newbuffer = this.audiocontext.createBuffer(2, audiolength, this.samplerate)
     
     newbuffer.getChannelData(0)
       .set(rawbuffer)
