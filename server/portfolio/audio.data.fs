@@ -17,3 +17,12 @@ let webaudiotrough = -1.0F
 
 [<Literal>]
 let webaudiorange = 2.0F
+
+[<Literal>]
+let public chunksize = 256_000
+
+[<Literal>]
+let public maxsampleratebits = 3
+
+[<Literal>]
+let public availablememory = 1_000_000_000

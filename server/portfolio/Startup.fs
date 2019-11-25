@@ -17,7 +17,7 @@ open portfolio.data
 open portfolio.controllers.audio
 open Newtonsoft.Json.Serialization
 open Newtonsoft.Json
-
+open audio.data
 
 type Startup private () =
     [<Literal>]
