@@ -8,6 +8,7 @@ import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
 import { playablebuffercount, streamresponse } from './streaming.data';
+const createBuffer = require("audio-buffer-from")
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,8 @@ export class MusicService implements OnDestroy {
   /**stream */
   private streamcompleted = false
   private connection: HubConnection
-  private currentbufferdownloaded = 0
   private defaultsubscriber: IStreamSubscriber<streamresponse> 
-  private weirdsubscription: ISubscription<streamresponse>
+  private weirdsubscription: ISubscription<streamresponse> 
 
   /**audio */
   private musicisplaying = false
@@ -88,20 +88,23 @@ export class MusicService implements OnDestroy {
 
   private onmusicdownloaded = (response: streamresponse) => {  
     if(response.totalchunks !== 0) { //the first chunk has metadata
-      this.buffers = new Array<AudioBuffer>(response.totalchunks) //lets me make correct playback decisions
       this.totalchunks = response.totalchunks
       this.samplerate = response.samplerate
       this.bitdepth = response.bitdepth
       this.channels = response.channels
     }     
     let rawbuffer = new Float32Array(response.chunk)
-    let audiolength = response.chunk.length / this.samplerate
-    let newbuffer = this.audiocontext.createBuffer(2, audiolength, this.samplerate)
-    
-    newbuffer.getChannelData(0)
-      .set(rawbuffer)
-    this.buffers[this.currentbufferdownloaded] = newbuffer
-    this.currentbufferdownloaded++
+    let audiolength = ((response.chunk.length / 2) / this.samplerate) * 10
+
+    let newbuffer = createBuffer(rawbuffer, {
+      context: this.audiocontext,
+      length: audiolength,
+      channels: this.channels,
+      rate: this.samplerate      
+    })
+    // newbuffer = this.audiocontext.createBuffer(this.channels, audiolength, this.samplerate)
+
+    this.buffers.push(newbuffer)
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -141,13 +144,12 @@ export class MusicService implements OnDestroy {
 
   private musicisreadytoplay(): boolean {
     let musicisnotplaying = this.musicisplaying === false    
-    let buffersleft = this.buffers.length - 1 - this.currentbufferplayed
+    let buffersleft = this.buffers.length - this.currentbufferplayed
     let hasenoughbuffers = buffersleft >= playablebuffercount
-    let streamonitswayout = this.streamcompleted && buffersleft < playablebuffercount
 
     return this.apploaded &&
       musicisnotplaying &&
-      (hasenoughbuffers || streamonitswayout)     
+      (hasenoughbuffers || this.streamcompleted)     
   }
 
   public playrandomdeserttrack = () => {    
