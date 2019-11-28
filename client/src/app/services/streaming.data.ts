@@ -7,4 +7,4 @@ export interface streamresponse {
     channels: number
 }
 
-export const playablebuffercount = 50
+export const playablebuffercount = 1

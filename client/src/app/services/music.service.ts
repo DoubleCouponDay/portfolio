@@ -50,7 +50,8 @@ export class MusicService implements OnDestroy {
       complete: this.onstreamcomplete
     }
 
-    this.audiocontext = new AudioContext()        
+    this.audiocontext = new AudioContext()    
+    this.audiocontext.suspend()    
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -94,17 +95,17 @@ export class MusicService implements OnDestroy {
       this.channels = response.channels
     }     
     let rawbuffer = new Float32Array(response.chunk)
-    let audiolength = ((response.chunk.length / 2) / this.samplerate) * 10
+
+    if(this.buffers.length >= 1) {
+      return
+    }
 
     let newbuffer = createBuffer(rawbuffer, {
-      context: this.audiocontext,
-      length: audiolength,
-      channels: this.channels,
-      rate: this.samplerate      
+      context: this.audiocontext
     })
-    // newbuffer = this.audiocontext.createBuffer(this.channels, audiolength, this.samplerate)
 
     this.buffers.push(newbuffer)
+    console.log("1 buffer downloaded")
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -158,15 +159,17 @@ export class MusicService implements OnDestroy {
   }
 
   private playanewbuffer = () => {
-    let source = this.audiocontext.createBufferSource()
-    source.connect(this.audiocontext.destination)
-    let currentbuffer = this.buffers[this.currentbufferplayed]
-    this.currentbufferplayed++
+    let source = this.audiocontext.createBufferSource()    
+    let currentbuffer = this.buffers[this.currentbufferplayed]    
+    this.buffers = null
     source.buffer = currentbuffer    
+    source.connect(this.audiocontext.destination)
     source.onended = this.playanewbuffer
-    this.audiocontext.resume()    
+    this.currentbufferplayed++
+    this.audiocontext.resume()        
     source.start()        
-    console.log("buffer played")
+    console.log("buffer played at time: " + this.audiocontext.currentTime)
+    console.log("buffer time downloaded: " + this.buffers.length * source.channelCount * source.buffer.duration)
   }
     
   ngOnDestroy() {    
