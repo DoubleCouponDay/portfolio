@@ -59,11 +59,12 @@ type public audiodecoder() =
             failwith "the data of the wav file is unknown!"
             
         let mutable output = new streamresponse()
+        let samplegiver = reader.ToSampleProvider()
         output.bitdepth <- 32
         output.samplerate <- reader.WaveFormat.SampleRate
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
-        let samplegiver = reader.ToSampleProvider()
+        output.encoding <- samplegiver.WaveFormat.Encoding.ToString()        
         let samplesarray = Array.create chunksize 0.0F
         let mutable moredatatoread = true
 

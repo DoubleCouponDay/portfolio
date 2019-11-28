@@ -96,10 +96,6 @@ export class MusicService implements OnDestroy {
     }     
     let rawbuffer = new Float32Array(response.chunk)
 
-    if(this.buffers.length >= 1) {
-      return
-    }
-
     let newbuffer = createBuffer(rawbuffer, {
       context: this.audiocontext
     })
@@ -159,9 +155,9 @@ export class MusicService implements OnDestroy {
   }
 
   private playanewbuffer = () => {
+    this.audiocontext = new AudioContext()
     let source = this.audiocontext.createBufferSource()    
     let currentbuffer = this.buffers[this.currentbufferplayed]    
-    this.buffers = null
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
     source.onended = this.playanewbuffer

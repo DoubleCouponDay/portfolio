@@ -9,3 +9,4 @@ type public streamresponse() =
     member val public bitdepth: int = 0 with get, set
     member val public samplerate: int = 0 with get, set
     member val public channels: int = 0 with get, set
+    member val public encoding: string = null with get, set
