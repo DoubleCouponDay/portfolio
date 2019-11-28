@@ -5,6 +5,7 @@ export interface streamresponse {
     bitdepth: number
     samplerate: number
     channels: number
+    encoding: string
 }
 
 export const playablebuffercount = 1
