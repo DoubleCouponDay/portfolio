@@ -155,7 +155,7 @@ export class MusicService implements OnDestroy {
   }
 
   private playanewbuffer = () => {
-    this.audiocontext = new AudioContext()
+    // this.audiocontext = new AudioContext()
     let source = this.audiocontext.createBufferSource()    
     let currentbuffer = this.buffers[this.currentbufferplayed]    
     source.buffer = currentbuffer    
@@ -165,7 +165,6 @@ export class MusicService implements OnDestroy {
     this.audiocontext.resume()        
     source.start()        
     console.log("buffer played at time: " + this.audiocontext.currentTime)
-    console.log("buffer time downloaded: " + this.buffers.length * source.channelCount * source.buffer.duration)
   }
     
   ngOnDestroy() {    

@@ -60,7 +60,7 @@ type public audiodecoder() =
             
         let mutable output = new streamresponse()
         let samplegiver = reader.ToSampleProvider()
-        output.bitdepth <- 32
+        output.bitdepth <- reader.WaveFormat.BitsPerSample
         output.samplerate <- reader.WaveFormat.SampleRate
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
@@ -69,9 +69,7 @@ type public audiodecoder() =
         let mutable moredatatoread = true
 
         seq {
-            while moredatatoread do 
-                GC.Collect()
-
+            while moredatatoread do                 
                 if reader.Position <> 0L then
                     output <- new streamresponse()
 

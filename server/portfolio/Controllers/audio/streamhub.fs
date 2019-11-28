@@ -34,6 +34,7 @@ type streamhub() =
                 input.Writer.TryWrite(item) |> ignore
 
             input.Writer.TryComplete() |> ignore
-            track.stream.Dispose()                
+            track.stream.Dispose()    
+            GC.Collect()
         }
         |> Async.Start
