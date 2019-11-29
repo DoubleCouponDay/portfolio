@@ -9,3 +9,5 @@ export interface streamresponse {
 }
 
 export const playablebuffercount = 1
+export const bufferdelay = 0.007
+export const musicvolume = 0.7
