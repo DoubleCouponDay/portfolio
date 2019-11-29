@@ -35,31 +35,6 @@ type public audiodecoder() =
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
-    member public this.returndecoded(track: audiofile): MemoryStream =
-        track.stream.Position <- 0L
-    
-        match track.fileextension with
-            //| "flac" ->
-            //    this.decodeflac(track)
-    
-            //| "mp3" -> 
-            //    this.decodemp3(track)
-    
-            //| "ogg" ->
-            //    this.decodeogg(track)
-    
-            //| "m4a" ->
-            //    this.decodem4a(track)
-    
-            | "wav" ->
-                use reader = new WaveFileReader(track.stream)
-                let output = new MemoryStream()
-                reader.CopyTo(output)
-                output
-    
-            | _ -> 
-                failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
-        
     member private this.converttowebaudiorange(value: float32, max: float32, min: float32) =
         let range = max - min
         let percentagevalue = value / range

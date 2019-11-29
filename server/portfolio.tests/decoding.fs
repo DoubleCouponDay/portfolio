@@ -15,7 +15,6 @@ open System.Threading
 
 type public when_an_audio_file_is_decoded() =
     let context = new audiodecoder()    
-    
 
     interface IDisposable with
         member this.Dispose() =
@@ -53,6 +52,7 @@ type public when_an_audio_file_is_decoded() =
             let output = context.streamdecodedchunks(input)            
             let subject = this.fetchentireoutput(output)            
             Assert.True(subject <> null, "I got the full file")
+            input.stream.Dispose()
         }
 
     member private this.preparewavdecoding(): audiofile =
@@ -65,9 +65,9 @@ type public when_an_audio_file_is_decoded() =
     member public this.it_can_play_decoded_wav() =
         async {
             let input = this.preparewavdecoding()
-            let subject = context.returndecoded(input)
+            input.stream.Position <- 0L
+            use reader = new WaveFileReader(input.stream)
             let player = new WaveOutEvent()
-            use reader = new WaveFileReader(subject)
             player.Init(reader)
             player.Play()            
             Thread.Sleep(1000)
