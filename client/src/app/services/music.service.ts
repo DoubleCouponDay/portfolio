@@ -56,7 +56,6 @@ export class MusicService implements OnDestroy {
     this.volume = this.audiocontext.createGain()
     this.volume.gain.value = 0.0
 
-
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
     )
@@ -91,18 +90,15 @@ export class MusicService implements OnDestroy {
     return true
   }
 
-  private onmusicdownloaded = (response: streamresponse) => {  
-    if(response.totalchunks !== 0) { //the first chunk has metadata
+  private onmusicdownloaded = async (response: streamresponse) => {  
+    if(this.buffers.length === 0) { //the first chunk has metadata
       this.totalchunks = response.totalchunks
       this.samplerate = response.samplerate
       this.bitdepth = response.bitdepth
       this.channels = response.channels
     }     
     let rawbuffer = new Float32Array(response.chunk)
-
-    let newbuffer = createBuffer(rawbuffer, {
-      context: this.audiocontext
-    })
+    let newbuffer = await this.audiocontext.decodeAudioData(rawbuffer.buffer, null, console.error)
 
     this.buffers.push(newbuffer)
     console.log("1 buffer downloaded")
@@ -154,26 +150,23 @@ export class MusicService implements OnDestroy {
   }
 
   public playnextbuffer = () => {    
+    if(this.musicisplaying === false) {
+      this.volume.gain.exponentialRampToValueAtTime(musicvolume, this.audiocontext.currentTime + 1)
+    }
     this.musicisplaying = true  
-    this.audiocontext = new AudioContext()
-    this.audiocontext.suspend()          
     let source = this.audiocontext.createBufferSource()    
     let currentbuffer = this.buffers[this.currentbufferplayed]        
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
     this.currentbufferplayed++  
-    
-    this.volume = this.audiocontext.createGain()
     this.volume.connect(this.audiocontext.destination)
-    this.volume.gain.exponentialRampToValueAtTime(musicvolume, this.audiocontext.currentTime + 1000)
-
     this.audiocontext.resume()        
     source.start()           
-    let currenttime = this.audiocontext.currentTime - bufferdelay
+    let currenttime = this.audiocontext.currentTime
     console.log("buffer played at time: " + currenttime)
 
     let newtime = currenttime + currentbuffer.duration    
-    this.volume.gain.exponentialRampToValueAtTime(musicvolume, newtime - 1000)
+    this.volume.gain.exponentialRampToValueAtTime(0, newtime - 1)
     this.checkshouldplaynextbuffer(currentbuffer, currenttime, newtime)        
   }
 

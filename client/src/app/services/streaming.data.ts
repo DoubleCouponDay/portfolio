@@ -1,6 +1,6 @@
 
 export interface streamresponse {
-    chunk: number[]
+    chunk: number[] //actually an arraybuffer
     totalchunks: number
     bitdepth: number
     samplerate: number
