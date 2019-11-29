@@ -106,14 +106,14 @@ export class MusicService implements OnDestroy {
     if(this.musicisreadytoplay() === false) {
       return
     }
-    this.playrandomdeserttrack()
+    this.playnextbuffer()
   }
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
 
     if(this.musicisreadytoplay() === true) {
-      this.playrandomdeserttrack()      
+      this.playnextbuffer()      
     }
     
     else {
@@ -127,7 +127,7 @@ export class MusicService implements OnDestroy {
         return
       }
       window.clearInterval(this.tryplayagain_intervalid)
-      this.playrandomdeserttrack()      
+      this.playnextbuffer()      
     }, 500)
   }
 
@@ -149,22 +149,32 @@ export class MusicService implements OnDestroy {
       (hasenoughbuffers || this.streamcompleted)     
   }
 
-  public playrandomdeserttrack = () => {    
+  public playnextbuffer = () => {    
     this.musicisplaying = true        
-    this.playanewbuffer()
-  }
-
-  private playanewbuffer = () => {
-    // this.audiocontext = new AudioContext()
     let source = this.audiocontext.createBufferSource()    
-    let currentbuffer = this.buffers[this.currentbufferplayed]    
+    let currentbuffer = this.buffers[this.currentbufferplayed]        
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
-    source.onended = this.playanewbuffer
     this.currentbufferplayed++
     this.audiocontext.resume()        
     source.start()        
     console.log("buffer played at time: " + this.audiocontext.currentTime)
+    this.checkshouldplaynextbuffer(currentbuffer, this.audiocontext.currentTime)
+  }
+
+  private checkshouldplaynextbuffer = (currentbuffer: AudioBuffer, startingtime: number) => {
+    let checker = () => {
+      let timefornewbuffer = this.audiocontext.currentTime > startingtime + currentbuffer.duration
+
+      if(timefornewbuffer === true) {
+        this.playnextbuffer()
+      }
+
+      else {
+        window.requestAnimationFrame(checker)
+      }
+    }
+    window.requestAnimationFrame(checker)
   }
     
   ngOnDestroy() {    
