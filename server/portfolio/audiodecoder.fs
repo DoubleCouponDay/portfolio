@@ -1,7 +1,6 @@
 ﻿module portfolio.audiodecoder
 
 open ManagedBass.Aac
-open MP3Sharp
 open Accord.Audio
 open portfolio.models
 open portfolio.data
@@ -14,7 +13,7 @@ open NAudio
 open NAudio.Wave
 
 type public audiodecoder() =
-    member public this.decodeaudio(track: audiofile): seq<streamresponse> =
+    member public this.streamdecodedchunks(track: audiofile): seq<streamresponse> =
         track.stream.Position <- 0L
 
         match track.fileextension with
@@ -31,11 +30,36 @@ type public audiodecoder() =
             //    this.decodem4a(track)
 
             | "wav" ->
-                this.decodewav(track)
+                this.decodewavchunks(track)
 
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
+    member public this.returndecoded(track: audiofile): MemoryStream =
+        track.stream.Position <- 0L
+    
+        match track.fileextension with
+            //| "flac" ->
+            //    this.decodeflac(track)
+    
+            //| "mp3" -> 
+            //    this.decodemp3(track)
+    
+            //| "ogg" ->
+            //    this.decodeogg(track)
+    
+            //| "m4a" ->
+            //    this.decodem4a(track)
+    
+            | "wav" ->
+                use reader = new WaveFileReader(track.stream)
+                let output = new MemoryStream()
+                reader.CopyTo(output)
+                output
+    
+            | _ -> 
+                failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
+        
     member private this.converttowebaudiorange(value: float32, max: float32, min: float32) =
         let range = max - min
         let percentagevalue = value / range
@@ -52,7 +76,7 @@ type public audiodecoder() =
         //this.readstreamtoend(track, decoder)
         null
 
-    member private this.decodewav(track: audiofile): seq<streamresponse> =
+    member private this.decodewavchunks(track: audiofile): seq<streamresponse> =
         let reader = new WaveFileReader(track.stream)
         
         if reader.CanRead = false then

@@ -28,7 +28,7 @@ type streamhub() =
         async {
             let! track = drivereader.get.readrandomdeserttrack()
             let decoder = new audiodecoder()
-            let decoded = decoder.decodeaudio(track)
+            let decoded = decoder.streamdecodedchunks(track)
 
             for item in decoded do
                 input.Writer.TryWrite(item) |> ignore
