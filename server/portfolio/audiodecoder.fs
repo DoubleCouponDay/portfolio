@@ -35,20 +35,7 @@ type public audiodecoder() =
             | _ -> 
                 failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
-    member private this.converttowebaudiorange(value: float32, max: float32, min: float32) =
-        let range = max - min
-        let percentagevalue = value / range
-        let output = webaudiotrough + percentagevalue * webaudiorange        
-        output
-
     member private this.decodemp3(track: audiofile): seq<streamresponse> =        
-        //let decoder = new MP3Stream(track.stream, chunksize)
-
-        //if decoder.IsEOF then
-        //    String.concat "" [|track.fileextension; " decoder: could not understand audio file '"; track.filename;"'"|]
-        //    |> failwith
-
-        //this.readstreamtoend(track, decoder)
         null
 
     member private this.decodewavchunks(track: audiofile): seq<streamresponse> =
@@ -80,7 +67,7 @@ type public audiodecoder() =
         }
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
-    //    Async.
+    //    null
 
     //member private this.decodeflac(track: audiofile): Async<audiofile> =
     //    null
