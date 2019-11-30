@@ -98,7 +98,7 @@ export class MusicService implements OnDestroy {
       this.channels = response.channels
     }     
     let rawbuffer = new Float32Array(response.chunk)
-    let newbuffer = await this.audiocontext.decodeAudioData(rawbuffer.buffer, null, console.error)
+    let newbuffer = await this.audiocontext.decodeAudioData(rawbuffer.buffer, null)
     this.buffers.push(newbuffer)
     console.log("1 buffer downloaded")
 
@@ -110,17 +110,10 @@ export class MusicService implements OnDestroy {
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
-
-    if(this.musicisreadytoplay() === true) {
-      this.playnextbuffer()      
-    }
-    
-    else {
-      this.tryplayagain()
-    }
+    this.checkcanstart()
   }
 
-  private tryplayagain = () => {
+  private checkcanstart = () => {
     this.tryplayagain_intervalid = window.setInterval(() => {
       if(this.musicisreadytoplay() === false) {
         return
@@ -134,7 +127,6 @@ export class MusicService implements OnDestroy {
     if(state !== loadstate.done) {
       return
     }    
-    this.audiocontext.resume()
     this.apploaded = true    
   }
 
