@@ -42,7 +42,7 @@ type public audiodecoder() =
         let reader = new WaveFileReader(track.stream)
         
         if reader.CanRead = false then
-            failwith "the data of the wav file is unknown!"
+            failwith "the input wav file cant be read!"
             
         let mutable output = new streamresponse()
         let samplegiver = reader.ToSampleProvider()
@@ -51,18 +51,25 @@ type public audiodecoder() =
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
         output.encoding <- samplegiver.WaveFormat.Encoding.ToString()        
-        let samplesarray = Array.create chunksize 0.0F
-        let mutable moredatatoread = true
+        let inbetweenarray = Array.create chunksize 0uy
+        let mutable moredatatoread = true        
 
         seq {
-            while moredatatoread do                 
+            while moredatatoread do                   
                 if reader.Position <> 0L then
                     output <- new streamresponse()
 
-                let countread = samplegiver.Read(samplesarray, 0, chunksize)
+                use outputstream = new MemoryStream()
+                use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
+                let countread = reader.Read(inbetweenarray, 0, chunksize)
+                writer.Write(inbetweenarray, 0, chunksize) |> ignore
+                outputstream.Position <- 0L
+                output.chunk <- outputstream.GetBuffer()
+                    .Select(fun item -> float32(item))
+                    .ToArray()
+
                 moredatatoread <- if countread = chunksize then true else false
-                output.chunk <- samplesarray
-                
+                GC.Collect()
                 yield output
         }
 

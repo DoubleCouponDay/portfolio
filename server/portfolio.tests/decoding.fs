@@ -88,9 +88,14 @@ type public when_an_audio_file_is_decoded() =
                 Assert.True(item.encoding = "IeeeFloat", "the decoder returned floating point samples")
                 isfirstiteration <- true
 
-            for number in item.chunk do
-                Assert.True(number <= 1.0F && number >= -1.0F, "number is a web audio sample")
+            let currentbytes = item.chunk.Select(fun item -> byte(item)).ToArray()
+            use currentstream = new MemoryStream(currentbytes)
+            use possiblefile = new WaveFileReader(currentstream)
+
+            if possiblefile.CanRead = false then
+                failwith "the received chunk file cant be read!"
 
             accumulate <- Array.append accumulate item.chunk
+            GC.Collect()
 
         accumulate
