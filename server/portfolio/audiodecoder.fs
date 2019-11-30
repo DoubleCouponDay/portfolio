@@ -51,26 +51,34 @@ type public audiodecoder() =
         output.channels <- reader.WaveFormat.Channels
         output.totalchunks <- reader.Length / int64(chunksize)
         output.encoding <- samplegiver.WaveFormat.Encoding.ToString()        
-        let inbetweenarray = Array.create chunksize 0uy
-        let mutable moredatatoread = true        
+        let inbetweenarray: float32[] = Array.create chunksize 0.0F
+        let mutable moredatatoread = true       
 
         seq {
-            while moredatatoread do                   
-                if reader.Position <> 0L then
-                    output <- new streamresponse()
+            track.stream.Position <- 0L
 
-                use outputstream = new MemoryStream()
-                use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
-                let countread = reader.Read(inbetweenarray, 0, chunksize)
-                writer.Write(inbetweenarray, 0, chunksize) |> ignore
-                outputstream.Position <- 0L
-                output.chunk <- outputstream.GetBuffer()
-                    .Select(fun item -> float32(item))
-                    .ToArray()
+            output.chunk <- track.stream.ToArray()
+                .Select(fun item -> float32(item))
+                .ToArray()
 
-                moredatatoread <- if countread = chunksize then true else false
-                GC.Collect()
-                yield output
+            yield output
+            //while moredatatoread do                   
+            //    if reader.Position <> 0L then
+            //        output <- new streamresponse()
+
+            //    use outputstream = new MemoryStream()
+            //    use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
+            //    let countread = sampler.Read(inbetweenarray, 0, chunksize)
+            //    writer.WriteSamples(inbetweenarray, 0, chunksize) |> ignore
+            //    outputstream.Position <- 0L
+
+            //    output.chunk <- outputstream.GetBuffer()
+            //        .Select(fun item -> float32(item))
+            //        .ToArray()
+
+            //    moredatatoread <- if countread = chunksize then true else false
+            //    GC.Collect()
+            //    yield output
         }
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =

@@ -97,9 +97,11 @@ export class MusicService implements OnDestroy {
       this.bitdepth = response.bitdepth
       this.channels = response.channels
     }     
-    let rawbuffer = new Float32Array(response.chunk)
-    let newbuffer = await this.audiocontext.decodeAudioData(rawbuffer.buffer, null)
-    this.buffers.push(newbuffer)
+    console.log("number[] length: " + response.chunk.length)
+    let floatbuffer = new Float32Array(response.chunk)
+    console.log("floatbuffer length: " + floatbuffer.length)
+    let audiobuffer = await this.audiocontext.decodeAudioData(floatbuffer.buffer)    
+    this.buffers.push(audiobuffer)
     console.log("1 buffer downloaded")
 
     if(this.musicisreadytoplay() === false) {
