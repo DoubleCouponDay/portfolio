@@ -20,8 +20,8 @@ export class MusicService implements OnDestroy {
   /**stream */
   private streamcompleted = false
   private connection: HubConnection
-  private defaultsubscriber: IStreamSubscriber<streamresponse> 
-  private weirdsubscription: ISubscription<streamresponse> 
+  private defaultsubscriber: IStreamSubscriber<ArrayBuffer> 
+  private weirdsubscription: ISubscription<ArrayBuffer> 
 
   /**audio */
   private musicisplaying = false
@@ -79,28 +79,20 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<ArrayBuffer>): boolean {
     if(this.buffers.length > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-    let stream = this.connection.stream<streamresponse>(randomdeserttrackroute)        
+    let stream = this.connection.stream<ArrayBuffer>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = async (response: streamresponse) => {  
-    if(this.buffers.length === 0) { //the first chunk has metadata
-      this.totalchunks = response.totalchunks
-      this.samplerate = response.samplerate
-      this.bitdepth = response.bitdepth
-      this.channels = response.channels
-    }     
-    console.log("number[] length: " + response.chunk.length)
-    let floatbuffer = new Float32Array(response.chunk)
-    console.log("floatbuffer length: " + floatbuffer.length)
-    let audiobuffer = await this.audiocontext.decodeAudioData(floatbuffer.buffer)    
+  private onmusicdownloaded = async (response: any) => {    
+    let integers = Uint8Array.from(atob(response.fileContents), c => c.charCodeAt(0))
+    let audiobuffer = await this.audiocontext.decodeAudioData(integers.buffer)    
     this.buffers.push(audiobuffer)
     console.log("1 buffer downloaded")
 
