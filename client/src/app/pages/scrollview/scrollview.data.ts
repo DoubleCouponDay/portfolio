@@ -7,7 +7,6 @@ export const mintranslationY = 1
 
 export const nomovementtimer = 1000
 export const buttonidentifier = 'scrollbutton'
-export const millisecondspoint = 1000
 
 export enum volumestate {
     stable,

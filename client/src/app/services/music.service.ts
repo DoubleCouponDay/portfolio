@@ -7,8 +7,8 @@ import { streamhublabel, randomdeserttrackroute } from 'src/environments/environ
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { playablebuffercount, streamresponse, bufferdelay, musicvolume } from './streaming.data';
-const createBuffer = require("audio-buffer-from")
+import { playablebuffercount, streamresponse, bufferdelay, musicvolume, millisecond } from './streaming.data';
+const createbuffer = require("audio-buffer-from")
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +99,6 @@ export class MusicService implements OnDestroy {
     }     
     let rawbuffer = new Float32Array(response.chunk)
     let newbuffer = await this.audiocontext.decodeAudioData(rawbuffer.buffer, null, console.error)
-
     this.buffers.push(newbuffer)
     console.log("1 buffer downloaded")
 
@@ -150,32 +149,36 @@ export class MusicService implements OnDestroy {
   }
 
   public playnextbuffer = () => {    
+    let currentbuffer = this.buffers[this.currentbufferplayed]      
+
+    if(isnullorundefined(currentbuffer)) {
+      console.log("finished playing")
+      return 
+    }
+
     if(this.musicisplaying === false) {
       this.volume.gain.exponentialRampToValueAtTime(musicvolume, this.audiocontext.currentTime + 1)
     }
     this.musicisplaying = true  
-    let source = this.audiocontext.createBufferSource()    
-    let currentbuffer = this.buffers[this.currentbufferplayed]        
+    let source = this.audiocontext.createBufferSource()          
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
     this.currentbufferplayed++  
     this.volume.connect(this.audiocontext.destination)
-    this.audiocontext.resume()        
-    source.start()           
-    let currenttime = this.audiocontext.currentTime
-    console.log("buffer played at time: " + currenttime)
-
-    let newtime = currenttime + currentbuffer.duration    
-    this.volume.gain.exponentialRampToValueAtTime(0, newtime - 1)
-    this.checkshouldplaynextbuffer(currentbuffer, currenttime, newtime)        
+    this.audiocontext.resume()            
+    source.start()               
+    let currenttime = performance.now() - (bufferdelay * millisecond)
+    console.log("buffer played at time: " + currenttime)    
+    this.checkshouldplaynextbuffer(currentbuffer, currenttime)        
   }
 
-  private checkshouldplaynextbuffer = (currentbuffer: AudioBuffer, startingtime: number, newtime: number) => {
-    let checker = () => {      
-      let timefornewbuffer = this.audiocontext.currentTime >= newtime
+  private checkshouldplaynextbuffer = (currentbuffer: AudioBuffer, startingtime: number) => {
+    let newtime = startingtime + (currentbuffer.duration * millisecond) //in milliseconds
+
+    let checker = () => {            
+      let timefornewbuffer = performance.now() >= newtime
 
       if(timefornewbuffer === true) {
-        let currenttime = this.audiocontext.currentTime
         this.playnextbuffer()
       }
 
