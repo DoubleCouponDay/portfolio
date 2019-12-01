@@ -26,3 +26,6 @@ let public maxsampleratebits = 3
 
 [<Literal>]
 let public availablememory = 1_000_000_000
+
+[<Literal>]
+let public threeseconds = 3.0

@@ -20,8 +20,8 @@ export class MusicService implements OnDestroy {
   /**stream */
   private streamcompleted = false
   private connection: HubConnection
-  private defaultsubscriber: IStreamSubscriber<ArrayBuffer> 
-  private weirdsubscription: ISubscription<ArrayBuffer> 
+  private defaultsubscriber: IStreamSubscriber<streamresponse> 
+  private weirdsubscription: ISubscription<streamresponse> 
 
   /**audio */
   private musicisplaying = false
@@ -79,19 +79,19 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<ArrayBuffer>): boolean {
+  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
     if(this.buffers.length > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
     }
-    let stream = this.connection.stream<ArrayBuffer>(randomdeserttrackroute)        
+    let stream = this.connection.stream<streamresponse>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
     return true
   }
 
-  private onmusicdownloaded = async (response: any) => {    
-    let integers = Uint8Array.from(atob(response.fileContents), c => c.charCodeAt(0))
+  private onmusicdownloaded = async (response: streamresponse) => {    
+    let integers = Uint8Array.from(atob(response.binarystring), c => c.charCodeAt(0))
     let audiobuffer = await this.audiocontext.decodeAudioData(integers.buffer)    
     this.buffers.push(audiobuffer)
     console.log("1 buffer downloaded")

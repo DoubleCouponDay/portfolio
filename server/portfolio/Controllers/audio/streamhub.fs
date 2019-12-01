@@ -20,12 +20,12 @@ type streamhub() =
         Console.WriteLine("socket connected!")
         base.OnConnectedAsync()
 
-    member public this.randomdeserttrack(): ChannelReader<FileResult> =
-        let channel = Channel.CreateUnbounded<FileResult>()
+    member public this.randomdeserttrack(): ChannelReader<streamresponse> =
+        let channel = Channel.CreateUnbounded<streamresponse>()
         this.fillchannel(channel) |> ignore
         channel.Reader
 
-    member private this.fillchannel(input: Channel<FileResult>): unit =
+    member private this.fillchannel(input: Channel<streamresponse>): unit =
         async {
             let! track = drivereader.get.readrandomdeserttrack()
             let decoder = new audiodecoder()
