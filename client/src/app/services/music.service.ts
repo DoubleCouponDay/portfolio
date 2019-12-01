@@ -127,12 +127,15 @@ export class MusicService implements OnDestroy {
 
   private musicisreadytoplay(): boolean {
     let musicisnotplaying = this.musicisplaying === false    
-    let buffersleft = this.buffers.length - this.currentbufferplayed
-    let hasenoughbuffers = buffersleft >= playablebuffercount
 
     return this.apploaded &&
       musicisnotplaying &&
-      (hasenoughbuffers || this.streamcompleted)     
+      (this.hasenoughbuffers() || this.streamcompleted)     
+  }
+
+  private hasenoughbuffers = () => {
+    let buffersleft = this.buffers.length - this.currentbufferplayed    
+    return buffersleft >= playablebuffercount
   }
 
   public playnextbuffer = () => {    
@@ -165,7 +168,8 @@ export class MusicService implements OnDestroy {
     let checker = () => {            
       let timefornewbuffer = performance.now() >= newtime
 
-      if(timefornewbuffer === true) {
+      if(timefornewbuffer === true && 
+        this.hasenoughbuffers()) {
         this.playnextbuffer()
       }
 

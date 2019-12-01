@@ -46,7 +46,7 @@ describe('musicservice', () => {
         .then(() => {
             let subscriber: IStreamSubscriber<streamresponse> = {
                 next: (chunk: streamresponse) => {
-                    expect(chunk.binarystring.length).toBeGreaterThan(0)
+                    expect(chunk.chunk.length).toBeGreaterThan(0)
                     expect(chunk.bitdepth !== 0).toBeTruthy()
                     expect(chunk.channels !== 0).toBeTruthy()
                     expect(isnullorundefined(chunk.encoding)).toBeTruthy()

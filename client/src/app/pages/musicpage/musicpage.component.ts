@@ -13,7 +13,9 @@ import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/common/http';
 import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
-const SC = require("soundcloud")
+import * as SC from "../../audio/sdk-3.3.2"
+
+const playerclass = ".iframe-player"
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -57,7 +59,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   private initializeiframes() {
-    var players = document.querySelectorAll('.music-player')
+    var players = document.querySelectorAll(playerclass)
     
     players.forEach((item: Element) => {
       var widget = SC.Widget(item)  

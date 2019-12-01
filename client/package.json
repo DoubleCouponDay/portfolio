@@ -27,7 +27,6 @@
     "assert": "^2.0.0",
     "audio-buffer-from": "^1.1.1",
     "rxjs": "~6.4.0",
-    "soundcloud": "^3.3.2",
     "subsink": "^1.0.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
