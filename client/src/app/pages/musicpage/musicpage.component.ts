@@ -13,7 +13,6 @@ import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/common/http';
 import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
-import * as SC from "../../audio/sdk-3.3.2"
 
 const playerclass = ".iframe-player"
 
@@ -55,16 +54,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.castcontent2 = <SVGElement>this.content.nativeElement
     this.castcontent2.style.opacity = '0'
     super.ngAfterViewInit()
-    this.initializeiframes()    
-  }
-
-  private initializeiframes() {
-    var players = document.querySelectorAll(playerclass)
-    
-    players.forEach((item: Element) => {
-      var widget = SC.Widget(item)  
-      widget.setVolume(50)
-    })
   }
 
   private onpagechange = (pagenumber: number) => {
