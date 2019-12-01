@@ -91,7 +91,7 @@ export class MusicService implements OnDestroy {
   }
 
   private onmusicdownloaded = async (response: streamresponse) => {    
-    let integers = Uint8Array.from(atob(response.binarystring), c => c.charCodeAt(0))
+    let integers = Uint8Array.from(atob(response.chunk), c => c.charCodeAt(0))
     let audiobuffer = await this.audiocontext.decodeAudioData(integers.buffer)    
     this.buffers.push(audiobuffer)
     console.log("1 buffer downloaded")

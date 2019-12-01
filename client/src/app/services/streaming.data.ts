@@ -1,6 +1,6 @@
 
 export interface streamresponse {
-    binarystring: string
+    chunk: string
     totalchunks: number
     bitdepth: number
     samplerate: number
