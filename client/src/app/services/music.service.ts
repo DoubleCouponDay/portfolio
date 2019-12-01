@@ -7,7 +7,8 @@ import { streamhublabel, randomdeserttrackroute } from 'src/environments/environ
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { playablebuffercount, streamresponse, bufferdelay, musicvolume, millisecond } from './streaming.data';
+import { playablebuffercount, streamresponse, bufferdelay, millisecond } from './streaming.data';
+import { musicvolume } from '../audio/audio.data';
 const createbuffer = require("audio-buffer-from")
 
 @Injectable({
@@ -54,7 +55,7 @@ export class MusicService implements OnDestroy {
     this.audiocontext = new AudioContext()    
     this.audiocontext.suspend()    
     this.volume = this.audiocontext.createGain()
-    this.volume.gain.value = 0.0
+    this.volume.gain.value = musicvolume
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)

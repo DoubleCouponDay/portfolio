@@ -8,7 +8,7 @@ import { fadein, fadeout, togglefade } from '../animations/fade';
 import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactory } from '@angular/animations';
 import { inputopacityname, inputtimename } from '../animations/animation.data';
 import { smoothtime } from '../animations/movetocursorvertically';
-import { aetherpingsoundaddress } from '../audio/audio.data';
+import { aetherpingsoundaddress, musicvolume } from '../audio/audio.data';
 
 const shadowfilter = "url(#57Nu2Y3s56IqsQpTc4EMeWkbexdLrGOS)"
 const fixedloadtime = 4000
@@ -40,7 +40,7 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.fadefactory = animationfactory.build(togglefade)    
     this.entersound = new Audio(aetherpingsoundaddress)
-    this.entersound.volume = 0.3
+    this.entersound.volume = musicvolume
     setTimeout(() => {this.onloaded(loadstate.waitingforpress)}, fixedloadtime)
   }
 
