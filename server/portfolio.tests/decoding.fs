@@ -47,13 +47,11 @@ type public when_an_audio_file_is_decoded() =
 
     [<Fact>]
     member public this.it_can_decode_wav() =
-        async {            
-            let input = this.preparewavdecoding()
-            let output = context.streamdecodedchunks(input)            
-            let subject = this.fetchentireoutput(output)            
-            Assert.True(subject <> null, "I got the full file")
-            input.stream.Dispose()
-        }
+        let input = this.preparewavdecoding()
+        let output = context.streamdecodedchunks(input)            
+        let subject = this.fetchentireoutput(output)            
+        Assert.True(subject <> null, "I got the full file")
+        input.stream.Dispose()
 
     member private this.preparewavdecoding(): audiofile =
         let stream = new MemoryStream()
@@ -79,17 +77,17 @@ type public when_an_audio_file_is_decoded() =
         }
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>): seq<byte[]> =
-        let mutable isfirstiteration = false
+        let mutable isfirstiteration = true
         
         seq {
             for item in sequence do
-                if isfirstiteration = false then
+                if isfirstiteration = true then
                     Assert.True(item.bitdepth <> 0, "a bit depth was returned")
                     Assert.True(item.channels <> 0, "channel count was returned")
                     Assert.True(item.samplerate <> 0, "a samplerate was returned")
                     Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
-                    Assert.True(item.encoding = "IeeeFloat", "the decoder returned floating point samples")
-                    isfirstiteration <- true
+                    Assert.True(item.encoding = "Pcm", "the decoder returned raw pcm")
+                    isfirstiteration <- false
 
                 use currentstream = new MemoryStream(item.chunk)
                 use possiblefile = new WaveFileReader(currentstream)

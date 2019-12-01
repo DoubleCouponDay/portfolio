@@ -53,21 +53,25 @@ type public audiodecoder() =
         output.totalchunks <- reader.Length / int64(chunksize)
         output.encoding <- reader.WaveFormat.Encoding.ToString()        
         let inbetweenarray: float32[] = Array.create 0 0.0F
+        let mutable firstiteration = true
         let mutable moredatatoread = true       
-        track.stream.Position <- 0L
-        
+
         seq {
                 let mutable skipamount = 0.0
 
                 while moredatatoread do                   
-                    if reader.Position <> 0L then
+                    if firstiteration = false then                        
                         output <- new streamresponse()
 
+                    firstiteration <- false
                     use outputstream = new MemoryStream()
                     use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
                     let endingposition = int64(chunksize) + reader.Position
-                    waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
+                    let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
+                    writer.Dispose()
+                    moredatatoread <- if amountread = chunksize then true else false
                     output.chunk <- outputstream.GetBuffer()
+                    skipamount <- skipamount + float(chunksize)
                     GC.Collect()
                     yield output
         }
