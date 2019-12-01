@@ -29,6 +29,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="portfolio.data.fs" />
+    <Compile Include="WaveUtils.fs" />
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />

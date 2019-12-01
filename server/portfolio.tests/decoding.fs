@@ -65,37 +65,40 @@ type public when_an_audio_file_is_decoded() =
     member public this.it_can_play_decoded_wav() =
         async {
             let input = this.preparewavdecoding()
-            input.stream.Position <- 0L
-            use reader = new WaveFileReader(input.stream)
-            let player = new WaveOutEvent()
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(1000)
-            player.Stop()
-            player.Dispose()
+            let output = context.streamdecodedchunks(input)            
+            let subject = this.fetchentireoutput(output)  
+            use player = new WaveOutEvent()
+
+            for item in subject do   
+                use stream = new MemoryStream(item)
+                use reader = new WaveFileReader(stream)
+                player.Init(reader)
+                player.Play()            
+                Thread.Sleep(1000)
+                player.Stop()
         }
 
-    member private this.fetchentireoutput(sequence: seq<streamresponse>) =
-        let mutable accumulate = Array.create 0 0.0F
+    member private this.fetchentireoutput(sequence: seq<streamresponse>): seq<byte[]> =
         let mutable isfirstiteration = false
+        
+        seq {
+            for item in sequence do
+                if isfirstiteration = false then
+                    Assert.True(item.bitdepth <> 0, "a bit depth was returned")
+                    Assert.True(item.channels <> 0, "channel count was returned")
+                    Assert.True(item.samplerate <> 0, "a samplerate was returned")
+                    Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
+                    Assert.True(item.encoding = "IeeeFloat", "the decoder returned floating point samples")
+                    isfirstiteration <- true
 
-        for item in sequence do
-            if isfirstiteration = false then
-                Assert.True(item.bitdepth <> 0, "a bit depth was returned")
-                Assert.True(item.channels <> 0, "channel count was returned")
-                Assert.True(item.samplerate <> 0, "a samplerate was returned")
-                Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
-                Assert.True(item.encoding = "IeeeFloat", "the decoder returned floating point samples")
-                isfirstiteration <- true
+                use currentstream = new MemoryStream(item.chunk)
+                use possiblefile = new WaveFileReader(currentstream)
 
-            let currentbytes = item.chunk.Select(fun item -> byte(item)).ToArray()
-            use currentstream = new MemoryStream(currentbytes)
-            use possiblefile = new WaveFileReader(currentstream)
+                if possiblefile.CanRead = false then
+                    failwith "the received chunk file cant be read!"
 
-            if possiblefile.CanRead = false then
-                failwith "the received chunk file cant be read!"
+                GC.Collect()
+                yield item.chunk
+        }
 
-            accumulate <- Array.append accumulate item.chunk
-            GC.Collect()
 
-        accumulate

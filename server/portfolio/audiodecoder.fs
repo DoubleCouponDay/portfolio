@@ -12,6 +12,7 @@ open audio.data
 open NAudio
 open NAudio.Wave
 open Microsoft.AspNetCore.Mvc
+open WaveUtils
 
 type public audiodecoder() =
     member public this.streamdecodedchunks(track: audiofile): seq<streamresponse> =
@@ -54,8 +55,7 @@ type public audiodecoder() =
         let inbetweenarray: float32[] = Array.create 0 0.0F
         let mutable moredatatoread = true       
         track.stream.Position <- 0L
-        let sampler = reader.ToSampleProvider()
-
+        
         seq {
                 let mutable skipamount = 0.0
 
@@ -64,17 +64,10 @@ type public audiodecoder() =
                         output <- new streamresponse()
 
                     use outputstream = new MemoryStream()
-
-                    let smallerwave = 
-                        sampler.Skip(TimeSpan.FromSeconds(skipamount))
-                            .Take(TimeSpan.FromSeconds(threeseconds))
-                            .ToWaveProvider()
-
-                    skipamount <- skipamount + threeseconds
-                    WaveFileWriter.WriteWavFileToStream(outputstream, smallerwave) |> ignore                    
+                    use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
+                    let endingposition = int64(chunksize) + reader.Position
+                    waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
                     output.chunk <- outputstream.GetBuffer()
-
-                    moredatatoread <- if output.chunk.Length = chunksize then true else false
                     GC.Collect()
                     yield output
         }
