@@ -61,20 +61,20 @@ type public when_an_audio_file_is_decoded() =
 
     [<Fact>]
     member public this.it_can_play_decoded_wav() =
-        async {
-            let input = this.preparewavdecoding()
-            let output = context.streamdecodedchunks(input)            
-            let subject = this.fetchentireoutput(output)  
-            use player = new WaveOutEvent()
+        let input = this.preparewavdecoding()
+        let output = context.streamdecodedchunks(input)            
+        let subject = this.fetchentireoutput(output)  
+        use player = new WaveOutEvent()
 
-            for item in subject do   
-                use stream = new MemoryStream(item)
-                use reader = new WaveFileReader(stream)
-                player.Init(reader)
-                player.Play()            
-                Thread.Sleep(1000)
-                player.Stop()
-        }
+        for item in subject do   
+            use stream = new MemoryStream(item)
+            use reader = new WaveFileReader(stream)
+            player.Init(reader)
+            player.Play()            
+            Thread.Sleep(100)
+            player.Stop()
+
+        ()
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>): seq<byte[]> =
         let mutable isfirstiteration = true

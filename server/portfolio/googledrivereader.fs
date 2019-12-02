@@ -38,12 +38,8 @@ let backslash = @"\"
 let myfields = "files(*)"
 
 type secrets = JsonProvider<secretspath>
-
 let reader = secrets.Load(secretspath)
-
 let Scopes = [| DriveService.Scope.DriveReadonly |] 
-
-let ApplicationName = "googledrivereader"
 
 type public drivereader private() =    
     let privatekey: string = reader.Driveprivatekey
@@ -56,17 +52,13 @@ type public drivereader private() =
         initializer <- initializer.FromCertificate(certificate)
 
     let credential = new ServiceAccountCredential(initializer)
-
     let baseservice = new BaseClientService.Initializer()
 
     do
         baseservice.HttpClientInitializer <- credential
-        baseservice.ApplicationName <- ApplicationName        
+        baseservice.ApplicationName <- "googledrivereader"        
     
-    let servicefield = new DriveService(baseservice)
-
-    static member public get = new drivereader()
-    member private x.service: DriveService = servicefield
+    static member public get = new drivereader() //singleton
 
     member val private playlist: string[] = null
         with get, set
@@ -74,26 +66,28 @@ type public drivereader private() =
     member val private rng = new Random()
 
     member public x.readrandomdeserttrack(): Async<audiofile> =    
-        async {        
-            let! operation = x.setplaylist()
+        async {
+            use service = new DriveService(baseservice)
+            let! operation = x.setplaylist(service)
             let chosenindex = x.rng.Next(x.playlist.Length)
             let chosenfilename = x.playlist.[chosenindex]
-            let! chosenfile = x.requestfilebyname(chosenfilename)
-            let stream = x.requestfilebyID(chosenfile.Id)
+            let! chosenfile = x.requestfilebyname(service, chosenfilename)
+            let stream = x.requestfilebyID(service, chosenfile.Id)
+            service.Dispose()
             return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
         }        
 
-    member private x.setplaylist(): Async<unit> =
+    member private x.setplaylist(service: DriveService): Async<unit> =
         async {
             let! playlistfile = 
-                x.requestfilebyname(playlistname)
+                x.requestfilebyname(service, playlistname)
 
-            x.playlist <- x.getplaylistlines(playlistfile)
+            x.playlist <- x.getplaylistlines(service, playlistfile)
         }                
         
-    member private x.requestfilebyname(filename: string): Async<Data.File> =
+    member private x.requestfilebyname(service: DriveService, filename: string): Async<Data.File> =
         let verytrue = new Nullable<bool>(true)
-        let listRequest = x.service.Files.List()            
+        let listRequest = service.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)
         listRequest.Fields <- myfields
         listRequest.Spaces <- "drive"
@@ -118,8 +112,8 @@ type public drivereader private() =
             return query.Files.Item(0)
         }
 
-    member private x.requestfilebyID(id: string): MemoryStream = 
-        let request = x.service.Files.Get(id)
+    member private x.requestfilebyID(service: DriveService, id: string): MemoryStream = 
+        let request = service.Files.Get(id)
         request.Fields <- myfields
         let mutable output = new MemoryStream()
         let result = request.DownloadWithStatus(output)
@@ -130,8 +124,8 @@ type public drivereader private() =
         output.Position <- 0L
         output
 
-    member private x.getplaylistlines(playlist: Data.File): string[] =
-        let download = x.requestfilebyID(playlist.Id)
+    member private x.getplaylistlines(service: DriveService, playlist: Data.File): string[] =
+        let download = x.requestfilebyID(service, playlist.Id)
         let entire = Encoding.ASCII.GetString(download.ToArray())
         download.Dispose()
 

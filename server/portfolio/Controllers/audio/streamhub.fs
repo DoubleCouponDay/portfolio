@@ -28,6 +28,7 @@ type streamhub() =
     member private this.fillchannel(input: Channel<streamresponse>): unit =
         async {
             let! track = drivereader.get.readrandomdeserttrack()
+            GC.Collect()
             let decoder = new audiodecoder()
             let decoded = decoder.streamdecodedchunks(track)
 

@@ -57,28 +57,27 @@ type public audiodecoder() =
         let mutable moredatatoread = true       
 
         seq {
-                let mutable skipamount = 0.0
+            let mutable skipamount = 0.0
 
-                while moredatatoread do                   
-                    if firstiteration = false then                        
-                        output <- new streamresponse()
+            while moredatatoread do                   
+                if firstiteration = false then                        
+                    output <- new streamresponse()
 
-                    firstiteration <- false
-                    use outputstream = new MemoryStream()
-                    use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
-                    let endingposition = int64(chunksize) + reader.Position
-                    let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
-                    writer.Dispose()
+                firstiteration <- false
+                use outputstream = new MemoryStream()
+                use writer = new WaveFileWriter(outputstream, reader.WaveFormat)
+                let endingposition = int64(chunksize) + reader.Position
+                let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
+                writer.Dispose()
 
-                    if amountread <> 0 then 
-                        moredatatoread <- true                        
-                        output.chunk <- outputstream.GetBuffer()
-                        skipamount <- skipamount + float(chunksize)
-                        GC.Collect()
-                        yield output
+                if amountread <> 0 then 
+                    moredatatoread <- true                        
+                    output.chunk <- outputstream.GetBuffer()
+                    skipamount <- skipamount + float(chunksize)
+                    yield output
                         
-                    else 
-                        moredatatoread <- false 
+                else 
+                    moredatatoread <- false 
         }
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =

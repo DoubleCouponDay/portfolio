@@ -18,8 +18,9 @@ type public waveutils =
         /// WaveFormat.BlockAlign = channels * (bits / 8), so for 16 bit stereo wav it will be 4096 bytes
         let buffer = Array.create buffersize 0.0F
         let sampler = reader.ToSampleProvider()
+        let mutable shouldloop = true
 
-        while reader.Position < stopposition do
+        while shouldloop && reader.Position < stopposition do
             let bytesrequired = int32(stopposition - reader.Position) 
 
             if bytesrequired > 0 then
@@ -28,6 +29,12 @@ type public waveutils =
                 amountread <- amountread + bytesread
                 
                 if bytesread > 0 then
-                    writer.WriteSamples(buffer, 0, bytestoread)     
+                    writer.WriteSamples(buffer, 0, bytestoread)                      
+
+                else
+                    shouldloop <- false                    
+
+            else
+                shouldloop <- false
                     
         amountread
