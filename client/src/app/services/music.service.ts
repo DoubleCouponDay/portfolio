@@ -167,9 +167,10 @@ export class MusicService implements OnDestroy {
 
     let checker = () => {            
       let timefornewbuffer = performance.now() >= newtime
+      let hasenoughbuffers = this.hasenoughbuffers()
 
       if(timefornewbuffer === true && 
-        this.hasenoughbuffers()) {
+        hasenoughbuffers) {
         this.playnextbuffer()
       }
 

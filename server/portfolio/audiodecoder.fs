@@ -69,11 +69,16 @@ type public audiodecoder() =
                     let endingposition = int64(chunksize) + reader.Position
                     let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
                     writer.Dispose()
-                    moredatatoread <- if amountread = chunksize then true else false
-                    output.chunk <- outputstream.GetBuffer()
-                    skipamount <- skipamount + float(chunksize)
-                    GC.Collect()
-                    yield output
+
+                    if amountread <> 0 then 
+                        moredatatoread <- true                        
+                        output.chunk <- outputstream.GetBuffer()
+                        skipamount <- skipamount + float(chunksize)
+                        GC.Collect()
+                        yield output
+                        
+                    else 
+                        moredatatoread <- false 
         }
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
