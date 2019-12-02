@@ -8,6 +8,6 @@ export interface streamresponse {
     encoding: string
 }
 
-export const playablebuffercount = 3
-export const bufferdelay = 0.006
+export const playablebuffercount = 5
+export const bufferdelay = 15
 export const millisecond = 1000

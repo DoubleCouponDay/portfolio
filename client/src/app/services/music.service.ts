@@ -9,6 +9,8 @@ import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
 import { playablebuffercount, streamresponse, bufferdelay, millisecond } from './streaming.data';
 import { musicvolume } from '../audio/audio.data';
+const crossfade = require("crossfade")
+
 const createbuffer = require("audio-buffer-from")
 
 @Injectable({
@@ -55,7 +57,7 @@ export class MusicService implements OnDestroy {
     this.audiocontext = new AudioContext()    
     this.audiocontext.suspend()    
     this.volume = this.audiocontext.createGain()
-    this.volume.gain.value = musicvolume
+    this.volume.gain.value = 0.0
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -95,7 +97,6 @@ export class MusicService implements OnDestroy {
     let integers = Uint8Array.from(atob(response.chunk), c => c.charCodeAt(0))
     let audiobuffer = await this.audiocontext.decodeAudioData(integers.buffer)    
     this.buffers.push(audiobuffer)
-    console.log("1 buffer downloaded")
 
     if(this.musicisreadytoplay() === false) {
       return
@@ -105,6 +106,7 @@ export class MusicService implements OnDestroy {
 
   private onstreamcomplete = () => {
     this.streamcompleted = true
+    this.weirdsubscription.dispose()
     this.checkcanstart()
   }
 
@@ -142,7 +144,7 @@ export class MusicService implements OnDestroy {
     let currentbuffer = this.buffers[this.currentbufferplayed]      
 
     if(isnullorundefined(currentbuffer)) {
-      console.log("finished playing")
+      this.weirdsubscription.dispose()
       return 
     }
 
@@ -153,13 +155,12 @@ export class MusicService implements OnDestroy {
     let source = this.audiocontext.createBufferSource()          
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
-    this.currentbufferplayed++  
-    this.volume.connect(this.audiocontext.destination)
     this.audiocontext.resume()            
-    source.start()               
-    let currenttime = performance.now() - (bufferdelay * millisecond)
-    console.log("buffer played at time: " + currenttime)    
-    this.checkshouldplaynextbuffer(currentbuffer, currenttime)        
+    source.start()        
+    let currenttimemilli = performance.now() - bufferdelay
+    this.checkshouldplaynextbuffer(currentbuffer, currenttimemilli)  
+    this.buffers[this.currentbufferplayed] = null      
+    this.currentbufferplayed++  
   }
 
   private checkshouldplaynextbuffer = (currentbuffer: AudioBuffer, startingtime: number) => {
@@ -183,8 +184,8 @@ export class MusicService implements OnDestroy {
     
   ngOnDestroy() {    
     this.audiocontext.suspend()
-    this.connection.stop()
-    this.subs.unsubscribe()
     this.weirdsubscription.dispose()
+    this.connection.stop()
+    this.subs.unsubscribe()    
   }
 }

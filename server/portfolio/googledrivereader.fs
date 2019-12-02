@@ -67,13 +67,13 @@ type public drivereader private() =
 
     member public x.readrandomdeserttrack(): Async<audiofile> =    
         async {
-            use service = new DriveService(baseservice)
+            use service = new DriveService(baseservice)            
             let! operation = x.setplaylist(service)
             let chosenindex = x.rng.Next(x.playlist.Length)
             let chosenfilename = x.playlist.[chosenindex]
             let! chosenfile = x.requestfilebyname(service, chosenfilename)
             let stream = x.requestfilebyID(service, chosenfile.Id)
-            service.Dispose()
+            service.HttpClient.Dispose()
             return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
         }        
 
