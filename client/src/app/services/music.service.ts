@@ -34,6 +34,7 @@ export class MusicService implements OnDestroy {
   private tryplayagain_intervalid = 0
   private volume: GainNode
   private latency = 0
+  private endoflastbufferplayed = 0
 
   private totalchunks = 0
   private channels = 0
@@ -84,7 +85,7 @@ export class MusicService implements OnDestroy {
   }
   
   /** can only be called once. returns false if service decided not a good time. */
-  public loadrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
+  public playrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>): boolean {
     if(this.buffers.length > 0 ||
       this.connection.state === HubConnectionState.Disconnected) {
       return false
@@ -103,7 +104,7 @@ export class MusicService implements OnDestroy {
     if(this.musicisreadytoplay() === false) {
       return
     }
-    this.playnextbuffer()
+    
   }
 
   private onstreamcomplete = () => {
@@ -142,7 +143,7 @@ export class MusicService implements OnDestroy {
     return buffersleft >= playablebuffercount
   }
 
-  public playnextbuffer = () => {    
+  private playnextbuffer = () => {    
     let currentbuffer = this.buffers[this.currentbufferplayed]      
 
     if(isnullorundefined(currentbuffer)) {

@@ -46,7 +46,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
         if(result.outcome === false) {
           return
         }
-        streamer.loadrandomdeserttrack()
+        streamer.playrandomdeserttrack()
       })
   }
 

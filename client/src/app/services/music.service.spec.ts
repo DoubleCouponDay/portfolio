@@ -59,7 +59,7 @@ describe('musicservice', () => {
                 },
                 error: console.error
             }
-            let allowedtostream = service.loadrandomdeserttrack(subscriber)   
+            let allowedtostream = service.playrandomdeserttrack(subscriber)   
             expect(allowedtostream).toBeTruthy()
         })
     }, streamtimeout)
