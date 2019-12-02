@@ -9,5 +9,5 @@ export interface streamresponse {
 }
 
 export const playablebuffercount = 5
-export const bufferdelay = 15
+export const bufferdelay = 5
 export const millisecond = 1000

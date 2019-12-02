@@ -33,6 +33,7 @@ export class MusicService implements OnDestroy {
   private buffers = new Array<AudioBuffer>()
   private tryplayagain_intervalid = 0
   private volume: GainNode
+  private latency = 0
 
   private totalchunks = 0
   private channels = 0
@@ -58,6 +59,7 @@ export class MusicService implements OnDestroy {
     this.audiocontext.suspend()    
     this.volume = this.audiocontext.createGain()
     this.volume.gain.value = 0.0
+    this.latency = this.audiocontext.baseLatency * millisecond
 
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
@@ -149,15 +151,16 @@ export class MusicService implements OnDestroy {
     }
 
     if(this.musicisplaying === false) {
-      this.volume.gain.exponentialRampToValueAtTime(musicvolume, this.audiocontext.currentTime + 1)
+      let fullvolumetime = (this.audiocontext.currentTime + 5) / millisecond
+      this.volume.gain.exponentialRampToValueAtTime(musicvolume, fullvolumetime)
     }
     this.musicisplaying = true  
     let source = this.audiocontext.createBufferSource()          
     source.buffer = currentbuffer    
     source.connect(this.audiocontext.destination)
     this.audiocontext.resume()            
-    source.start()        
-    let currenttimemilli = performance.now() - bufferdelay
+    source.start()            
+    let currenttimemilli = performance.now()  - this.latency
     this.checkshouldplaynextbuffer(currentbuffer, currenttimemilli)  
     this.buffers[this.currentbufferplayed] = null      
     this.currentbufferplayed++  
