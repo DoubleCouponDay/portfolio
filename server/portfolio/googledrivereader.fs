@@ -73,7 +73,6 @@ type public drivereader private() =
             let chosenfilename = x.playlist.[chosenindex]
             let! chosenfile = x.requestfilebyname(service, chosenfilename)
             let stream = x.requestfilebyID(service, chosenfile.Id)
-            service.HttpClient.Dispose()
             return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
         }        
 
