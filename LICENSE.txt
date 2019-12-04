@@ -1,6 +1,8 @@
 You may copy this software.
 
-Only the Entity "samuel peter jenks" can perform actions which result in the website, in this software, being hosted.
+You may modify this software.
+
+Only the Entity "samuel peter jenks" can perform actions which result in this software, being hosted as a website.
 
 Distributions that are not the repository https://github.com/DoubleCouponDay/portfolio...
 	they can only be public github forks.
