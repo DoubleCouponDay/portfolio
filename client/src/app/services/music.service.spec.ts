@@ -1,5 +1,5 @@
 import { TestBed, tick } from '@angular/core/testing';
-import { MusicService } from './music2.service';
+import { MusicService } from './music.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SubSink } from 'subsink';
 import {strictEqual, notStrictEqual} from 'assert'

@@ -8,12 +8,11 @@ import { togglefade } from 'src/app/animations/fade';
 import { resetmouse } from 'src/app/animations/mousechanger';
 import { contentidentifier } from '../page.data'
 import { elementrefargs } from 'src/app/utility/utility.data';
-import { MusicService } from 'src/app/services/music.service';
 import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/common/http';
 import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
-import { MusicService } from 'src/app/services/music2.service';
+import { MusicService } from 'src/app/services/music.service';
 
 const playerclass = ".iframe-player"
 
@@ -43,10 +42,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.sink.add(sub2)
 
     streamer.startconnection()
-      .then((result) => {
-        if(result.outcome === false) {
-          return
-        }
+      .then(() => {
         streamer.playrandomdeserttrack()
       })
   }
