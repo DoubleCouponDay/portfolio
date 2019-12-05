@@ -35,19 +35,13 @@ export class musicplayer {
         let audiobuffer = await this._context.decodeAudioData(integers.buffer)    
         this.buffers.push(audiobuffer)
         let plentifulbuffers = this._musicisplaying === true
-        let readytostart = this.musicisreadytostart() === true
-    
+        
         if(plentifulbuffers) {
             this.queuebuffer(audiobuffer)
-            return
         }
 
-        else if(readytostart) { 
-            this.beginplayback()
-        } 
-        
-        else { //scarce buffers
-            this.waittostart()
+        else {
+            this.decidetypeofplayback()
         }
     }
 
@@ -77,7 +71,19 @@ export class musicplayer {
     }
 
     public toggleplayback(input: boolean) {
+        this.decidetypeofplayback()
+    }
 
+    private decidetypeofplayback() {
+        let readytostart = this.musicisreadytostart() === true
+
+        if(readytostart) { 
+            this.beginplayback()
+        } 
+        
+        else { //scarce buffers
+            this.waittostart()
+        }
     }
 
     private waittostart = () => {
