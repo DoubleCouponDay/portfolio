@@ -22,7 +22,6 @@ export class Music2Service implements OnDestroy {
   private subs = new SubSink()
 
   /*stream */
-  private streamcompleted = false
   private connectbuilder = new HubConnectionBuilder()
   private connection: HubConnection
   private defaultsubscriber: IStreamSubscriber<streamresponse> 
@@ -68,13 +67,12 @@ export class Music2Service implements OnDestroy {
   }
 
   private onstreamcomplete = () => {
-    this.streamcompleted = true
     this.weirdsubscription.dispose()
 
     if(this.apploaded === false) {
       return
     }
-    this.musicplayer.toggleplayback(true)
+    this.musicplayer.onfullydownloaded()
   }
 
   private onapploaded = (state: loadstate) => {
@@ -82,6 +80,7 @@ export class Music2Service implements OnDestroy {
       return
     }    
     this.apploaded = true
+    this.musicplayer.toggleplayback(true)
   }
     
   ngOnDestroy() {    

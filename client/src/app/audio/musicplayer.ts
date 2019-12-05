@@ -19,6 +19,7 @@ export class musicplayer {
     private tryplayagain_intervalid = 0    
     private playbacksEnd = 0.0
     private shouldplay = false
+    private fullydownloaded = false
 
     constructor() {
         this._context = new AudioContext()    
@@ -41,7 +42,7 @@ export class musicplayer {
             return
         }
 
-        else if(readytostart) { //ready to play
+        else if(readytostart) { 
             this.beginplayback()
         } 
         
@@ -51,10 +52,9 @@ export class musicplayer {
     }
 
     public onfullydownloaded = () => {
-
+        this.fullydownloaded = true
     }
 
-    //must add audiobuffer to buffer array before invoking this
     private queuebuffer(buffer: AudioBuffer) {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
@@ -67,7 +67,7 @@ export class musicplayer {
         this._bufferindex++        
 
         source.onended = () => {
-            let notstarved = (this._buffers.length - 1) === currentindex
+            let notstarved = (this._buffers.length - 1) > currentindex
 
             if(notstarved) {
                 return
@@ -91,11 +91,10 @@ export class musicplayer {
       }
     
     private hasenoughbuffers = () => {
-        let buffersleft = this._buffers.length - this._bufferindex    
+        let buffersleft = this._buffers.length - (this._bufferindex  + 1)   
         return buffersleft >= playablebuffercount
     }
 
-    //must add new item to _buffers before invoking this
     private beginplayback = () => {       
         if(this._musicisplaying === false) {
             let fullvolumetime = (this._context.currentTime + 5) / millisecond
@@ -115,6 +114,6 @@ export class musicplayer {
 
         return this.shouldplay &&
             musicisnotplaying &&
-            this.hasenoughbuffers()     
+            (this.hasenoughbuffers() || this.fullydownloaded)    
     }
 }
