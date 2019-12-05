@@ -34,7 +34,12 @@ export class musicplayer {
         let audiobuffer = await this._context.decodeAudioData(integers.buffer)    
         this.buffers.push(audiobuffer)
     
-        if(this.musicisreadytostart() === false) {
+        if(this._musicisplaying === true) {
+            this.queuebuffer(audiobuffer)
+            return
+        }
+
+        else if(this.musicisreadytostart() === false) {
             return
         } 
         this.beginplayback()
