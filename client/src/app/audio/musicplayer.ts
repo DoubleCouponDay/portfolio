@@ -34,35 +34,36 @@ export class musicplayer {
         let audiobuffer = await this._context.decodeAudioData(integers.buffer)    
         this.buffers.push(audiobuffer)
     
-        if(this._musicisplaying === true) {
+        if(this._musicisplaying === true) { //plentyful buffers
             this.queuebuffer(audiobuffer)
             return
         }
 
-        else if(this.musicisreadytostart() === false) {
-            return
+        else if(this.musicisreadytostart() === true) { //ready to play
+            this.beginplayback()
         } 
-        this.beginplayback()
+        
+        else { //scarce buffers
+            this.waittostart()
+        }
     }
 
+    //must add audiobuffer to buffer array before invoking this
     private queuebuffer(buffer: AudioBuffer) {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
         source.buffer = buffer
-        source.start(this.playbacksEnd)
+        source.start(this.playbacksEnd)        
         this.playbacksEnd += buffer.duration
+        this._buffers[this._bufferindex] = null      
+        this._bufferindex++        
     }
 
     public toggleplayback(input: boolean) {
-        this.shouldplay = input
 
-        if(this.shouldplay === false) {
-            return
-        }
-        this.checkcanstart()
     }
 
-    private checkcanstart = () => {
+    private waittostart = () => {
         this.tryplayagain_intervalid = window.setInterval(() => {
           if(this.musicisreadytostart() === false) {
             return
@@ -77,6 +78,7 @@ export class musicplayer {
         return buffersleft >= playablebuffercount
     }
 
+    //must add new item to _buffers before invoking this
     private beginplayback = () => {       
         if(this._musicisplaying === false) {
             let fullvolumetime = (this._context.currentTime + 5) / millisecond
@@ -88,7 +90,6 @@ export class musicplayer {
         for(let i = this.bufferindex; i < this._buffers.length; i++) {
             let currentbuffer = this._buffers[i]
             this.queuebuffer(currentbuffer)
-            this._buffers[this._bufferindex] = null      
         }
     }
     
