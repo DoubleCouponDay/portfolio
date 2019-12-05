@@ -33,13 +33,15 @@ export class musicplayer {
 
         let audiobuffer = await this._context.decodeAudioData(integers.buffer)    
         this.buffers.push(audiobuffer)
+        let plentifulbuffers = this._musicisplaying === true
+        let readytostart = this.musicisreadytostart() === true
     
-        if(this._musicisplaying === true) { //plentyful buffers
+        if(plentifulbuffers) {
             this.queuebuffer(audiobuffer)
             return
         }
 
-        else if(this.musicisreadytostart() === true) { //ready to play
+        else if(readytostart) { //ready to play
             this.beginplayback()
         } 
         
@@ -48,15 +50,30 @@ export class musicplayer {
         }
     }
 
+    public onfullydownloaded = () => {
+
+    }
+
     //must add audiobuffer to buffer array before invoking this
     private queuebuffer(buffer: AudioBuffer) {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
         source.buffer = buffer
-        source.start(this.playbacksEnd)        
+        source.start(this.playbacksEnd)                
+
         this.playbacksEnd += buffer.duration
         this._buffers[this._bufferindex] = null      
+        let currentindex = this._bufferindex
         this._bufferindex++        
+
+        source.onended = () => {
+            let notstarved = (this._buffers.length - 1) === currentindex
+
+            if(notstarved) {
+                return
+            }
+            this._musicisplaying = false
+        }
     }
 
     public toggleplayback(input: boolean) {
