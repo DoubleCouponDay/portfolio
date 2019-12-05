@@ -1,5 +1,5 @@
 import { TestBed, tick } from '@angular/core/testing';
-import { Music2Service } from './music2.service';
+import { MusicService } from './music2.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SubSink } from 'subsink';
 import {strictEqual, notStrictEqual} from 'assert'
@@ -12,7 +12,7 @@ import { streamresponse } from './streaming.data';
 const streamtimeout = 60000
 
 describe('musicservice', () => {
-    let service: Music2Service
+    let service: MusicService
     let loader: LoadingService
     let subs: SubSink
 
@@ -22,7 +22,7 @@ describe('musicservice', () => {
                 HttpClientModule
             ]
         })
-        service = TestBed.get(Music2Service)
+        service = TestBed.get(MusicService)
         loader = TestBed.get(LoadingService)
         subs = new SubSink()
     });

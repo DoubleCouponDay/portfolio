@@ -13,7 +13,7 @@ import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/common/http';
 import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
-import { Music2Service } from 'src/app/services/music2.service';
+import { MusicService } from 'src/app/services/music2.service';
 
 const playerclass = ".iframe-player"
 
@@ -34,7 +34,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   contentlength = 10
 
-  constructor(paging: PagingService, private streamer: Music2Service) {
+  constructor(paging: PagingService, private streamer: MusicService) {
     super()
     let sub = paging.subscribepagechange(this.onpagechange)
     let sub2 = paging.subscribepagecompletedmove(this.onpagechangecomplete)

@@ -17,7 +17,7 @@ const createbuffer = require("audio-buffer-from")
 @Injectable({
   providedIn: 'root'
 })
-export class Music2Service implements OnDestroy {
+export class MusicService implements OnDestroy {
   private apploaded = false
   private subs = new SubSink()
 
