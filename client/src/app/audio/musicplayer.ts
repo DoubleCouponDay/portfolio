@@ -61,7 +61,6 @@ export class musicplayer {
         this._buffers[this._bufferindex] = null      
         let currentindex = this._bufferindex
         this._bufferindex++      
-        console.log("buffer count" + this._buffers.length)  
 
         source.onended = () => {
             let notstarved = (this._buffers.length - 1) > currentindex
@@ -117,7 +116,6 @@ export class musicplayer {
         }
         this._musicisplaying = true  
         this._context.resume()   
-        console.log("playing")
         for(let i = this.bufferindex; i < this._buffers.length; i++) {
             let currentbuffer = this._buffers[i]
             this.queuebuffer(currentbuffer)

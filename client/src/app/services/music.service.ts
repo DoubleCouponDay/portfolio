@@ -22,16 +22,20 @@ export class MusicService implements OnDestroy {
 
   /*stream */
   private connectbuilder = new HubConnectionBuilder()
-  private connection: HubConnection
+
+  private _connection: HubConnection
+  public get connection() { return this._connection }
+
   private defaultsubscriber: IStreamSubscriber<streamresponse> 
   private weirdsubscription: ISubscription<streamresponse> 
 
   /*audio */
-  private musicplayer = new musicplayer()
+  private _musicplayer = new musicplayer()
+  public get musicplayer() { return this._musicplayer }
 
   constructor(loading: LoadingService) {
     this.defaultsubscriber = {
-      next: this.musicplayer.onnewbuffer,
+      next: this._musicplayer.onnewbuffer,
       error: console.error,
       complete: this.onstreamcomplete
     }
@@ -42,43 +46,43 @@ export class MusicService implements OnDestroy {
   }
 
   public async startconnection() {
-    this.connection = this.connectbuilder.configureLogging(LogLevel.Warning)
+    this._connection = this.connectbuilder.configureLogging(LogLevel.Warning)
       .withUrl(baseroute + streamhublabel, {
         transport: HttpTransportType.LongPolling,
       })
       .build()
 
-    await this.connection.start()
+    await this._connection.start()
   }
   
   public async playrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>) {
-    if(this.connection.state === HubConnectionState.Disconnected) {
+    if(this._connection.state === HubConnectionState.Disconnected) {
       await this.startconnection()
     }
-    let stream = this.connection.stream<streamresponse>(randomdeserttrackroute)        
+    let stream = this._connection.stream<streamresponse>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
   }
 
   public pause() {
-    this.musicplayer.toggleplayback(false)
+    this._musicplayer.toggleplayback(false)
   }
 
   private onstreamcomplete = () => {
     this.weirdsubscription.dispose()
-    this.musicplayer.onfullydownloaded()
+    this._musicplayer.onfullydownloaded()
   }
 
   private onapploaded = (state: loadstate) => {
     if(state !== loadstate.done) {
       return
     }    
-    this.musicplayer.toggleplayback(true)
+    this._musicplayer.toggleplayback(true)
   }
     
   ngOnDestroy() {    
     this.weirdsubscription.dispose()
-    this.connection.stop()
+    this._connection.stop()
     this.subs.unsubscribe()    
   }
 }

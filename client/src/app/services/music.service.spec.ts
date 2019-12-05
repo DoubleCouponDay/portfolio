@@ -5,12 +5,13 @@ import { SubSink } from 'subsink';
 import {strictEqual, notStrictEqual} from 'assert'
 import { isnullorundefined } from '../utility/utilities';
 import { assertNotNull } from '@angular/compiler/src/output/output_ast';
-import { IStreamSubscriber } from '@aspnet/signalr';
+import { IStreamSubscriber, HubConnectionState } from '@aspnet/signalr';
 import { LoadingService } from './loading.service';
 import { streamresponse } from './streaming.data';
 
 const streamtimeout = 60000
 
+/** portfolio server must be running before running these tests */
 describe('musicservice', () => {
     let service: MusicService
     let loader: LoadingService
@@ -34,7 +35,7 @@ describe('musicservice', () => {
 
     it('should negotiate a transport', async (done: DoneFn) => {
         await service.startconnection()
-        expect(true).toBeTruthy()
+        expect(service.connection.state === HubConnectionState.Connected).toBeTruthy()
         done()
     }, streamtimeout)
 
@@ -56,8 +57,6 @@ describe('musicservice', () => {
             error: console.error
         }
         await service.playrandomdeserttrack(subscriber)   
-        expect(true).toBeTruthy()
-        done()
     })
 
     afterEach(() => {
