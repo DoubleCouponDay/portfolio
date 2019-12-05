@@ -15,11 +15,13 @@ export class musicplayer {
 
     private _context: AudioContext
     private volume: GainNode
+    
+    private playbacksEnd = 0.0
+
+    private fullydownloaded = false
 
     private tryplayagain_intervalid = 0    
-    private playbacksEnd = 0.0
-    private shouldplay = false
-    private fullydownloaded = false
+    private waiting = false
 
     constructor() {
         this._context = new AudioContext()    
@@ -58,7 +60,8 @@ export class musicplayer {
         this.playbacksEnd += buffer.duration
         this._buffers[this._bufferindex] = null      
         let currentindex = this._bufferindex
-        this._bufferindex++        
+        this._bufferindex++      
+        console.log("buffer count" + this._buffers.length)  
 
         source.onended = () => {
             let notstarved = (this._buffers.length - 1) > currentindex
@@ -87,12 +90,18 @@ export class musicplayer {
     }
 
     private waittostart = () => {
-        this.tryplayagain_intervalid = window.setInterval(() => {
-          if(this.musicisreadytostart() === false) {
+        if(this.waiting === true)  {
             return
-          }
-          window.clearInterval(this.tryplayagain_intervalid)
-          this.beginplayback()      
+        }
+        this.waiting = true
+
+        this.tryplayagain_intervalid = window.setInterval(() => {
+            if(this.musicisreadytostart() === false) {                
+            return
+            }            
+            window.clearInterval(this.tryplayagain_intervalid)
+            this.waiting = false
+            this.beginplayback()      
         }, 500)
       }
     
@@ -108,7 +117,7 @@ export class musicplayer {
         }
         this._musicisplaying = true  
         this._context.resume()   
-
+        console.log("playing")
         for(let i = this.bufferindex; i < this._buffers.length; i++) {
             let currentbuffer = this._buffers[i]
             this.queuebuffer(currentbuffer)
@@ -118,8 +127,7 @@ export class musicplayer {
     private musicisreadytostart(): boolean {
         let musicisnotplaying = this.musicisplaying === false    
 
-        return this.shouldplay &&
-            musicisnotplaying &&
+        return musicisnotplaying &&
             (this.hasenoughbuffers() || this.fullydownloaded)    
     }
 }

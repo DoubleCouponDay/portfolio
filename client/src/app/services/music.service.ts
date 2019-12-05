@@ -18,7 +18,6 @@ const createbuffer = require("audio-buffer-from")
   providedIn: 'root'
 })
 export class MusicService implements OnDestroy {
-  private apploaded = false
   private subs = new SubSink()
 
   /*stream */
@@ -59,7 +58,6 @@ export class MusicService implements OnDestroy {
     let stream = this.connection.stream<streamresponse>(randomdeserttrackroute)        
     let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
-    this.musicplayer.toggleplayback(true)
   }
 
   public pause() {
@@ -68,10 +66,6 @@ export class MusicService implements OnDestroy {
 
   private onstreamcomplete = () => {
     this.weirdsubscription.dispose()
-
-    if(this.apploaded === false) {
-      return
-    }
     this.musicplayer.onfullydownloaded()
   }
 
@@ -79,7 +73,6 @@ export class MusicService implements OnDestroy {
     if(state !== loadstate.done) {
       return
     }    
-    this.apploaded = true
     this.musicplayer.toggleplayback(true)
   }
     
