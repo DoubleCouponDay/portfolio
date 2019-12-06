@@ -43,25 +43,27 @@ type public audiodecoder() =
     //    null
 
     member private this.decodewav(track: audiofile): seq<streamresponse> =
-        use reader = new WaveFileReader(track.stream)
-        
-        if reader.CanRead = false then
-            failwith ("wav reader could not understand wav file: " + track.filename)
-
         let mutable output = new streamresponse()
-        output.bitdepth <- reader.WaveFormat.BitsPerSample
-        output.samplerate <- reader.WaveFormat.SampleRate
-        output.channels <- reader.WaveFormat.Channels
-        output.totalchunks <- reader.Length / int64(chunksize)
-        output.encoding <- reader.WaveFormat.Encoding.ToString()        
         let mutable firstiteration = true
         let mutable moredatatoread = true       
 
         seq {
+            use reader = new WaveFileReader(track.stream)
+
+            if reader.CanRead = false then
+                failwith ("wav reader could not understand wav file: " + track.filename)
+
             let mutable skipamount = 0.0
+
+            output.bitdepth <- reader.WaveFormat.BitsPerSample
+            output.samplerate <- reader.WaveFormat.SampleRate
+            output.channels <- reader.WaveFormat.Channels
+            output.totalchunks <- reader.Length / int64(chunksize)
+            output.encoding <- reader.WaveFormat.Encoding.ToString()     
 
             while moredatatoread do     
                 let outputstream = new MemoryStream()
+                
 
                 if firstiteration = false then                        
                     output <- new streamresponse()
@@ -86,19 +88,18 @@ type public audiodecoder() =
         }
 
     member private this.decodeflac(track: audiofile): seq<streamresponse> =
-        use reader = new FlakeReader(null, track.stream)
-
         let mutable output = new streamresponse()
-        output.bitdepth <- reader.PCM.BitsPerSample
-        output.samplerate <- reader.PCM.SampleRate
-        output.channels <- reader.PCM.ChannelCount
-        output.totalchunks <- reader.Length / int64(chunksize)
         output.encoding <- "flac"
         let mutable firstiteration = true
         let mutable moredatatoread = true    
 
         seq {
             let mutable skipamount = 0.0
+            use reader = new FlakeReader(null, track.stream)
+            output.bitdepth <- reader.PCM.BitsPerSample
+            output.samplerate <- reader.PCM.SampleRate
+            output.channels <- reader.PCM.ChannelCount
+            output.totalchunks <- reader.Length / int64(chunksize)
 
             while moredatatoread do                   
                 if firstiteration = false then                        
@@ -123,8 +124,7 @@ type public audiodecoder() =
                         
                 else 
                     moredatatoread <- false 
-        }
-        
+        }       
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    null
