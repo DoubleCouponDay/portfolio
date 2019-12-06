@@ -41,7 +41,7 @@ type public when_an_audio_file_is_decoded() =
         use input = this.prepareencoding(flacfilepath, flacextension)
         let output = context.streamdecodedchunks(input)            
         let subject = this.fetchentireoutput(output, this.onflacchunk)            
-        Assert.True(subject <> null, "I got the full file")
+        Assert.True(subject.Length <> 0, "I got the full file")
         subject
 
     member private this.prepareencoding(filepath: string, extension: string): audiofile =
@@ -80,11 +80,11 @@ type public when_an_audio_file_is_decoded() =
         Assert.True(false)
 
     [<Fact>]
-    member public this.it_can_decode_wav(): seq<byte[]> =
+    member public this.it_can_decode_wav() =
         use input = this.prepareencoding(wavfilepath, wavextension)
         let output = context.streamdecodedchunks(input)  
         let subject = this.fetchentireoutput(output, this.onwavchunk)            
-        Assert.True(subject <> null, "I got the full file")
+        Assert.True(subject.Length <> 0, "I got the full file")
         subject
 
     member private this.onwavchunk(stream:MemoryStream) =
@@ -108,10 +108,10 @@ type public when_an_audio_file_is_decoded() =
             Thread.Sleep(100)
             player.Stop()
 
-    member private this.fetchentireoutput(sequence: seq<streamresponse>, ?onchunkreceived: (MemoryStream) -> unit): seq<byte[]> =
+    member private this.fetchentireoutput(sequence: seq<streamresponse>, ?onchunkreceived: (MemoryStream) -> unit):byte[][] =
         let mutable isfirstiteration = true
         
-        seq {
+        let output = seq {
             for item in sequence do
                 if isfirstiteration = true then
                     Assert.True(item.bitdepth <> 0, "a bit depth was returned")
@@ -127,5 +127,6 @@ type public when_an_audio_file_is_decoded() =
                 GC.Collect()
                 yield item.chunk
         }
+        output.ToArray()
 
 

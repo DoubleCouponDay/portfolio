@@ -60,12 +60,15 @@ type public audiodecoder() =
         seq {
             let mutable skipamount = 0.0
 
-            while moredatatoread do                   
+            while moredatatoread do     
+                let outputstream = new MemoryStream()
+
                 if firstiteration = false then                        
                     output <- new streamresponse()
 
-                firstiteration <- false
-                use outputstream = new MemoryStream()
+                else
+                    firstiteration <- false
+                
                 let writer = new WaveFileWriter(outputstream, reader.WaveFormat)
                 let endingposition = int64(chunksize) + reader.Position
                 let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
@@ -74,6 +77,7 @@ type public audiodecoder() =
                 if amountread <> 0 then 
                     moredatatoread <- true                        
                     output.chunk <- outputstream.GetBuffer()
+                    outputstream.Dispose()
                     skipamount <- skipamount + float(chunksize)
                     yield output
                         
@@ -100,8 +104,10 @@ type public audiodecoder() =
                 if firstiteration = false then                        
                     output <- new streamresponse()
 
-                firstiteration <- false
-                use outputstream = new MemoryStream()
+                else
+                    firstiteration <- false
+
+                let outputstream = new MemoryStream()
                 let writer = new FlakeWriter(null, outputstream, reader.PCM)
                 
                 let endingposition = int64(chunksize) + reader.Position
@@ -111,6 +117,7 @@ type public audiodecoder() =
                 if amountread <> 0 then 
                     moredatatoread <- true                        
                     output.chunk <- outputstream.GetBuffer()
+                    outputstream.Dispose()
                     skipamount <- skipamount + float(chunksize)
                     yield output
                         
