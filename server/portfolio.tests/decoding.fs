@@ -12,6 +12,9 @@ open System.Collections.Generic
 open System.Linq
 open NAudio.Wave
 open System.Threading
+open decodingdata
+open CUETools.Codecs.FLAKE
+open NAudio.Flac
 
 type public when_an_audio_file_is_decoded() =
     let context = new audiodecoder()    
@@ -35,7 +38,38 @@ type public when_an_audio_file_is_decoded() =
 
     [<Fact>]
     member public this.it_can_decode_flac() =
-        Assert.True(false)
+        use input = this.prepareencoding(flacfilepath, flacextension)
+        let output = context.streamdecodedchunks(input)            
+        let subject = this.fetchentireoutput(output, this.onflacchunk)            
+        Assert.True(subject <> null, "I got the full file")
+        subject
+
+    member private this.prepareencoding(filepath: string, extension: string): audiofile =
+        let stream = new MemoryStream()
+        use file = File.OpenRead(filepath)
+        file.CopyTo(stream)
+        new audiofile(stream, "", extension)
+
+    member private this.onflacchunk(stream:MemoryStream) =
+        use file = new FlakeReader(null, stream)
+        Assert.True(file.PCM.SampleRate <> 0, "a samplerate could be read")
+
+        ()
+
+    [<Fact>]
+    member public this.it_can_play_flac() =
+        let subject = this.it_can_decode_flac()
+        use player = new WaveOutEvent()
+
+        for item in subject do   
+            use stream = new MemoryStream(item)
+            use reader = new FlacReader(stream)
+            player.Init(reader)
+            player.Play()            
+            Thread.Sleep(100)
+            player.Stop()
+
+        ()
 
     [<Fact>]
     member public this.it_can_decode_ogg() =
@@ -46,24 +80,24 @@ type public when_an_audio_file_is_decoded() =
         Assert.True(false)
 
     [<Fact>]
-    member public this.it_can_decode_wav() =
-        let input = this.preparewavdecoding()
-        let output = context.streamdecodedchunks(input)            
-        let subject = this.fetchentireoutput(output)            
+    member public this.it_can_decode_wav(): seq<byte[]> =
+        use input = this.prepareencoding(wavfilepath, wavextension)
+        let output = context.streamdecodedchunks(input)  
+        let subject = this.fetchentireoutput(output, this.onwavchunk)            
         Assert.True(subject <> null, "I got the full file")
-        input.stream.Dispose()
+        subject
 
-    member private this.preparewavdecoding(): audiofile =
-        let stream = new MemoryStream()
-        use file = File.OpenRead("assets/sample.wav")
-        file.CopyTo(stream)
-        new audiofile(stream, "", "wav")
+    member private this.onwavchunk(stream:MemoryStream) =
+        use possiblefile = new WaveFileReader(stream)
+        
+        if possiblefile.CanRead = false then
+            failwith "the received chunk file cant be read!"
+
+        ()
 
     [<Fact>]
     member public this.it_can_play_decoded_wav() =
-        let input = this.preparewavdecoding()
-        let output = context.streamdecodedchunks(input)            
-        let subject = this.fetchentireoutput(output)  
+        let subject = this.it_can_decode_wav()
         use player = new WaveOutEvent()
 
         for item in subject do   
@@ -74,9 +108,7 @@ type public when_an_audio_file_is_decoded() =
             Thread.Sleep(100)
             player.Stop()
 
-        ()
-
-    member private this.fetchentireoutput(sequence: seq<streamresponse>): seq<byte[]> =
+    member private this.fetchentireoutput(sequence: seq<streamresponse>, ?onchunkreceived: (MemoryStream) -> unit): seq<byte[]> =
         let mutable isfirstiteration = true
         
         seq {
@@ -86,14 +118,11 @@ type public when_an_audio_file_is_decoded() =
                     Assert.True(item.channels <> 0, "channel count was returned")
                     Assert.True(item.samplerate <> 0, "a samplerate was returned")
                     Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
-                    Assert.True(item.encoding = "Pcm", "the decoder returned raw pcm")
+                    Assert.True(String.IsNullOrEmpty(item.encoding) <> true, "an ecoding was returned")
                     isfirstiteration <- false
 
                 use currentstream = new MemoryStream(item.chunk)
-                use possiblefile = new WaveFileReader(currentstream)
-
-                if possiblefile.CanRead = false then
-                    failwith "the received chunk file cant be read!"
+                this.onwavchunk(currentstream)
 
                 GC.Collect()
                 yield item.chunk

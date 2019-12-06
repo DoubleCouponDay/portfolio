@@ -27,16 +27,15 @@ type streamhub() =
 
     member private this.fillchannel(input: Channel<streamresponse>): unit =
         async {
-            let! track = drivereader.get.readrandomdeserttrack()
             GC.Collect()
+            use! track = drivereader.get.readrandomdeserttrack()            
             let decoder = new audiodecoder()
             let decoded = decoder.streamdecodedchunks(track)
 
             for item in decoded do
                 input.Writer.TryWrite(item) |> ignore
 
-            input.Writer.TryComplete() |> ignore
-            track.stream.Dispose()    
+            input.Writer.Complete() |> ignore        
             GC.Collect()
         }
         |> Async.Start

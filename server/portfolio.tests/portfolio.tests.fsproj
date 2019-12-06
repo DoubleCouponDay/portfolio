@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="decoding.data.fs" />
     <None Include="assets\sample.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
