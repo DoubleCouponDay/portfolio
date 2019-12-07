@@ -1,41 +1,46 @@
 ﻿namespace portfolio.controllers.audio
 
 open Microsoft.AspNetCore.SignalR
-open System.Threading.Tasks
-open System.Collections.Generic
 open portfolio.googledrivereader
 open System.Threading.Channels
 open System
-open portfolio.data
 open portfolio.models
-open Newtonsoft.Json
-open System.Linq
 open portfolio.audiodecoder
-open Microsoft.AspNetCore.Mvc
+open System.Threading
 
 type streamhub() =
     inherit Hub()
+    let channel = Channel.CreateUnbounded<streamresponse>()
+    let canceller = new CancellationTokenSource()   
 
     override this.OnConnectedAsync() =
         Console.WriteLine("socket connected!")
         base.OnConnectedAsync()
 
+    override this.OnDisconnectedAsync(error: exn) =
+        canceller.Cancel()
+        this.cleanup()
+        base.OnDisconnectedAsync(error)
+
     member public this.randomdeserttrack(): ChannelReader<streamresponse> =
-        let channel = Channel.CreateUnbounded<streamresponse>()
         this.fillchannel(channel) |> ignore
         channel.Reader
 
     member private this.fillchannel(input: Channel<streamresponse>): unit =
-        async {
+        let mission = async {
             GC.Collect()
-            use! track = drivereader.get.readrandomdeserttrack()            
+            use! track = drivereader.get.readrandomdeserttrack()                        
             let decoder = new audiodecoder()
             let decoded = decoder.streamdecodedchunks(track)
 
             for item in decoded do
                 input.Writer.TryWrite(item) |> ignore
 
-            input.Writer.Complete() |> ignore        
-            GC.Collect()
+            this.cleanup()
         }
-        |> Async.Start
+        Async.Start(mission, canceller.Token)
+        
+    member private this.cleanup() =
+        channel.Writer.TryComplete() |> ignore
+        canceller.Dispose()
+        GC.Collect()
