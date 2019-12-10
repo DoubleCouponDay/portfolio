@@ -30,6 +30,7 @@
     "rxjs": "~6.4.0",
     "subsink": "^1.0.0",
     "tslib": "^1.10.0",
+    "typed-web-workers": "^3.0.0-next",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {

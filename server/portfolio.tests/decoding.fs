@@ -121,8 +121,9 @@ type public when_an_audio_file_is_decoded() =
                     Assert.True(String.IsNullOrEmpty(item.encoding) <> true, "an ecoding was returned")
                     isfirstiteration <- false
 
-                use currentstream = new MemoryStream(item.chunk)
-                this.onwavchunk(currentstream)
+                if onchunkreceived.IsSome then
+                    use currentstream = new MemoryStream(item.chunk)
+                    onchunkreceived.Value(currentstream)
 
                 GC.Collect()
                 yield item.chunk

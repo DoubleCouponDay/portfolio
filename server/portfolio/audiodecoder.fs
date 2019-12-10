@@ -58,7 +58,7 @@ type public audiodecoder() =
             output.bitdepth <- reader.WaveFormat.BitsPerSample
             output.samplerate <- reader.WaveFormat.SampleRate
             output.channels <- reader.WaveFormat.Channels
-            output.totalchunks <- reader.Length / int64(chunksize)
+            output.totalchunks <- this.calculatetotalchunks(reader.Length)
             output.encoding <- reader.WaveFormat.Encoding.ToString()     
 
             while moredatatoread do     
@@ -99,7 +99,8 @@ type public audiodecoder() =
             output.bitdepth <- reader.PCM.BitsPerSample
             output.samplerate <- reader.PCM.SampleRate
             output.channels <- reader.PCM.ChannelCount
-            output.totalchunks <- reader.Length / int64(chunksize)
+            let chunkcount = this.calculatetotalchunks(reader.Length)
+            output.totalchunks <- chunkcount
 
             while moredatatoread do                   
                 if firstiteration = false then                        
@@ -125,6 +126,13 @@ type public audiodecoder() =
                 else 
                     moredatatoread <- false 
         }       
+
+    member private this.calculatetotalchunks(filesize:int64): int64 =
+        let floatsize = float(filesize)
+        let floatchunk = float(chunksize)
+        let calculation = floatsize / floatchunk
+        let rounded = Math.Ceiling(calculation)
+        int64(rounded)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    null

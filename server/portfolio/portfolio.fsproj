@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="flacutils.fs" />
     <Compile Include="audio.data.fs" />
     <None Include="portfolio-ffdfea565994.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -34,6 +33,7 @@
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />
+    <Compile Include="flacutils.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
     <Compile Include="audiodecoder.fs" />
