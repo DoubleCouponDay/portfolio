@@ -44,7 +44,7 @@ type public when_an_audio_file_is_decoded() =
         ()
 
     [<Fact>]
-    member public this.it_can_play_flac() =
+    member public this.it_can_play_split_flac_files() =
         let subject = this.it_can_decode_flac()
         use player = new WaveOutEvent()
 
@@ -75,7 +75,7 @@ type public when_an_audio_file_is_decoded() =
         ()
 
     [<Fact>]
-    member public this.it_can_play_decoded_wav() =
+    member public this.it_can_play_split_wav_files() =
         let subject = this.it_can_decode_wav()
         use player = new WaveOutEvent()
 
@@ -118,11 +118,25 @@ type public when_an_audio_file_is_decoded() =
         subject
 
     member private this.onmp3chunk(stream: MemoryStream) =
+        use possiblefile = new Mp3FileReader(stream)
+        
+        if possiblefile.CanRead = false then
+            failwith "the received chunk file cant be read!"
+
         ()
 
     [<Fact>]
-    member public this.it_can_play_mp3() =
-        ()
+    member public this.it_can_play_split_mp3_files() =
+        let subject = this.it_can_decode_mp3()
+        use player = new WaveOutEvent()
+
+        for item in subject do   
+            use stream = new MemoryStream(item)
+            use reader = new Mp3FileReader(stream)
+            player.Init(reader)
+            player.Play()            
+            Thread.Sleep(100)
+            player.Stop()
 
     //[<Fact>]
     //member public this.it_can_decode_ogg(): byte[][] =
