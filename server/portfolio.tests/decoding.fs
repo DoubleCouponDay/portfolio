@@ -24,20 +24,7 @@ type public when_an_audio_file_is_decoded() =
             ()
 
     [<Fact>]
-    member public this.it_can_decode_mp3() =
-        //async {
-        //    use stream = new MemoryStream()
-        //    use file = File.OpenRead("assets/sample.mp3")
-        //    file.CopyTo(stream)
-        //    let mime = MimeTypes.tryFind(".mp3").Value
-        //    let input = new audiofile(stream, "", mime)
-        //    let output = context.decodeaudio(input)
-        //    this.fetchentireoutput(output)
-        //}
-        Assert.True(false)
-
-    [<Fact>]
-    member public this.it_can_decode_flac() =
+    member public this.it_can_decode_flac(): byte[][] =
         use input = this.prepareencoding(flacfilepath, flacextension)
         let output = context.streamdecodedchunks(input)            
         let subject = this.fetchentireoutput(output, this.onflacchunk)            
@@ -72,15 +59,7 @@ type public when_an_audio_file_is_decoded() =
         ()
 
     [<Fact>]
-    member public this.it_can_decode_ogg() =
-        Assert.True(false)
-
-    [<Fact>]
-    member public this.it_can_decode_m4a() =
-        Assert.True(false)
-
-    [<Fact>]
-    member public this.it_can_decode_wav() =
+    member public this.it_can_decode_wav(): byte[][] =
         use input = this.prepareencoding(wavfilepath, wavextension)
         let output = context.streamdecodedchunks(input)  
         let subject = this.fetchentireoutput(output, this.onwavchunk)            
@@ -130,4 +109,25 @@ type public when_an_audio_file_is_decoded() =
         }
         output.ToArray()
 
+    [<Fact>]
+    member public this.it_can_decode_mp3(): byte[][] =
+        use input = this.prepareencoding(mp3filepath, mp3extension)
+        let output = context.streamdecodedchunks(input)  
+        let subject = this.fetchentireoutput(output, this.onmp3chunk)            
+        Assert.True(subject.Length <> 0, "I got the full file")
+        subject
 
+    member private this.onmp3chunk(stream: MemoryStream) =
+        ()
+
+    [<Fact>]
+    member public this.it_can_play_mp3() =
+        ()
+
+    //[<Fact>]
+    //member public this.it_can_decode_ogg(): byte[][] =
+    //    Assert.True(false)
+
+    //[<Fact>]
+    //member public this.it_can_decode_m4a(): byte[][] =
+    //    Assert.True(false)

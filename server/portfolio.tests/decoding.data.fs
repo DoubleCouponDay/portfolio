@@ -12,3 +12,8 @@ let public flacextension = "flac"
 [<Literal>]
 let public flacfilepath = "assets/sample.flac"
 
+[<Literal>]
+let public mp3filepath = "assets/sample.mp3"
+
+[<Literal>]
+let public mp3extension = "mp3"

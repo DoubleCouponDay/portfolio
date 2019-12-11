@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="bridgedecoders\Iuniversalreader.fs" />
     <Compile Include="audio.data.fs" />
     <None Include="portfolio-ffdfea565994.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
