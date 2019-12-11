@@ -4,6 +4,8 @@ import { gratingsoundaddress, tabletsoundaddress, drawbridgesoundaddress } from 
 import { scrolldisabler } from './utility/scrolldisabler';
 import { loadstate, LoadingService } from './services/loading.service';
 import { Subscription } from 'rxjs';
+import {createWorker} from "typed-web-workers"
+import { streamresponse } from './services/streaming.data';
 
 @Component({
   selector: 'app-root',

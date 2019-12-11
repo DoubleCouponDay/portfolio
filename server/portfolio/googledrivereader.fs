@@ -125,7 +125,7 @@ type public drivereader private() =
 
     member private x.getplaylistlines(service: DriveService, playlist: Data.File): string[] =
         let download = x.requestfilebyID(service, playlist.Id)
-        let entire = Encoding.ASCII.GetString(download.ToArray())
+        let entire = Encoding.UTF8.GetString(download.ToArray())
         download.Dispose()
 
         let output = 
