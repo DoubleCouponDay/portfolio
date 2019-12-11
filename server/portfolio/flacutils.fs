@@ -11,7 +11,7 @@ type public flacutils =
 
         let takecount = 
             let naiveend = int(endposition - startposition)
-            let intelligentend = reader.Samples.Length
+            let intelligentend = int(reader.Length)
 
             if naiveend > intelligentend then naiveend else intelligentend
         
