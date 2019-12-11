@@ -35,7 +35,6 @@
     <Compile Include="bridgedecoders\universalreader.fs" />
     <Compile Include="bridgedecoders\universalflac.fs" />
     <Compile Include="bridgedecoders\universalwav.fs" />
-    <Compile Include="flacutils.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
     <Compile Include="audiodecoder.fs" />

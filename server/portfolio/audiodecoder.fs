@@ -12,7 +12,6 @@ open NAudio
 open NAudio.Wave
 open Microsoft.AspNetCore.Mvc
 open CUETools.Codecs.FLAKE
-open flacutils
 open CUETools.Codecs
 open portfolio.bridgedecoders
 

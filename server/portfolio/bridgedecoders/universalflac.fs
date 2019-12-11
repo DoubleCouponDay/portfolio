@@ -27,7 +27,7 @@ type public universalflac(track: audiofile) =
             let naiveend = int(reader.Position + int64(chunksize))
             let amountleft = int(reader.Length - reader.Position)
 
-            if naiveend > amountleft then naiveend else amountleft
+            if naiveend > amountleft then amountleft else naiveend
     
         if takecount = 0 then
             None
