@@ -14,7 +14,6 @@ export class musicplayer {
     public get musicisplaying() { return this._musicisplaying }
 
     private _context: AudioContext
-    private volume: GainNode
     
     private playbacksEnd = 0.0
 
@@ -26,8 +25,6 @@ export class musicplayer {
     constructor() {
         this._context = new AudioContext()    
         this._context.suspend()    
-        this.volume = this._context.createGain()
-        this.volume.gain.value = 0.0
     }
 
     public onnewbuffer = async (response: streamresponse) => {
@@ -55,6 +52,7 @@ export class musicplayer {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
         source.buffer = buffer
+        this.normalizevolume(source)
         source.start(this.playbacksEnd)                
 
         this.playbacksEnd += buffer.duration
@@ -70,6 +68,12 @@ export class musicplayer {
             }
             this._musicisplaying = false
         }
+    }
+
+    private normalizevolume(buffer: AudioBufferSourceNode) {
+        let newvolume = this._context.createGain()
+        newvolume.gain.value = musicvolume
+        newvolume.connect(buffer)
     }
 
     public toggleplayback(input: boolean) {
@@ -110,10 +114,6 @@ export class musicplayer {
     }
 
     private beginplayback = () => {       
-        if(this._musicisplaying === false) {
-            let fullvolumetime = (this._context.currentTime + 5) / millisecond
-            this.volume.gain.exponentialRampToValueAtTime(musicvolume, fullvolumetime)
-        }
         this._musicisplaying = true  
         this._context.resume()   
         for(let i = this.bufferindex; i < this._buffers.length; i++) {

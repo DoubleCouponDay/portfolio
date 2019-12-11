@@ -17,7 +17,7 @@ import { mouseservice } from 'src/app/services/mouse.service';
 import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import { fadeout, togglefade } from 'src/app/animations/fade';
-import { gratingsoundaddress } from 'src/app/audio/audio.data';
+import { gratingsoundaddress, effectvolume } from 'src/app/audio/audio.data';
 import { elementrefargs } from 'src/app/utility/utility.data';
 
 const shadowcheckinterval = smoothtime / 5 
@@ -53,7 +53,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private boxresetfactory: AnimationFactory
     private fadefactory: AnimationFactory
   
-    blocksoundplayer = new generatedraggableaudio(gratingsoundaddress, 0.5)
+    blocksoundplayer = new generatedraggableaudio(gratingsoundaddress, effectvolume)
   
     entirepage: HTMLElement = document.documentElement
   
