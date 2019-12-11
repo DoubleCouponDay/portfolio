@@ -6,10 +6,10 @@ open System.IO
 open System
 open audio.data
 
-type public universalwav(stream: MemoryStream) =
-    inherit Iuniversalreader()
+type public universalwav(track: audiofile) =
+    inherit universalreader(track)
 
-    let reader = new WaveFileReader(stream)
+    let reader = new WaveFileReader(track.stream)
     let mutable startposition = 0L
     let sampler = reader.ToSampleProvider()
 

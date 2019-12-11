@@ -5,7 +5,7 @@ open audio.data
 open System
 
 [<AbstractClass>]
-type public Iuniversalreader() =
+type public universalreader(track: audiofile) =
     abstract position: int64
     abstract filesize: int64
     abstract samplecount: int64

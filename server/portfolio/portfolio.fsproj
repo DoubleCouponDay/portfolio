@@ -32,7 +32,8 @@
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />
-    <Compile Include="bridgedecoders\Iuniversalreader.fs" />
+    <Compile Include="bridgedecoders\universalreader.fs" />
+    <Compile Include="bridgedecoders\universalflac.fs" />
     <Compile Include="bridgedecoders\universalwav.fs" />
     <Compile Include="flacutils.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
