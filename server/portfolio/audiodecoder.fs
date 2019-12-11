@@ -69,6 +69,7 @@ type public audiodecoder() =
                         
                 else 
                     moredatatoread <- false 
+                    reader.Dispose()
         }
 
     member private this.calculatetotalchunks(filesize: int64): int64 =

@@ -142,6 +142,13 @@ type public when_an_audio_file_is_decoded() =
     //member public this.it_can_decode_ogg(): byte[][] =
     //    Assert.True(false)
 
-    //[<Fact>]
-    //member public this.it_can_decode_m4a(): byte[][] =
-    //    Assert.True(false)
+    [<Fact>]
+    member public this.it_can_decode_m4a(): byte[][] =
+        use input = this.prepareencoding(m4afilepath, m4aextension)
+        let output = context.streamdecodedchunks(input)  
+        let subject = this.fetchentireoutput(output, this.onm4achunk)            
+        Assert.True(subject.Length <> 0, "I got the full file")
+        subject
+
+    member private this.onm4achunk(stream: MemoryStream) =
+        ()

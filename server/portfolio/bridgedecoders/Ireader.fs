@@ -1,6 +1,10 @@
 ﻿namespace portfolio.bridgedecoders
 
+open System
+
 type public Ireader =
+    inherit IDisposable
+
     abstract position: int64
     abstract filesize: int64
     abstract bitdepth: int

@@ -34,6 +34,7 @@
     <Compile Include="Models\session.fs" />
     <Compile Include="bridgedecoders\universalreader.fs" />
     <Compile Include="bridgedecoders\Ireader.fs" />
+    <Compile Include="bridgedecoders\universalm4a.fs" />
     <Compile Include="bridgedecoders\universalmp3.fs" />
     <Compile Include="bridgedecoders\universalflac.fs" />
     <Compile Include="bridgedecoders\universalwav.fs" />

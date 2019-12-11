@@ -10,6 +10,10 @@ type public universalmp3(track: audiofile) =
     inherit universalreader(track)
     let reader = new Mp3FileReader(track.stream)
 
+    do
+        if reader.CanRead = false then
+            failwith "error trying to read the MP3 file!"
+
     interface Ireader with
         member this.bitdepth: int = reader.WaveFormat.BitsPerSample
         member this.channels: int = reader.WaveFormat.BitsPerSample            
