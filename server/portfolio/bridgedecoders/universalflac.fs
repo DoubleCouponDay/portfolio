@@ -9,37 +9,34 @@ open System
 
 type public universalflac(track: audiofile) =
     inherit universalreader(track)
+
     let reader = new FlakeReader(null, track.stream)
 
-    override this.position: int64 = reader.Position
-    override this.filesize: int64 = reader.Length
-    override this.samplecount: int64 = int64(reader.Samples.Length)
-    override this.bitdepth: int = reader.PCM.BitsPerSample
-    override this.samplerate: int = reader.PCM.SampleRate
-    override this.channels: int = reader.PCM.SampleRate
-    override this.encoding: string = "flac"
+    interface Ireader with
+        member this.bitdepth: int = reader.PCM.BitsPerSample            
+        member this.channels: int = reader.PCM.SampleRate
+        member this.encoding: string = "flac"
+        member this.filesize: int64 = reader.Length
+        member this.position: int64 = reader.Position
+        member this.samplerate: int = reader.PCM.SampleRate
 
-    override this.readchunk(): Option<byte[]> =
-        use newstream = new MemoryStream()
-        let writer = new FlakeWriter(null, newstream, reader.PCM)
+        member this.readchunk(): Option<byte[]> =
+            use newstream = new MemoryStream()
+            let writer = new FlakeWriter(null, newstream, reader.PCM)
 
-        let takecount = 
-            let naiveend = int(reader.Position + int64(chunksize))
-            let amountleft = int(reader.Length - reader.Position)
-
-            if naiveend > amountleft then amountleft else naiveend
+            let takecount = this.getbuffersize(reader.Position, reader.Length)
     
-        if takecount = 0 then
-            None
+            if takecount = 0 then
+                None
 
-        else
-            let buffer = new AudioBuffer(reader, takecount)
-            let amountread = reader.Read(buffer, takecount)
-            writer.WriteHeader()
-            writer.Write(buffer)
-            writer.Dispose()
-            let output = newstream.ToArray()
-            Some output
+            else
+                let buffer = new AudioBuffer(reader, takecount)
+                let amountread = reader.Read(buffer, takecount)
+                writer.WriteHeader()
+                writer.Write(buffer)
+                writer.Dispose()
+                let output = newstream.ToArray()
+                Some output
 
     interface IDisposable with
         member this.Dispose() =

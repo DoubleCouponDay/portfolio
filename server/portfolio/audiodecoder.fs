@@ -19,10 +19,10 @@ type public audiodecoder() =
     member public this.streamdecodedchunks(track: audiofile): seq<streamresponse> =
         track.stream.Position <- 0L
 
-        let reader: universalreader = 
+        let reader: Ireader = 
             match track.fileextension with
                 | "flac" ->
-                    new universalflac(track) :> universalreader
+                    new universalflac(track) :> Ireader
 
                 //| "mp3" -> 
                 //    this.decodemp3(track)
@@ -34,7 +34,7 @@ type public audiodecoder() =
                 //    this.decodem4a(track)
 
                 | "wav" ->
-                    new universalwav(track) :> universalreader
+                    new universalwav(track) :> Ireader
 
                 | _ -> 
                     failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
@@ -44,7 +44,7 @@ type public audiodecoder() =
     //member private this.decodemp3(track: audiofile): seq<streamresponse> =        
     //    null
 
-    member private this.decode(reader: universalreader): seq<streamresponse> =
+    member private this.decode(reader: Ireader): seq<streamresponse> =
         let mutable output = new streamresponse()
         let mutable firstiteration = true
         let mutable moredatatoread = true       
@@ -53,7 +53,7 @@ type public audiodecoder() =
             output.bitdepth <- reader.bitdepth
             output.samplerate <- reader.samplerate
             output.channels <- reader.channels
-            output.totalchunks <- reader.calculatetotalchunks()
+            output.totalchunks <- this.calculatetotalchunks(reader.filesize)
             output.encoding <- reader.encoding   
 
             while moredatatoread do     
@@ -73,6 +73,13 @@ type public audiodecoder() =
                 else 
                     moredatatoread <- false 
         }
+
+    member private this.calculatetotalchunks(filesize: int64): int64 =
+        let floatsize = float(filesize)
+        let floatchunk = float(chunksize)
+        let calculation = floatsize / floatchunk
+        let rounded = Math.Ceiling(calculation)
+        int64(rounded)
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    null
