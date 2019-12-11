@@ -24,8 +24,8 @@ type public audiodecoder() =
                 | "flac" ->
                     new universalflac(track) :> Ireader
 
-                //| "mp3" -> 
-                //    this.decodemp3(track)
+                | "mp3" -> 
+                    new universalmp3(track) :> Ireader
 
                 //| "ogg" ->
                 //    this.decodeogg(track)
@@ -40,9 +40,6 @@ type public audiodecoder() =
                     failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
 
         this.decode(reader)
-
-    //member private this.decodemp3(track: audiofile): seq<streamresponse> =        
-    //    null
 
     member private this.decode(reader: Ireader): seq<streamresponse> =
         let mutable output = new streamresponse()
