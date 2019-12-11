@@ -11,7 +11,7 @@ type public universalwav(stream: MemoryStream) =
 
     let reader = new WaveFileReader(stream)
     let mutable startposition = 0L
-    let mutable stopposition = int64(chunksize)
+    let sampler = reader.ToSampleProvider()
 
     do
         if reader.CanRead = false then
@@ -28,21 +28,23 @@ type public universalwav(stream: MemoryStream) =
     override this.readchunk(): byte[] =
         use newstream = new MemoryStream()
         let writer = new WaveFileWriter(newstream, reader.WaveFormat)
-        let mutable amountread: int = 0
         reader.Position <- startposition
         let buffersize = reader.BlockAlign * 1024 /// make sure that buffer is sized to a multiple of our WaveFormat.BlockAlign.
         /// BlockAlign equals channels * (bits / 8), so for 16 bit stereo wav it will be 4096 bytes
         let buffer = Array.create buffersize 0.0F
-        let sampler = reader.ToSampleProvider()
+        
         let mutable shouldloop = true
+        let formattedsize = int64(chunksize)
+        let difference = reader.Length - reader.Position
+        let takecount = if difference >= formattedsize then formattedsize else difference
+        
 
-        while shouldloop && reader.Position < stopposition do
-            let bytesrequired = int32(stopposition - reader.Position) 
+        while shouldloop do
+            let bytesrequired = int32(takecount - writer.Length) 
 
             if bytesrequired > 0 then
                 let bytestoread = Math.Min(bytesrequired, buffer.Length)
                 let bytesread = sampler.Read(buffer, 0, bytestoread)        
-                amountread <- amountread + bytesread
                 
                 if bytesread > 0 then
                     writer.WriteSamples(buffer, 0, bytestoread)                      
@@ -54,8 +56,7 @@ type public universalwav(stream: MemoryStream) =
                 shouldloop <- false
 
         startposition <- reader.Position        
-        stopposition <- reader.Position + int64(chunksize)
-        writer.Dispose()
+        writer.Dispose() // writes the header
         newstream.GetBuffer()
 
     interface IDisposable with

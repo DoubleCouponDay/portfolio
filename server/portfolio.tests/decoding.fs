@@ -117,7 +117,7 @@ type public when_an_audio_file_is_decoded() =
         Assert.True(subject.Length <> 0, "I got the full file")
         subject
 
-    member private this.onmp3chunk() =
+    member private this.onmp3chunk(stream: MemoryStream) =
         ()
 
     [<Fact>]
