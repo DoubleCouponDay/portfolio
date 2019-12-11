@@ -23,7 +23,6 @@ type public universalwav(track: audiofile) =
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.WaveFormat.SampleRate
         member this.bitdepth = reader.WaveFormat.BitsPerSample
-        member this.encoding = reader.WaveFormat.Encoding.ToString()
 
         member this.readchunk(): Option<byte[]> =
             use newstream = new MemoryStream()

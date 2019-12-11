@@ -97,7 +97,6 @@ type public when_an_audio_file_is_decoded() =
                     Assert.True(item.channels <> 0, "channel count was returned")
                     Assert.True(item.samplerate <> 0, "a samplerate was returned")
                     Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
-                    Assert.True(String.IsNullOrEmpty(item.encoding) <> true, "an ecoding was returned")
                     isfirstiteration <- false
 
                 if onchunkreceived.IsSome then

@@ -17,7 +17,6 @@ type public universalmp3(track: audiofile) =
     interface Ireader with
         member this.bitdepth: int = reader.WaveFormat.BitsPerSample
         member this.channels: int = reader.WaveFormat.BitsPerSample            
-        member this.encoding: string = "mpeg"
         member this.filesize: int64 = reader.Length
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.WaveFormat.SampleRate

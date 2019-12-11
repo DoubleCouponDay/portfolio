@@ -28,7 +28,6 @@ type public universalm4a(track: audiofile) =
     interface Ireader with
         member this.bitdepth: int = reader.WaveFormat.BitsPerSample
         member this.channels: int = reader.WaveFormat.Channels
-        member this.encoding: string = "aac"
         member this.filesize: int64 = reader.Length
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.WaveFormat.SampleRate
@@ -37,14 +36,16 @@ type public universalm4a(track: audiofile) =
             let mutable samplecount = 
                 (chunksize / reader.WaveFormat.Channels / reader.WaveFormat.BitsPerSample) 
 
-            let cut = 
-                sampler.Skip(TimeSpan.FromSeconds(skipcount))
-                    .Take(TimeSpan.FromSeconds(samplecount))
-                    .ToWaveProvider()
+            //let cut = 
+            //    sampler.Skip(TimeSpan.FromSeconds(skipcount))
+            //        .Take(TimeSpan.FromSeconds(samplecount))
+            //        .ToWaveProvider()
 
-            skipcount <- skipcount + samplecount
-            let output = cut.
-            Some output
+            //skipcount <- skipcount + samplecount
+            //let output = cut.
+            //Some output
+
+            None
 
         
     interface IDisposable with

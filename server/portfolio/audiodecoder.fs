@@ -51,7 +51,6 @@ type public audiodecoder() =
             output.samplerate <- reader.samplerate
             output.channels <- reader.channels
             output.totalchunks <- this.calculatetotalchunks(reader.filesize)
-            output.encoding <- reader.encoding   
 
             while moredatatoread do     
                 if firstiteration = false then                        

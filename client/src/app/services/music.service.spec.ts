@@ -46,8 +46,6 @@ describe('musicservice', () => {
                 expect(chunk.chunk.length).toBeGreaterThan(0)
                 expect(chunk.bitdepth !== 0).toBeTruthy()
                 expect(chunk.channels !== 0).toBeTruthy()
-                expect(isnullorundefined(chunk.encoding)).toBeTruthy()
-                expect(chunk.encoding !== "").toBeTruthy()
                 expect(chunk.samplerate !== 0).toBeTruthy()
                 expect(chunk.totalchunks !== 0).toBeTruthy()
             },

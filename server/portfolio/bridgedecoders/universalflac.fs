@@ -15,7 +15,6 @@ type public universalflac(track: audiofile) =
     interface Ireader with
         member this.bitdepth: int = reader.PCM.BitsPerSample            
         member this.channels: int = reader.PCM.SampleRate
-        member this.encoding: string = "flac"
         member this.filesize: int64 = reader.Length
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.PCM.SampleRate
