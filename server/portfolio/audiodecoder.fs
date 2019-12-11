@@ -11,133 +11,111 @@ open audio.data
 open NAudio
 open NAudio.Wave
 open Microsoft.AspNetCore.Mvc
-open WaveUtils
 open CUETools.Codecs.FLAKE
 open flacutils
 open CUETools.Codecs
+open portfolio.bridgedecoders
 
 type public audiodecoder() =
     member public this.streamdecodedchunks(track: audiofile): seq<streamresponse> =
         track.stream.Position <- 0L
 
-        match track.fileextension with
-            | "flac" ->
-                this.decodeflac(track)
+        let reader: Iuniversalreader = 
+            match track.fileextension with
+                //| "flac" ->
+                    //this.decodeflac(track)
 
-            //| "mp3" -> 
-            //    this.decodemp3(track)
+                //| "mp3" -> 
+                //    this.decodemp3(track)
 
-            //| "ogg" ->
-            //    this.decodeogg(track)
+                //| "ogg" ->
+                //    this.decodeogg(track)
 
-            //| "m4a" ->
-            //    this.decodem4a(track)
+                //| "m4a" ->
+                //    this.decodem4a(track)
 
-            | "wav" ->
-                this.decodewav(track)
+                | "wav" ->
+                    new universalwav(track.stream) :> Iuniversalreader
 
-            | _ -> 
-                failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
+                | _ -> 
+                    failwith (String.concat "" [|"filetype: "; track.fileextension; " not known by decoder!"|])
+
+        this.decode(reader)
 
     //member private this.decodemp3(track: audiofile): seq<streamresponse> =        
     //    null
 
-    member private this.decodewav(track: audiofile): seq<streamresponse> =
+    member private this.decode(reader: Iuniversalreader): seq<streamresponse> =
         let mutable output = new streamresponse()
         let mutable firstiteration = true
         let mutable moredatatoread = true       
 
         seq {
-            use reader = new WaveFileReader(track.stream)
-
-            if reader.CanRead = false then
-                failwith ("wav reader could not understand wav file: " + track.filename)
-
-            let mutable skipamount = 0.0
-
-            output.bitdepth <- reader.WaveFormat.BitsPerSample
-            output.samplerate <- reader.WaveFormat.SampleRate
-            output.channels <- reader.WaveFormat.Channels
-            output.totalchunks <- this.calculatetotalchunks(reader.Length)
-            output.encoding <- reader.WaveFormat.Encoding.ToString()     
+            output.bitdepth <- reader.bitdepth
+            output.samplerate <- reader.samplerate
+            output.channels <- reader.channels
+            output.totalchunks <- reader.calculatetotalchunks()
+            output.encoding <- reader.encoding   
 
             while moredatatoread do     
-                let outputstream = new MemoryStream()
-                
-
                 if firstiteration = false then                        
                     output <- new streamresponse()
 
                 else
                     firstiteration <- false
-                
-                let writer = new WaveFileWriter(outputstream, reader.WaveFormat)
-                let endingposition = int64(chunksize) + reader.Position
-                let amountread = waveutils.writewavchunk(reader, writer, reader.Position, endingposition)
-                writer.Dispose()
 
-                if amountread <> 0 then 
-                    moredatatoread <- true                        
-                    output.chunk <- outputstream.GetBuffer()
-                    outputstream.Dispose()
-                    skipamount <- skipamount + float(chunksize)
+                output.chunk <- reader.readchunk()
+
+                if output.chunk.Length <> 0 then 
+                    moredatatoread <- true                                            
                     yield output
                         
                 else 
                     moredatatoread <- false 
         }
 
-    member private this.decodeflac(track: audiofile): seq<streamresponse> =
-        let mutable output = new streamresponse()
-        output.encoding <- "flac"
-        let mutable firstiteration = true
-        let mutable moredatatoread = true    
+    //member private this.decodeflac(track: audiofile): seq<streamresponse> =
+    //    let mutable output = new streamresponse()
+    //    output.encoding <- "flac"
+    //    let mutable firstiteration = true
+    //    let mutable moredatatoread = true    
 
-        seq {
-            let mutable skipamount = 0.0
-            use reader = new FlakeReader(null, track.stream)
-            output.bitdepth <- reader.PCM.BitsPerSample
-            output.samplerate <- reader.PCM.SampleRate
-            output.channels <- reader.PCM.ChannelCount
-            let chunkcount = this.calculatetotalchunks(reader.Length)
-            output.totalchunks <- chunkcount
+    //    seq {
+    //        let mutable skipamount = 0.0
+    //        use reader = new FlakeReader(null, track.stream)
+    //        output.bitdepth <- reader.PCM.BitsPerSample
+    //        output.samplerate <- reader.PCM.SampleRate
+    //        output.channels <- reader.PCM.ChannelCount
+    //        let chunkcount = this.calculatetotalchunks(reader.Length)
+    //        output.totalchunks <- chunkcount
 
-            while moredatatoread do                   
-                if firstiteration = false then                        
-                    output <- new streamresponse()
+    //        while moredatatoread do                   
+    //            if firstiteration = false then                        
+    //                output <- new streamresponse()
 
-                else
-                    firstiteration <- false
+    //            else
+    //                firstiteration <- false
 
-                let outputstream = new MemoryStream()
-                let writer = new FlakeWriter(null, outputstream, reader.PCM)
+    //            let outputstream = new MemoryStream()
+    //            let writer = new FlakeWriter(null, outputstream, reader.PCM)
                 
-                let endingposition = int64(chunksize) + reader.Position
-                let amountread = flacutils.writeflacchunk(reader, writer, reader.Position, endingposition)
-                writer.Dispose()
+    //            let endingposition = int64(chunksize) + reader.Position
+    //            let amountread = flacutils.writeflacchunk(reader, writer, reader.Position, endingposition)
+    //            writer.Dispose()
 
-                if amountread <> 0 then 
-                    moredatatoread <- true                        
-                    output.chunk <- outputstream.GetBuffer()
-                    outputstream.Dispose()
-                    skipamount <- skipamount + float(chunksize)
-                    yield output
+    //            if amountread <> 0 then 
+    //                moredatatoread <- true                        
+    //                output.chunk <- outputstream.GetBuffer()
+    //                outputstream.Dispose()
+    //                skipamount <- skipamount + float(chunksize)
+    //                yield output
                         
-                else 
-                    moredatatoread <- false 
-        }       
-
-    member private this.calculatetotalchunks(filesize:int64): int64 =
-        let floatsize = float(filesize)
-        let floatchunk = float(chunksize)
-        let calculation = floatsize / floatchunk
-        let rounded = Math.Ceiling(calculation)
-        int64(rounded)
+    //            else 
+    //                moredatatoread <- false 
+    //    }       
 
     //member private this.decodem4a(track: audiofile): Async<audiofile> =
     //    null
-
-
 
     //member private this.decodeogg(input: audiofile): Async<audiofile> =
     //    null

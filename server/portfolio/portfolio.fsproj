@@ -24,16 +24,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="bridgedecoders\Iuniversalreader.fs" />
     <Compile Include="audio.data.fs" />
     <None Include="portfolio-ffdfea565994.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="portfolio.data.fs" />
-    <Compile Include="WaveUtils.fs" />
     <Compile Include="Models\streamresponse.fs" />
     <Compile Include="Models\audiofile.fs" />
     <Compile Include="Models\session.fs" />
+    <Compile Include="bridgedecoders\Iuniversalreader.fs" />
+    <Compile Include="bridgedecoders\universalwav.fs" />
     <Compile Include="flacutils.fs" />
     <Compile Include="googleresponses\unsuccessfulhandler.fs" />
     <Compile Include="googleresponses\exceptionhandler.fs" />
