@@ -25,39 +25,44 @@ type public universalwav(stream: MemoryStream) =
     override this.bitdepth = reader.WaveFormat.BitsPerSample
     override this.encoding = reader.WaveFormat.Encoding.ToString()  
 
-    override this.readchunk(): byte[] =
+    override this.readchunk(): Option<byte[]> =
         use newstream = new MemoryStream()
         let writer = new WaveFileWriter(newstream, reader.WaveFormat)
+
         reader.Position <- startposition
         let buffersize = reader.BlockAlign * 1024 /// make sure that buffer is sized to a multiple of our WaveFormat.BlockAlign.
         /// BlockAlign equals channels * (bits / 8), so for 16 bit stereo wav it will be 4096 bytes
-        let buffer = Array.create buffersize 0.0F
-        
-        let mutable shouldloop = true
+        let buffer = Array.create buffersize 0.0F        
         let formattedsize = int64(chunksize)
         let difference = reader.Length - reader.Position
-        let takecount = if difference >= formattedsize then formattedsize else difference
-        
+        let mutable takecount:int32 = if difference >= formattedsize then int32(formattedsize) else int32(difference)
+        let mutable sampleswritten = false
 
-        while shouldloop do
-            let bytesrequired = int32(takecount - writer.Length) 
-
-            if bytesrequired > 0 then
-                let bytestoread = Math.Min(bytesrequired, buffer.Length)
-                let bytesread = sampler.Read(buffer, 0, bytestoread)        
+        while takecount > 0 do
+            buffer.Initialize()
+            let bytestoread = Math.Min(takecount, buffer.Length)
+            let bytesread = sampler.Read(buffer, 0, bytestoread)        
                 
-                if bytesread > 0 then
-                    writer.WriteSamples(buffer, 0, bytestoread)                      
-
-                else
-                    shouldloop <- false                    
-
+            if bytesread > 0 then
+                writer.WriteSamples(buffer, 0, bytestoread) 
+                takecount <- takecount - bytesread
+                sampleswritten <- true
+                
+            if takecount = 0 then
+                writer.Dispose() // writes the header     
+                
             else
-                shouldloop <- false
+                takecount <- takecount - bytesread
 
-        startposition <- reader.Position        
-        writer.Dispose() // writes the header
-        newstream.GetBuffer()
+        startposition <- reader.Position     
+        writer.Dispose()
+
+        if sampleswritten then 
+            let output = newstream.GetBuffer()
+            Some output
+
+        else None
+        
 
     interface IDisposable with
         member this.Dispose() =

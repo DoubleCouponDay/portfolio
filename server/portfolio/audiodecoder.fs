@@ -64,10 +64,11 @@ type public audiodecoder() =
                 else
                     firstiteration <- false
 
-                output.chunk <- reader.readchunk()
+                let possiblechunk = reader.readchunk()
 
-                if output.chunk.Length <> 0 then 
-                    moredatatoread <- true                                            
+                if possiblechunk.IsSome then 
+                    moredatatoread <- true  
+                    output.chunk <- possiblechunk.Value
                     yield output
                         
                 else 
