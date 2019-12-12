@@ -5,6 +5,8 @@ open NAudio.MediaFoundation
 open NAudio.Wave
 open System
 open audio.data
+open System.IO
+open NAudio.Wave
 
 type public universalm4a(track: audiofile) =
     inherit universalreader(track)
@@ -29,23 +31,26 @@ type public universalm4a(track: audiofile) =
 
         member this.readchunk(): Option<byte []> =             
             let samplesperchunk = chunksize / reader.WaveFormat.BitsPerSample
-            let timeperchunk = float(samplesperchunk / reader.WaveFormat.SampleRate) |> float
+            let timeperchunk = float(samplesperchunk) / float(reader.WaveFormat.SampleRate)
 
             let cut = 
                 sampler.Skip(TimeSpan.FromSeconds(skiptime))
                     .Take(TimeSpan.FromSeconds(timeperchunk))
-                    .ToWaveProvider()
 
             skiptime <- skiptime + timeperchunk
-            let mutable shouldread = true
-            let buffer = Array.create chunksize 0uy
+            let buffer = Array.create chunksize 0.0F
+            let amountread = cut.Read(buffer, 0, samplesperchunk)            
 
-            while shouldread do
-                let amountread = cut.Read(buffer, 0, buffer.Length)
-                let output = amountread
-                () 
+            if amountread = 0 then
+                None
 
-            Some buffer
+            else
+                use outputstream = new MemoryStream()
+                let writer = new WaveFileWriter(outputstream, cut.WaveFormat)
+                writer.WriteSamples(buffer, 0, buffer.Length)
+                writer.Dispose()
+                let output = outputstream.ToArray()
+                Some output
         
     interface IDisposable with
         member this.Dispose(): unit = 

@@ -15,6 +15,7 @@ open System.Threading
 open decodingdata
 open CUETools.Codecs.FLAKE
 open NAudio.Flac
+open NAudio.MediaFoundation
 
 type public when_an_audio_file_is_decoded() =
     let context = new audiodecoder()    
@@ -137,10 +138,6 @@ type public when_an_audio_file_is_decoded() =
             Thread.Sleep(100)
             player.Stop()
 
-    //[<Fact>]
-    //member public this.it_can_decode_ogg(): byte[][] =
-    //    Assert.True(false)
-
     [<Fact>]
     member public this.it_can_decode_m4a(): byte[][] =
         use input = this.prepareencoding(m4afilepath, m4aextension)
@@ -150,4 +147,24 @@ type public when_an_audio_file_is_decoded() =
         subject
 
     member private this.onm4achunk(stream: MemoryStream) =
-        ()
+        use reader = new WaveFileReader(stream)
+
+        if reader.CanRead = false then
+            failwith "split file was corrupted somehow."
+
+    [<Fact>]
+    member public this.it_can_play_m4a() =
+        let subject = this.it_can_decode_m4a()
+        use player = new WaveOutEvent()
+
+        for item in subject do   
+            use stream = new MemoryStream(item)
+            use reader = new WaveFileReader(stream)
+            player.Init(reader)
+            player.Play()            
+            Thread.Sleep(100)
+            player.Stop()
+
+    //[<Fact>]
+    //member public this.it_can_decode_ogg(): byte[][] =
+    //    Assert.True(false)

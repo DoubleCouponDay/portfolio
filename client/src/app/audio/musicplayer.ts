@@ -52,7 +52,7 @@ export class musicplayer {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
         source.buffer = buffer
-        this.normalizevolume(source)
+        // this.normalizevolume(source)
         source.start(this.playbacksEnd)                
 
         this.playbacksEnd += buffer.duration
