@@ -30,8 +30,8 @@ type public audiodecoder() =
                 //| "ogg" ->
                 //    this.decodeogg(track)
 
-                //| "m4a" ->
-                //    this.decodem4a(track)
+                | "m4a" ->
+                    new universalm4a(track) :> Ireader
 
                 | "wav" ->
                     new universalwav(track) :> Ireader

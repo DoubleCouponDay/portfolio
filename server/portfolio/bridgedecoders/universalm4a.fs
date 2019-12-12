@@ -14,16 +14,11 @@ type public universalm4a(track: audiofile) =
    
     let reader = new StreamMediaFoundationReader(track.stream)
     let sampler = reader.ToSampleProvider()
-    let mutable skipcount = 0.0
+    let mutable skiptime = 0.0
 
     do
-        let bytes = track.stream.ToArray()
-        reader.Write(bytes, 0, bytes.Length) 
-
         if reader.CanRead = false then
             failwith "error trying to read the M4A file!"
-
-        reader.Position <- 0L
 
     interface Ireader with
         member this.bitdepth: int = reader.WaveFormat.BitsPerSample
@@ -32,23 +27,25 @@ type public universalm4a(track: audiofile) =
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.WaveFormat.SampleRate
 
-        member this.readchunk(): Option<byte []> = 
-            let mutable taketime:float = 
-                
+        member this.readchunk(): Option<byte []> =             
+            let samplesperchunk = chunksize / reader.WaveFormat.BitsPerSample
+            let timeperchunk = float(samplesperchunk / reader.WaveFormat.SampleRate) |> float
 
             let cut = 
-                sampler.Skip(TimeSpan.FromSeconds(skipcount))
-                    .Take(TimeSpan.FromSeconds(taketime))
+                sampler.Skip(TimeSpan.FromSeconds(skiptime))
+                    .Take(TimeSpan.FromSeconds(timeperchunk))
                     .ToWaveProvider()
 
-            skipcount <- skipcount + taketime
-            let mutable amountread = 1
-            let buffer = Array.create 0 22
+            skiptime <- skiptime + timeperchunk
+            let mutable shouldread = true
+            let buffer = Array.create chunksize 0uy
 
-            while amountread > 0 do
-                cut.Read()
+            while shouldread do
+                let amountread = cut.Read(buffer, 0, buffer.Length)
+                let output = amountread
+                () 
 
-            Some output
+            Some buffer
         
     interface IDisposable with
         member this.Dispose(): unit = 
