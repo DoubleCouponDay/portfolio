@@ -14,7 +14,7 @@ type public universalm4a(track: audiofile) =
    
     let reader = new StreamMediaFoundationReader(track.stream)
     let sampler = reader.ToSampleProvider()
-    let mutable skipcount = 0
+    let mutable skipcount = 0.0
 
     do
         let bytes = track.stream.ToArray()
@@ -33,20 +33,22 @@ type public universalm4a(track: audiofile) =
         member this.samplerate: int = reader.WaveFormat.SampleRate
 
         member this.readchunk(): Option<byte []> = 
-            let mutable samplecount = 
-                (chunksize / reader.WaveFormat.Channels / reader.WaveFormat.BitsPerSample) 
+            let mutable taketime:float = 
+                
 
-            //let cut = 
-            //    sampler.Skip(TimeSpan.FromSeconds(skipcount))
-            //        .Take(TimeSpan.FromSeconds(samplecount))
-            //        .ToWaveProvider()
+            let cut = 
+                sampler.Skip(TimeSpan.FromSeconds(skipcount))
+                    .Take(TimeSpan.FromSeconds(taketime))
+                    .ToWaveProvider()
 
-            //skipcount <- skipcount + samplecount
-            //let output = cut.
-            //Some output
+            skipcount <- skipcount + taketime
+            let mutable amountread = 1
+            let buffer = Array.create 0 22
 
-            None
+            while amountread > 0 do
+                cut.Read()
 
+            Some output
         
     interface IDisposable with
         member this.Dispose(): unit = 
