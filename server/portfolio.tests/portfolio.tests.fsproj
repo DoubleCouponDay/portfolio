@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <Compile Include="decoding.data.fs" />
+    <None Include="assets\corrupted.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="assets\sample.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

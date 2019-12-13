@@ -129,3 +129,11 @@ type public when_an_audio_file_is_decoded() =
 
         if reader.CanRead = false then
             failwith "split file was corrupted somehow."
+
+    [<Fact>]
+    member public this.it_can_decode_corrupt_ogg(): byte[][] =
+        use input = this.prepareencoding(corruptedoggpath, oggextension)
+        let output = context.streamdecodedchunks(input)  
+        let subject = this.fetchentireoutput(output, this.onoggchunk)            
+        Assert.True(subject.Length <> 0, "I got the full file")
+        subject
