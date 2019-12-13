@@ -1,20 +1,16 @@
 ﻿namespace portfolio.bridgedecoders
 
-open portfolio.models
-open NAudio.MediaFoundation
 open NAudio.Wave
+open portfolio.models
+open System.IO
 open System
 open audio.data
-open System.IO
-open NAudio.Wave
+open NAudio.Vorbis
 
-type public universalm4a(track: audiofile) =
+type public universalogg(track: audiofile) =
     inherit universalreader(track)
-
-    do
-        MediaFoundationApi.Startup()
    
-    let reader = new StreamMediaFoundationReader(track.stream)
+    let reader = new VorbisWaveReader(track.stream)
     let sampler = reader.ToSampleProvider()
 
     do
@@ -42,8 +38,7 @@ type public universalm4a(track: audiofile) =
                 writer.Dispose()
                 let output = outputstream.ToArray()
                 Some output
-        
+
     interface IDisposable with
         member this.Dispose(): unit = 
             reader.Dispose()
-            MediaFoundationApi.Shutdown()

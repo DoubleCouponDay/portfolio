@@ -17,8 +17,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.0" />
     <PackageReference Include="NAudio" Version="1.9.0" />
     <PackageReference Include="NAudio.Flac" Version="1.0.5702.29018" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StbVorbisSharp" Version="1.16.2" />
     <PackageReference Include="System.IO" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
   </ItemGroup>
@@ -34,6 +34,7 @@
     <Compile Include="Models\session.fs" />
     <Compile Include="bridgedecoders\universalreader.fs" />
     <Compile Include="bridgedecoders\Ireader.fs" />
+    <Compile Include="bridgedecoders\universalogg.fs" />
     <Compile Include="bridgedecoders\universalm4a.fs" />
     <Compile Include="bridgedecoders\universalmp3.fs" />
     <Compile Include="bridgedecoders\universalflac.fs" />

@@ -23,3 +23,9 @@ let public m4afilepath = "assets/sample.m4a"
 
 [<Literal>]
 let public m4aextension = "m4a"
+
+[<Literal>]
+let public oggfilepath = "assets/sample.ogg"
+
+[<Literal>]
+let public oggextension = "ogg"

@@ -27,8 +27,8 @@ type public audiodecoder() =
                 | "mp3" -> 
                     new universalmp3(track) :> Ireader
 
-                //| "ogg" ->
-                //    this.decodeogg(track)
+                | "ogg" ->
+                    new universalogg(track) :> Ireader
 
                 | "m4a" ->
                     new universalm4a(track) :> Ireader
@@ -77,9 +77,3 @@ type public audiodecoder() =
         let calculation = floatsize / floatchunk
         let rounded = Math.Ceiling(calculation)
         int64(rounded)
-
-    //member private this.decodem4a(track: audiofile): Async<audiofile> =
-    //    null
-
-    //member private this.decodeogg(input: audiofile): Async<audiofile> =
-    //    null

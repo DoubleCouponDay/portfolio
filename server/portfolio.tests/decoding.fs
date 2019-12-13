@@ -15,7 +15,7 @@ open System.Threading
 open decodingdata
 open CUETools.Codecs.FLAKE
 open NAudio.Flac
-open NAudio.MediaFoundation
+open NAudio.Vorbis
 
 type public when_an_audio_file_is_decoded() =
     let context = new audiodecoder()    
@@ -165,6 +165,29 @@ type public when_an_audio_file_is_decoded() =
             Thread.Sleep(100)
             player.Stop()
 
-    //[<Fact>]
-    //member public this.it_can_decode_ogg(): byte[][] =
-    //    Assert.True(false)
+    [<Fact>]
+    member public this.it_can_decode_ogg(): byte[][] =
+        use input = this.prepareencoding(oggfilepath, oggextension)
+        let output = context.streamdecodedchunks(input)  
+        let subject = this.fetchentireoutput(output, this.onoggchunk)            
+        Assert.True(subject.Length <> 0, "I got the full file")
+        subject
+
+    member private this.onoggchunk(stream: MemoryStream) =
+        use reader = new WaveFileReader(stream)
+
+        if reader.CanRead = false then
+            failwith "split file was corrupted somehow."
+
+    [<Fact>]
+    member public this.it_can_play_ogg() =
+        let subject = this.it_can_decode_ogg()
+        use player = new WaveOutEvent()
+
+        for item in subject do   
+            use stream = new MemoryStream(item)
+            use reader = new WaveFileReader(stream)
+            player.Init(reader)
+            player.Play()            
+            Thread.Sleep(100)
+            player.Stop()
