@@ -29,24 +29,16 @@ type public universalm4a(track: audiofile) =
         member this.position: int64 = reader.Position
         member this.samplerate: int = reader.WaveFormat.SampleRate
 
-        member this.readchunk(): Option<byte []> =             
-            let samplesperchunk = chunksize / reader.WaveFormat.BitsPerSample
-            let timeperchunk = float(samplesperchunk) / float(reader.WaveFormat.SampleRate)
-
-            let cut = 
-                sampler.Skip(TimeSpan.FromSeconds(skiptime))
-                    .Take(TimeSpan.FromSeconds(timeperchunk))
-
-            skiptime <- skiptime + timeperchunk
+        member this.readchunk(): Option<byte []> = 
             let buffer = Array.create chunksize 0.0F
-            let amountread = cut.Read(buffer, 0, samplesperchunk)            
+            let amountread = sampler.Read(buffer, 0, chunksize)            
 
             if amountread = 0 then
                 None
 
             else
                 use outputstream = new MemoryStream()
-                let writer = new WaveFileWriter(outputstream, cut.WaveFormat)
+                let writer = new WaveFileWriter(outputstream, sampler.WaveFormat)
                 writer.WriteSamples(buffer, 0, buffer.Length)
                 writer.Dispose()
                 let output = outputstream.ToArray()
