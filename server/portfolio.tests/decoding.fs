@@ -44,20 +44,7 @@ type public when_an_audio_file_is_decoded() =
 
         ()
 
-    [<Fact>]
-    member public this.it_can_play_split_flac_files() =
-        let subject = this.it_can_decode_flac()
-        use player = new WaveOutEvent()
 
-        for item in subject do   
-            use stream = new MemoryStream(item)
-            use reader = new FlacReader(stream)
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(100)
-            player.Stop()
-
-        ()
 
     [<Fact>]
     member public this.it_can_decode_wav(): byte[][] =
@@ -75,18 +62,6 @@ type public when_an_audio_file_is_decoded() =
 
         ()
 
-    [<Fact>]
-    member public this.it_can_play_split_wav_files() =
-        let subject = this.it_can_decode_wav()
-        use player = new WaveOutEvent()
-
-        for item in subject do   
-            use stream = new MemoryStream(item)
-            use reader = new WaveFileReader(stream)
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(100)
-            player.Stop()
 
     member private this.fetchentireoutput(sequence: seq<streamresponse>, ?onchunkreceived: (MemoryStream) -> unit):byte[][] =
         let mutable isfirstiteration = true
@@ -125,18 +100,6 @@ type public when_an_audio_file_is_decoded() =
 
         ()
 
-    [<Fact>]
-    member public this.it_can_play_split_mp3_files() =
-        let subject = this.it_can_decode_mp3()
-        use player = new WaveOutEvent()
-
-        for item in subject do   
-            use stream = new MemoryStream(item)
-            use reader = new Mp3FileReader(stream)
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(100)
-            player.Stop()
 
     [<Fact>]
     member public this.it_can_decode_m4a(): byte[][] =
@@ -152,18 +115,6 @@ type public when_an_audio_file_is_decoded() =
         if reader.CanRead = false then
             failwith "split file was corrupted somehow."
 
-    [<Fact>]
-    member public this.it_can_play_m4a() =
-        let subject = this.it_can_decode_m4a()
-        use player = new WaveOutEvent()
-
-        for item in subject do   
-            use stream = new MemoryStream(item)
-            use reader = new WaveFileReader(stream)
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(100)
-            player.Stop()
 
     [<Fact>]
     member public this.it_can_decode_ogg(): byte[][] =
@@ -178,16 +129,3 @@ type public when_an_audio_file_is_decoded() =
 
         if reader.CanRead = false then
             failwith "split file was corrupted somehow."
-
-    [<Fact>]
-    member public this.it_can_play_ogg() =
-        let subject = this.it_can_decode_ogg()
-        use player = new WaveOutEvent()
-
-        for item in subject do   
-            use stream = new MemoryStream(item)
-            use reader = new WaveFileReader(stream)
-            player.Init(reader)
-            player.Play()            
-            Thread.Sleep(100)
-            player.Stop()
