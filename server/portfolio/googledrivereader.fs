@@ -89,7 +89,7 @@ type public googledrivereader private() =
             return playlist
         }
         
-    member private x.requestfilebyname(service: DriveService, filename: string): Async<Data.File> =
+    member public x.requestfilebyname(service: DriveService, filename: string): Async<Data.File> =
         let verytrue = new Nullable<bool>(true)
         let listRequest = service.Files.List()            
         listRequest.PageSize <- new Nullable<int>(1)

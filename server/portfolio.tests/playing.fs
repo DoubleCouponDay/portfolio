@@ -17,9 +17,10 @@ open CUETools.Codecs.FLAKE
 open NAudio.Flac
 open NAudio.Vorbis
 open decoding
+open Xunit.Abstractions
 
-type public when_an_audio_file_is_played() =
-    let decodingtests = new when_an_audio_file_is_decoded()
+type public when_an_audio_file_is_played(logger: ITestOutputHelper) =
+    let decodingtests = new when_an_audio_file_is_decoded(logger)
 
     interface IDisposable with
         member this.Dispose(): unit = 

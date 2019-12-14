@@ -18,8 +18,10 @@ open NAudio.Flac
 open NAudio.Vorbis
 open drivereading
 open portfolio.googledrivereader
+open Google.Apis.Drive.v3
+open Xunit.Abstractions
 
-type public when_an_audio_file_is_decoded() =
+type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
     let context = new audiodecoder()    
 
     interface IDisposable with
@@ -135,17 +137,18 @@ type public when_an_audio_file_is_decoded() =
     [<Theory>]
     [<InlineData(corruptedoggpath)>]
     ///returns if the file is corrupt or not
-    member public this.it_fails_to_decode_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =
-        use input = this.prepareencoding(virtualfilepath, oggextension)
+    member public this.it_fails_to_decode_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =        
         let mutable didthrow = false
 
         try
             if stream.IsNone then
+                use input = this.prepareencoding(virtualfilepath, oggextension)
                 let output = context.streamdecodedchunks(input)  
                 ()
 
             else
-                this.onoggchunk(stream.Value)
+                use reader = new VorbisWaveReader(stream.Value)
+                Assert.True(reader.CanRead = true)
                 ()
             ()
 
@@ -154,7 +157,7 @@ type public when_an_audio_file_is_decoded() =
             didthrow <- true
             
         | error ->
-            failwith ("unexpect error: " + error.ToString())
+            failwith ("unexpected error: " + error.ToString())
 
         didthrow
 
@@ -165,21 +168,20 @@ type public when_an_audio_file_is_decoded() =
             use drive = reader.createdriveservice()
             let! playlist = reader.getplaylist()        
 
-            let failedfiles = 
-                playlist.Where(fun item -> item.EndsWith("ogg"))
-                    .Select(fun item ->
-                        let file = reader.requestfilebyID(drive, item)
-                        (item, file)
-                    )
-                    .Where(fun (name, file) -> 
-                        let iscorrupt = this.it_fails_to_decode_corrupted_ogg_file(name, file)
-                        iscorrupt
-                    )
-                    .Select(fun (name, file) -> name)
-                    .Aggregate<string>(fun item aggregate -> aggregate + "/n" +  item)
+            let oggfiles = playlist.Where(fun item -> item.EndsWith("ogg")).ToArray()
 
-            if failedfiles <> "" then
-                failwith failedfiles
+            for name in oggfiles do
+                let file = this.fetchfile(reader, drive, name)
+                use stream = reader.requestfilebyID(drive, file.Id)
+                let iscorrupt = this.it_fails_to_decode_corrupted_ogg_file(name, stream)
+
+                if iscorrupt then
+                    logger.WriteLine("corrupt:" + name)
         }
         |> Async.RunSynchronously
-        ()
+
+    member private this.fetchfile(reader:googledrivereader, drive:DriveService, filename:string): Data.File =
+        async {
+            let! output = reader.requestfilebyname(drive, filename) 
+            return output
+        } |> Async.RunSynchronously
