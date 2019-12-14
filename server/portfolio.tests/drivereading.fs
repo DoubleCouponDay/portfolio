@@ -6,13 +6,14 @@ open System
 open Xunit.Abstractions
 open portfolio.models
 
-type public the_drive_reader(log: ITestOutputHelper) = 
+type public when_google_drive_is_read(log: ITestOutputHelper) = 
 
     [<Fact>]
-    member x.can_read_random_track() =
+    member x.it_can_read_random_track(): Async<unit> =
         async {
-            let! test1 = drivereader.get.readrandomdeserttrack()
-            Assert.True(test1.stream.Length <> 0L, "song length is not zero")
-            Assert.True(String.IsNullOrEmpty(test1.fileextension) = false, "filetype is not empty")
-            Assert.True(String.IsNullOrEmpty(test1.filename) = false, "filename is not empty")
+            let! context = googledrivereader.get.readrandomdeserttrack()
+            Assert.True(context.stream.Length <> 0L, "song length is not zero")
+            Assert.True(String.IsNullOrEmpty(context.fileextension) = false, "filetype is not empty")
+            Assert.True(String.IsNullOrEmpty(context.filename) = false, "filename is not empty")
+
         }

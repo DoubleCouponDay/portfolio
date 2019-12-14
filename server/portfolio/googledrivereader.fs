@@ -15,15 +15,13 @@ open System.Linq
 open System.Collections.Generic
 open System.Text
 open portfolio.models
+open System.Collections.ObjectModel
 
 [<Literal>]
 let credentialspath = @"portfolio-ffdfea565994.p12"
 
-//[<Literal>]
-//let playlistname = "wilderness.m3u"
-
 [<Literal>]
-let playlistname = "test.m3u"
+let playlistname = "wilderness.m3u"
 
 [<Literal>]
 let serviceaccountemail = "server@portfolio-256800.iam.gserviceaccount.com"
@@ -41,7 +39,7 @@ type secrets = JsonProvider<secretspath>
 let reader = secrets.Load(secretspath)
 let Scopes = [| DriveService.Scope.DriveReadonly |] 
 
-type public drivereader private() =    
+type public googledrivereader private() =    
     let privatekey: string = reader.Driveprivatekey
     let mutable initializer = new ServiceAccountCredential.Initializer(serviceaccountemail)        
 
@@ -53,36 +51,43 @@ type public drivereader private() =
 
     let credential = new ServiceAccountCredential(initializer)
     let baseservice = new BaseClientService.Initializer()
+    let mutable playlist: ReadOnlyCollection<string> = null
 
     do
         baseservice.HttpClientInitializer <- credential
         baseservice.ApplicationName <- "googledrivereader"        
     
-    static member public get = new drivereader() //singleton
-
-    member val private playlist: string[] = null
-        with get, set
-
+    static member public get = new googledrivereader() //singleton
     member val private rng = new Random()
 
-    member public x.readrandomdeserttrack(): Async<audiofile> =    
+    member public this.readrandomdeserttrack(): Async<audiofile> =    
         async {
-            use service = new DriveService(baseservice)            
-            let! operation = x.setplaylist(service)
-            let chosenindex = x.rng.Next(x.playlist.Length)
-            let chosenfilename = x.playlist.[chosenindex]
-            let! chosenfile = x.requestfilebyname(service, chosenfilename)
-            let stream = x.requestfilebyID(service, chosenfile.Id)
+            use service = this.createdriveservice()     
+            let! operation = this.setplaylist(service)
+            let chosenindex = this.rng.Next(playlist.Count)
+            let chosenfilename = playlist.[chosenindex]
+            let! chosenfile = this.requestfilebyname(service, chosenfilename)
+            let stream = this.requestfilebyID(service, chosenfile.Id)
             return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
-        }        
+        }    
+        
+    member public this.createdriveservice(): DriveService =
+        new DriveService(baseservice)
 
     member private x.setplaylist(service: DriveService): Async<unit> =
         async {
             let! playlistfile = 
                 x.requestfilebyname(service, playlistname)
 
-            x.playlist <- x.getplaylistlines(service, playlistfile)
-        }                
+            playlist <- x.getplaylistlines(service, playlistfile)
+        }    
+        
+    member public this.getplaylist(): Async<ReadOnlyCollection<string>> =
+        async {
+            use service = new DriveService(baseservice)            
+            let! operation = this.setplaylist(service)
+            return playlist
+        }
         
     member private x.requestfilebyname(service: DriveService, filename: string): Async<Data.File> =
         let verytrue = new Nullable<bool>(true)
@@ -111,7 +116,7 @@ type public drivereader private() =
             return query.Files.Item(0)
         }
 
-    member private x.requestfilebyID(service: DriveService, id: string): MemoryStream = 
+    member public x.requestfilebyID(service: DriveService, id: string): MemoryStream = 
         let request = service.Files.Get(id)
         request.Fields <- myfields
         let mutable output = new MemoryStream()
@@ -123,7 +128,7 @@ type public drivereader private() =
         output.Position <- 0L
         output
 
-    member private x.getplaylistlines(service: DriveService, playlist: Data.File): string[] =
+    member private x.getplaylistlines(service: DriveService, playlist: Data.File): ReadOnlyCollection<string> =
         let download = x.requestfilebyID(service, playlist.Id)
         let entire = Encoding.UTF8.GetString(download.ToArray())
         download.Dispose()
@@ -136,7 +141,8 @@ type public drivereader private() =
                         .Last()
                 )
                 .ToArray()
-        output
+
+        Array.AsReadOnly(output)
 
 
         

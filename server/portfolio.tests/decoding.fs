@@ -16,6 +16,8 @@ open decodingdata
 open CUETools.Codecs.FLAKE
 open NAudio.Flac
 open NAudio.Vorbis
+open drivereading
+open portfolio.googledrivereader
 
 type public when_an_audio_file_is_decoded() =
     let context = new audiodecoder()    
@@ -130,10 +132,54 @@ type public when_an_audio_file_is_decoded() =
         if reader.CanRead = false then
             failwith "split file was corrupted somehow."
 
+    [<Theory>]
+    [<InlineData(corruptedoggpath)>]
+    ///returns if the file is corrupt or not
+    member public this.it_fails_to_decode_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =
+        use input = this.prepareencoding(virtualfilepath, oggextension)
+        let mutable didthrow = false
+
+        try
+            if stream.IsNone then
+                let output = context.streamdecodedchunks(input)  
+                ()
+
+            else
+                this.onoggchunk(stream.Value)
+                ()
+            ()
+
+        with 
+        | :? InvalidDataException as error ->
+            didthrow <- true
+            
+        | error ->
+            failwith ("unexpect error: " + error.ToString())
+
+        didthrow
+
     [<Fact>]
-    member public this.it_can_decode_corrupt_ogg(): byte[][] =
-        use input = this.prepareencoding(corruptedoggpath, oggextension)
-        let output = context.streamdecodedchunks(input)  
-        let subject = this.fetchentireoutput(output, this.onoggchunk)            
-        Assert.True(subject.Length <> 0, "I got the full file")
-        subject
+    member public this.it_detects_corrupt_ogg_files(): unit =
+        async {
+            let reader = googledrivereader.get
+            use drive = reader.createdriveservice()
+            let! playlist = reader.getplaylist()        
+
+            let failedfiles = 
+                playlist.Where(fun item -> item.EndsWith("ogg"))
+                    .Select(fun item ->
+                        let file = reader.requestfilebyID(drive, item)
+                        (item, file)
+                    )
+                    .Where(fun (name, file) -> 
+                        let iscorrupt = this.it_fails_to_decode_corrupted_ogg_file(name, file)
+                        iscorrupt
+                    )
+                    .Select(fun (name, file) -> name)
+                    .Aggregate<string>(fun item aggregate -> aggregate + "/n" +  item)
+
+            if failedfiles <> "" then
+                failwith failedfiles
+        }
+        |> Async.RunSynchronously
+        ()

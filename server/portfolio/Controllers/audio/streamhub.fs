@@ -29,7 +29,7 @@ type streamhub() =
     member private this.fillchannel(input: Channel<streamresponse>): unit =
         let mission = async {
             GC.Collect()
-            use! track = drivereader.get.readrandomdeserttrack()                        
+            use! track = googledrivereader.get.readrandomdeserttrack()                        
             let decoder = new audiodecoder()
             let decoded = decoder.streamdecodedchunks(track)
 

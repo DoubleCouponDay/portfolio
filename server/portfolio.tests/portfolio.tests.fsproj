@@ -27,6 +27,7 @@
     <None Include="assets\sample.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="drivereading.fs" />
     <Compile Include="decoding.fs" />
     <Compile Include="playing.fs" />
     <Content Include="secrets.json">
@@ -37,7 +38,6 @@
     <None Include="portfolio-ffdfea565994.p12">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Compile Include="drivereading.fs" />
   </ItemGroup>
 
   <ItemGroup>

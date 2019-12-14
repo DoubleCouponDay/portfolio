@@ -33,3 +33,6 @@ let public corruptedoggpath = "assets/corrupted.ogg"
 
 [<Literal>]
 let public oggextension = "ogg"
+
+[<Literal>]
+let public oggsamplelist = "C:\Users\sjsui\Google Drive\musicbeestate\Playlists\beta max\wilderness.m3u"
