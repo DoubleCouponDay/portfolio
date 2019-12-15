@@ -12,8 +12,6 @@ import { musicvolume } from '../audio/audio.data';
 import { musicplayer } from '../audio/musicplayer';
 const crossfade = require("crossfade")
 
-const createbuffer = require("audio-buffer-from")
-
 @Injectable({
   providedIn: 'root'
 })
