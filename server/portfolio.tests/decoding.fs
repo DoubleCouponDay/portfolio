@@ -162,7 +162,7 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
         didthrow
 
     [<Fact>]
-    member public this.it_detects_corrupt_ogg_files(): unit =
+    member public this.it_prints_corrupt_ogg_files(): unit =
         async {
             let reader = googledrivereader.get
             use drive = reader.createdriveservice()
