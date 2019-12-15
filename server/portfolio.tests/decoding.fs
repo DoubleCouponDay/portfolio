@@ -135,7 +135,7 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
             failwith "split file was corrupted somehow."
 
     [<Theory>]
-    [<InlineData(corruptedoggpath)>]
+    [<InlineData(corruptedoggpath, null)>]
     ///returns if the file is corrupt or not
     member public this.it_fails_to_decode_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =        
         let mutable didthrow = false
