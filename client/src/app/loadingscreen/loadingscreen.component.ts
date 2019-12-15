@@ -40,7 +40,7 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.fadefactory = animationfactory.build(togglefade)    
     this.entersound = new Audio(aetherpingsoundaddress)
-    this.entersound.volume = effectvolume
+    this.entersound.volume = musicvolume
     setTimeout(() => {this.onloaded(loadstate.waitingforpress)}, fixedloadtime)
   }
 

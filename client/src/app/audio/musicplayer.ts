@@ -22,6 +22,8 @@ export class musicplayer {
     private tryplayagain_intervalid = 0    
     private waiting = false
 
+    private autoplaycondition = false
+
     constructor() {
         this._context = new AudioContext()    
         this._context.suspend()    
@@ -44,7 +46,7 @@ export class musicplayer {
         }
     }
 
-    public onfullydownloaded = () => {
+    public onfullydownloaded: () => void = () => {
         this.fullydownloaded = true
     }
 
@@ -77,6 +79,7 @@ export class musicplayer {
     }
 
     public toggleplayback(input: boolean) {
+        this.autoplaycondition = input
         this.decidetypeofplayback()
     }
 
@@ -126,6 +129,7 @@ export class musicplayer {
         let musicisnotplaying = this.musicisplaying === false    
 
         return musicisnotplaying &&
+            this.autoplaycondition &&
             (this.hasenoughbuffers() || this.fullydownloaded)    
     }
 }
