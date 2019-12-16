@@ -60,52 +60,53 @@ type public googledrivereader private() =
     static member public get = new googledrivereader() //singleton
     member val private rng = new Random()
 
-    member public this.readrandomdeserttrack(): Async<audiofile> =    
+    member public this.readrandomdeserttrack(canceller: CancellationToken): Async<audiofile> =    
         async {
             use service = this.createdriveservice()     
-            let! operation = this.setplaylist(service)
+            let! operation = this.setplaylist(service, canceller)
             let chosenindex = this.rng.Next(playlist.Count)
             let chosenfilename = playlist.[chosenindex]
-            let! chosenfile = this.requestfilebyname(service, chosenfilename)
-            let stream = this.requestfilebyID(service, chosenfile.Id)
+            let! chosenfile = this.requestfilebyname(service, chosenfilename, canceller)
+            let! stream = this.requestfilebyID(service, chosenfile.Id, canceller)
             return new audiofile(stream, chosenfilename, chosenfile.FileExtension)
         }    
         
     member public this.createdriveservice(): DriveService =
         new DriveService(baseservice)
 
-    member private x.setplaylist(service: DriveService): Async<unit> =
+    member private x.setplaylist(service: DriveService, canceller: CancellationToken): Async<unit> =
         async {
             let! playlistfile = 
-                x.requestfilebyname(service, playlistname)
+                x.requestfilebyname(service, playlistname, canceller)
 
-            playlist <- x.getplaylistlines(service, playlistfile)
+            let! lines = x.getplaylistlines(service, playlistfile, canceller)
+            playlist <- lines
         }    
         
-    member public this.getplaylist(): Async<ReadOnlyCollection<string>> =
+    member public this.getplaylist(canceller: CancellationToken): Async<ReadOnlyCollection<string>> =
         async {
             use service = new DriveService(baseservice)            
-            let! operation = this.setplaylist(service)
+            let! operation = this.setplaylist(service, canceller)
             return playlist
         }
         
-    member public x.requestfilebyname(service: DriveService, filename: string): Async<Data.File> =
-        let verytrue = new Nullable<bool>(true)
-        let listRequest = service.Files.List()            
-        listRequest.PageSize <- new Nullable<int>(1)
-        listRequest.Fields <- myfields
-        listRequest.Spaces <- "drive"
-        listRequest.Corpora <- "allDrives"
-        listRequest.Q <- "name = '" + filename + "'"
-        listRequest.SupportsAllDrives <- verytrue
-        listRequest.IncludeItemsFromAllDrives <- verytrue   
-        
-        listRequest.AddExceptionHandler(new exceptionhandler())
-        listRequest.AddUnsuccessfulResponseHandler(new unsuccessfulhandler())
-
+    member public x.requestfilebyname(service: DriveService, filename: string, canceller: CancellationToken): Async<Data.File> =
         async {
+            let verytrue = new Nullable<bool>(true)
+            let listRequest = service.Files.List()    
+            listRequest.PageSize <- new Nullable<int>(1)
+            listRequest.Fields <- myfields
+            listRequest.Spaces <- "drive"
+            listRequest.Corpora <- "allDrives"
+            listRequest.Q <- "name = '" + filename + "'"
+            listRequest.SupportsAllDrives <- verytrue
+            listRequest.IncludeItemsFromAllDrives <- verytrue   
+            
+            listRequest.AddExceptionHandler(new exceptionhandler())
+            listRequest.AddUnsuccessfulResponseHandler(new unsuccessfulhandler())
+
             let! query = 
-                listRequest.ExecuteAsync() 
+                listRequest.ExecuteAsync(canceller)
                 |> Async.AwaitTask
 
             if query.Files.Count = 0 then
@@ -116,33 +117,41 @@ type public googledrivereader private() =
             return query.Files.Item(0)
         }
 
-    member public x.requestfilebyID(service: DriveService, id: string): MemoryStream = 
-        let request = service.Files.Get(id)
-        request.Fields <- myfields
-        let mutable output = new MemoryStream()
-        let result = request.DownloadWithStatus(output)
+    member public x.requestfilebyID(service: DriveService, id: string, canceller: CancellationToken): Async<MemoryStream> = 
+        async {
+            let request = service.Files.Get(id)
+            request.Fields <- myfields
+            let mutable output = new MemoryStream()
 
-        if result.Exception <> null then
-            raise result.Exception
+            let! result =
+                request.DownloadAsync(output, canceller)
+                |> Async.AwaitTask
+                
 
-        output.Position <- 0L
-        output
+            if result.Exception <> null then
+                raise result.Exception
 
-    member private x.getplaylistlines(service: DriveService, playlist: Data.File): ReadOnlyCollection<string> =
-        let download = x.requestfilebyID(service, playlist.Id)
-        let entire = Encoding.UTF8.GetString(download.ToArray())
-        download.Dispose()
+            output.Position <- 0L
+            return output
+        }
 
-        let output = 
-            entire.Split(Environment.NewLine)
-                .Where(fun currentline -> currentline <> "")
-                .Select(fun currentline -> 
-                    currentline.Split(backslash)
-                        .Last()
-                )
-                .ToArray()
+    member private x.getplaylistlines(service: DriveService, playlist: Data.File, canceller: CancellationToken): Async<ReadOnlyCollection<string>> =
+        async {
+            let! download = x.requestfilebyID(service, playlist.Id, canceller)
+            let entire = Encoding.UTF8.GetString(download.ToArray())
+            download.Dispose()
 
-        Array.AsReadOnly(output)
+            let output = 
+                entire.Split(Environment.NewLine)
+                    .Where(fun currentline -> currentline <> "")
+                    .Select(fun currentline -> 
+                        currentline.Split(backslash)
+                            .Last()
+                    )
+                    .ToArray()
+
+            return Array.AsReadOnly(output)
+        }
 
 
         

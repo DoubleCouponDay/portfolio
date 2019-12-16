@@ -16,13 +16,7 @@ type streamhub() =
     let canceller = new CancellationTokenSource()   
     let channel = Channel.CreateBounded<streamresponse>(channelcapacity)
 
-    do
-        channel.Reader.Completion.GetAwaiter().OnCompleted(fun _ -> 
-            Console.WriteLine("channel disposed!")
-        )
-
     override this.OnConnectedAsync() =
-        Console.WriteLine("socket connected! " + canceller.IsCancellationRequested.ToString())
         base.OnConnectedAsync()
 
     override this.OnDisconnectedAsync(error: exn) =
@@ -36,19 +30,24 @@ type streamhub() =
 
     member private this.fillchannel(input: Channel<streamresponse>): unit =
         let mission = async {
-            use! track = googledrivereader.get.readrandomdeserttrack()                        
+            use! track = googledrivereader.get.readrandomdeserttrack(canceller.Token)                        
             let decoder = new audiodecoder()
             let decoded = decoder.streamdecodedchunks(track)
 
             for item in decoded do
-                input.Writer.WaitToWriteAsync().AsTask() 
-                |> Async.AwaitTask
-                |> ignore
+                let! justwait = 
+                    input.Writer
+                        .WaitToWriteAsync()
+                        .AsTask() 
+                    |> Async.AwaitTask
 
-                input.Writer.WriteAsync(item, canceller.Token).AsTask() 
-                |> Async.AwaitTask
-                |> ignore
+                let! justwrite =
+                    input.Writer
+                        .WriteAsync(item, canceller.Token)
+                        .AsTask()
+                    |> Async.AwaitTask
 
+                ()
             this.cleanup()
         }
         Async.Start(mission, canceller.Token)

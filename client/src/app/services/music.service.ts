@@ -41,6 +41,7 @@ export class MusicService implements OnDestroy {
     this.subs.add(
       loading.subscribeloadedevent(this.onapploaded)
     )
+    window.addEventListener("beforeunload", this.ngOnDestroy)
   }
 
   public async startconnection() {
@@ -78,7 +79,7 @@ export class MusicService implements OnDestroy {
     this._musicplayer.toggleplayback(true)
   }
     
-  ngOnDestroy() {    
+  ngOnDestroy = () => {    
     this.weirdsubscription.dispose()
     this._connection.stop()
     this.subs.unsubscribe()    
