@@ -166,15 +166,16 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
         async {
             let reader = googledrivereader.get
             use drive = reader.createdriveservice()
-            let! playlist = reader.getplaylist()        
+            use canceller = new CancellationTokenSource()
+            let! playlist = reader.getplaylist(canceller.Token)        
 
             let oggfiles = 
                 playlist.Where(fun item -> item.EndsWith(oggextension))
                     .ToArray()
 
             for name in oggfiles do
-                let! file = reader.requestfilebyname(drive, name) 
-                use stream = reader.requestfilebyID(drive, file.Id)
+                let! file = reader.requestfilebyname(drive, name, canceller.Token) 
+                use! stream = reader.requestfilebyID(drive, file.Id, canceller.Token)
                 let iscorrupt = this.it_fails_to_decode_corrupted_ogg_file(name, stream)
 
                 if iscorrupt then

@@ -1,6 +1,7 @@
 ﻿namespace portfolio.models
 
 open System.Collections.Generic
+open System.Runtime.CompilerServices
 
 [<AllowNullLiteral>]
 type public streamresponse() =

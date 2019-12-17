@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="stressing.data.fs" />
+    <Compile Include="stressing.fs" />
     <Compile Include="decoding.data.fs" />
     <None Include="assets\corrupted.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
