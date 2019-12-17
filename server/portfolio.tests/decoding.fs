@@ -20,6 +20,7 @@ open drivereading
 open portfolio.googledrivereader
 open Google.Apis.Drive.v3
 open Xunit.Abstractions
+open NVorbis
 
 type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
     let context = new audiodecoder()    
@@ -137,7 +138,7 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
     [<Theory>]
     [<InlineData(corruptedoggpath, null)>]
     ///returns if the file is corrupt or not
-    member public this.it_fails_to_decode_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =        
+    member public this.it_can_decode_a_corrupted_ogg_file(virtualfilepath:string, ?stream: MemoryStream): Boolean =        
         let mutable didthrow = false
 
         try
@@ -159,6 +160,7 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
         | error ->
             failwith ("unexpected error: " + error.ToString())
 
+        Assert.False(didthrow, "could read corrupt ogg file")
         didthrow
 
     [<Fact>]
@@ -176,9 +178,18 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
             for name in oggfiles do
                 let! file = reader.requestfilebyname(drive, name, canceller.Token) 
                 use! stream = reader.requestfilebyID(drive, file.Id, canceller.Token)
-                let iscorrupt = this.it_fails_to_decode_corrupted_ogg_file(name, stream)
 
-                if iscorrupt then
-                    logger.WriteLine("corrupt: " + name)
+                try
+                    let iscorrupt = this.it_can_decode_a_corrupted_ogg_file(name, stream)
+
+                    if iscorrupt then
+                        logger.WriteLine("corrupt: " + name)
+                    ()
+
+                with
+                | error -> 
+                    () //everythings fine. file can be read
+
+
         }
         |> Async.RunSynchronously

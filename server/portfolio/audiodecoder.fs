@@ -1,6 +1,5 @@
 ﻿module portfolio.audiodecoder
 
-open Accord.Audio
 open portfolio.models
 open portfolio.data
 open System.Linq

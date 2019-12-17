@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Accord.Audio" Version="3.8.0" />
     <PackageReference Include="CUETools.Codecs" Version="1.0.2" />
     <PackageReference Include="CUETools.Codecs.FLAKE" Version="1.0.5" />
     <PackageReference Include="FSharp.Data" Version="3.3.2" />
@@ -22,6 +21,7 @@
     <PackageReference Include="NAudio.Flac" Version="1.0.5702.29018" />
     <PackageReference Include="NAudio.Vorbis" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="NVorbis" Version="0.8.6" />
     <PackageReference Include="System.IO" Version="4.3.0" />
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
   </ItemGroup>

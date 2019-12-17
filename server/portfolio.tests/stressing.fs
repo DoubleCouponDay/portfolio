@@ -39,6 +39,7 @@ type public when_the_server_is_stressed() =
             server.Dispose()
             factory.Dispose()
             
+    [<Fact>]
     member public this.it_can_handle_1000_requests() =
             let foreachstress = fun index ->
                 let request = 
