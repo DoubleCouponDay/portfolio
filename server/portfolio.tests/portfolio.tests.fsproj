@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="testserver.fs" />
     <Content Include="portfolio.deps.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,78 +1,90 @@
 ﻿module stressing
 
 open Xunit
-open Microsoft.AspNetCore.TestHost
 open System
-open Microsoft.AspNetCore.Mvc.Testing
 open portfolio
 open Microsoft.AspNetCore.SignalR.Client
 open Microsoft.AspNetCore.Http.Connections.Client
 open System.Threading
 open stressingdata
-open System.Threading.Tasks
-open System.Threading.Channels
 open portfolio.models
-open System.Reflection
-open System.IO
+open testserver
+open System.Collections.Generic
+open Xunit.Abstractions
 
-type public when_the_server_is_stressed(factory:WebApplicationFactory<Startup>) =
-    let _factory = factory
-    let address = _factory.Server.BaseAddress.OriginalString + "/stream"
+type public when_the_server_is_stressed(server: testserver<Startup>, logger: ITestOutputHelper) =
+    let _server = server
     
-    let thing = fun (options:HttpConnectionOptions) -> 
-        options.HttpMessageHandlerFactory <- fun _ -> _factory.Server.CreateHandler()
+    let configureurl = fun (options:HttpConnectionOptions) -> 
+        options.HttpMessageHandlerFactory <- fun _ -> _server.Server.CreateHandler()
         ()
     
     let connection =
         (new HubConnectionBuilder())
-            .WithUrl(address, thing)
+            .WithUrl(address, configureurl)
             .Build()
 
     let canceller = new CancellationTokenSource()
             
     do
-        connection.StartAsync(canceller.Token)
-        |> Async.AwaitTask
-        |> Async.Ignore
-        |> Async.RunSynchronously
-        ()
-
-    interface IClassFixture<WebApplicationFactory<Startup>>
-
-    interface IDisposable with
-        member this.Dispose(): unit = 
-            connection.StopAsync(canceller.Token) 
-            |> Async.AwaitTask 
-            |> Async.RunSynchronously
-
-            canceller.Cancel()
-
-            connection.DisposeAsync()
+        let connect =
+            connection.StartAsync(canceller.Token)
             |> Async.AwaitTask
-            |> ignore
+            |> Async.Ignore
+        
+        Async.RunSynchronously(connect, -1, canceller.Token)
 
-            _factory.Dispose()
-            
-    [<Fact>]
-    member public this.it_can_handle_10_simultaneous_streams() =
         if connection.State <> HubConnectionState.Connected then
             failwith "test is not connected"
 
+    interface IClassFixture<testserver<Startup>>
+
+    interface IDisposable with
+        member this.Dispose(): unit = 
+            let disposeall = 
+                async {
+                    let! dispose1 = 
+                        connection.StopAsync(canceller.Token) 
+                        |> Async.AwaitTask 
+
+                    let! dispose2 = 
+                        connection.DisposeAsync()
+                        |> Async.AwaitTask
+
+                    _server.Dispose()
+                    canceller.Cancel()
+                    canceller.Dispose()
+                }
+                |> Async.Ignore
+
+            Async.RunSynchronously(disposeall, -1, canceller.Token)
+            
+    [<Fact>]
+    member public this.it_can_handle_10_simultaneous_streams() =
         let stressonce = async {
-            let channel = 
+            let! channel = 
                 connection.StreamAsChannelAsync<streamresponse>(randompath, canceller.Token)
                 |> Async.AwaitTask
-                |> Async.RunSynchronously
 
             let reader = channel.ReadAllAsync(canceller.Token).GetAsyncEnumerator(canceller.Token)
+            let! hasread = this.readnextiteration(reader)
+            let mutable received = 0
 
             while reader.Current <> null do
-                reader.MoveNextAsync().AsTask()
-                |> Async.AwaitTask
-                |> Async.RunSynchronously
-                |> ignore
+                let! hasread = this.readnextiteration(reader)
+                Assert.True(hasread)
+                received <- received + 1
+                ()
+
+            logger.WriteLine("single stress finished by receiving chunk amount: " + string(received))
         }
-        Array.create stresscount stressonce
-        |> Async.Parallel
-        |> Async.RunSynchronously
-        |> ignore
+
+        let stressall =
+            Array.create stresscount stressonce
+            |> Async.Parallel
+        
+        Async.RunSynchronously(stressall, -1, canceller.Token)
+
+    member private this.readnextiteration(reader: IAsyncEnumerator<streamresponse>): Async<bool> =
+        reader.MoveNextAsync().AsTask()
+        |> Async.AwaitTask
