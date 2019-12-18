@@ -165,10 +165,11 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
 
     [<Fact>]
     member public this.it_prints_corrupt_ogg_files(): unit =
+        use canceller = new CancellationTokenSource()
+
         async {
             let reader = googledrivereader.get
             use drive = reader.createdriveservice()
-            use canceller = new CancellationTokenSource()
             let! playlist = reader.getplaylist(canceller.Token)        
 
             let oggfiles = 
@@ -189,7 +190,5 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
                 with
                 | error -> 
                     () //everythings fine. file can be read
-
-
         }
         |> Async.RunSynchronously

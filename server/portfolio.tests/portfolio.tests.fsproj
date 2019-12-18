@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="portfolio.deps.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="stressing.data.fs" />
     <Compile Include="stressing.fs" />
     <Compile Include="decoding.data.fs" />

@@ -2,7 +2,7 @@
 
 
 [<Literal>]
-let public stresscount = 1000
+let public stresscount = 10
 
 [<Literal>]
 let public randompath = "randomdeserttrack"
