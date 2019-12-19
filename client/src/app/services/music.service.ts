@@ -34,7 +34,7 @@ export class MusicService implements OnDestroy {
   constructor(loading: LoadingService) {
     this.defaultsubscriber = {
       next: this._musicplayer.onnewbuffer,
-      error: console.error,
+      error: this.onerror,
       complete: this.onstreamcomplete
     }
 
@@ -78,8 +78,14 @@ export class MusicService implements OnDestroy {
     }    
     this._musicplayer.toggleplayback(true)
   }
+
+  private onerror = (problem: Error) => {
+    console.error(problem)
+    this.ngOnDestroy()
+  }
     
   ngOnDestroy = () => {    
+    
     this.weirdsubscription.dispose()
     this._connection.stop()
     this.subs.unsubscribe()    
