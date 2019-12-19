@@ -32,7 +32,7 @@ type public when_the_server_is_stressed(server: testserver<Startup>, logger: ITe
             |> Async.AwaitTask
             |> Async.Ignore
         
-        Async.RunSynchronously(connect, -1, canceller.Token)
+        Async.RunSynchronously(connect, Timeout.Infinite, canceller.Token)
 
         if connection.State <> HubConnectionState.Connected then
             failwith "test is not connected"
@@ -52,12 +52,12 @@ type public when_the_server_is_stressed(server: testserver<Startup>, logger: ITe
                         |> Async.AwaitTask
 
                     _server.Dispose()
-                    canceller.Cancel()
-                    canceller.Dispose()
                 }
                 |> Async.Ignore
 
-            Async.RunSynchronously(disposeall, -1, canceller.Token)
+            Async.RunSynchronously(disposeall, Timeout.Infinite, canceller.Token)
+            canceller.Cancel()
+            canceller.Dispose()
             
     [<Fact>]
     member public this.it_can_handle_10_simultaneous_streams() =
@@ -76,14 +76,14 @@ type public when_the_server_is_stressed(server: testserver<Startup>, logger: ITe
                 received <- received + 1
                 ()
 
-            logger.WriteLine("single stress finished by receiving chunk amount: " + string(received))
+            logger.WriteLine("finished with chunks: " + string(received))
         }
 
         let stressall =
             Array.create stresscount stressonce
             |> Async.Parallel
         
-        Async.RunSynchronously(stressall, -1, canceller.Token)
+        Async.RunSynchronously(stressall, Timeout.Infinite, canceller.Token)
 
     member private this.readnextiteration(reader: IAsyncEnumerator<streamresponse>): Async<bool> =
         reader.MoveNextAsync().AsTask()
