@@ -67,12 +67,12 @@ type public when_the_server_is_stressed(server: testserver<Startup>, logger: ITe
                 |> Async.AwaitTask
 
             let reader = channel.ReadAllAsync(canceller.Token).GetAsyncEnumerator(canceller.Token)
-            let! hasread = this.readnextiteration(reader)
+            let mutable subsequentlyread = true
             let mutable received = 0
 
-            while reader.Current <> null do
+            while subsequentlyread do
                 let! hasread = this.readnextiteration(reader)
-                Assert.True(hasread)
+                subsequentlyread <- hasread
                 received <- received + 1
                 ()
 
