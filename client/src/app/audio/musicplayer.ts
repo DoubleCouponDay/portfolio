@@ -54,7 +54,7 @@ export class musicplayer {
         let source = this._context.createBufferSource()
         source.connect(this._context.destination)
         source.buffer = buffer
-        // this.normalizevolume(source)
+        this.normalizevolume(source)
         source.start(this.playbacksEnd)                
 
         this.playbacksEnd += buffer.duration
@@ -75,7 +75,8 @@ export class musicplayer {
     private normalizevolume(buffer: AudioBufferSourceNode) {
         let newvolume = this._context.createGain()
         newvolume.gain.value = musicvolume
-        newvolume.connect(buffer)
+        buffer.connect(newvolume)
+        newvolume.connect(this._context.destination)
     }
 
     public toggleplayback(input: boolean) {
