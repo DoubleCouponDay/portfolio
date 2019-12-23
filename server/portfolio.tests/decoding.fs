@@ -80,12 +80,14 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
                     Assert.True(item.totalchunks <> 0L, "a chunk count was returned")
                     isfirstiteration <- false
 
-                if onchunkreceived.IsSome then
-                    use currentstream = new MemoryStream(item.chunk)
-                    onchunkreceived.Value(currentstream)
+                let mutable output: byte[] = item.chunk.Select(fun item -> byte(item)).ToArray()
 
-                GC.Collect()
-                yield item.chunk
+                if onchunkreceived.IsSome then
+                    use currentstream = new MemoryStream(output)
+                    onchunkreceived.Value(currentstream)
+                    GC.Collect()
+
+                yield output
         }
         output.ToArray()
 

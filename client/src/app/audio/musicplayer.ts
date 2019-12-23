@@ -29,11 +29,13 @@ export class musicplayer {
         this._context.suspend()    
     }
 
-    public onnewbuffer = async (response: streamresponse) => {
-        let integers = Uint8Array.from(
-            atob(response.chunk), c => c.charCodeAt(0))
+    public onnewbuffer = (response: streamresponse) => {
+        console.log("chunk received")
+        let integers = new Float32Array(response.chunk)
+        this._context.decodeAudioData(integers.buffer, this.ondecoded)    
+    }
 
-        let audiobuffer = await this._context.decodeAudioData(integers.buffer)    
+    private ondecoded = (audiobuffer: AudioBuffer) => {
         this.buffers.push(audiobuffer)
         let plentifulbuffers = this._musicisplaying === true
         
@@ -101,6 +103,10 @@ export class musicplayer {
             return
         }
         this.waiting = true
+
+        if(this.tryplayagain_intervalid != 0) {
+            return
+        }
 
         this.tryplayagain_intervalid = window.setInterval(() => {
             if(this.musicisreadytostart() === false) {                

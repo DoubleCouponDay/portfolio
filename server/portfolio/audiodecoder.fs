@@ -62,7 +62,8 @@ type public audiodecoder() =
 
                 if possiblechunk.IsSome then 
                     moredatatoread <- true  
-                    output.chunk <- possiblechunk.Value
+                    let formatted = possiblechunk.Value.Select(fun item -> int8(item)).ToArray()
+                    output.chunk <- formatted
                     yield output
                         
                 else 
