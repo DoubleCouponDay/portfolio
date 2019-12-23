@@ -30,8 +30,7 @@ export class musicplayer {
     }
 
     public onnewbuffer = (response: streamresponse) => {
-        console.log("chunk received")
-        let integers = new Float32Array(response.chunk)
+        let integers = new Uint8Array(response.chunk)
         this._context.decodeAudioData(integers.buffer, this.ondecoded)    
     }
 
