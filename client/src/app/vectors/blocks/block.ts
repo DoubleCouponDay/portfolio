@@ -54,23 +54,11 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private fadefactory: AnimationFactory
   
     blocksoundplayer = new generatedraggableaudio(gratingsoundaddress, effectvolume)
-  
     entirepage: HTMLElement = document.documentElement
-  
     chosenpage: number = firstpagenumber
-  
     private sink = new SubSink()
-  
     private highlighter: mousehighlighter    
-
     private touches: touchevents
-
-    private get shouldnotmove() {
-      return this.held === false ||
-      this.tabletsmoving === true ||
-      this.activated === true ||
-      this.touched === true
-    }
 
     constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
       this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
@@ -103,6 +91,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
         )
     }
     
+    private shouldnotmove() {
+      return this.held === false ||
+      this.tabletsmoving === true ||
+      this.activated === true ||
+      this.touched === true
+    }
+
     private onpagechanged = (newpage: number) => {
       if(newpage === this.matchingpagenumber) {
         return
@@ -192,7 +187,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.choosecursor()
 
       if(ismobile() === false ||
-        this.shouldnotmove === true) {
+        this.shouldnotmove() === true) {
         return
       }      
       this.applytouchedstate()
@@ -202,7 +197,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
       this.touched = true
       this.highlighter.applyhighlight(this.casttopside)
       this.animatebox(maxboxtranslation, false, smoothtime)
-      this.blocksoundplayer.playaudio()    
+      this.blocksoundplayer.playaudio(true)    
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
@@ -212,7 +207,7 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     private onmousemoved = (event: MouseEvent) => {
-      if(this.shouldnotmove === true) {
+      if(this.shouldnotmove() === true) {
         return
       }    
       this.animatebox(event.movementY)    

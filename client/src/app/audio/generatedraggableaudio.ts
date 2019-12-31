@@ -17,7 +17,7 @@ export class generatedraggableaudio {
         this.audio = new Audio(pathtoaudio)    
     }
 
-    playaudio() {   
+    playaudio(playinfull?: boolean) {   
         if(this.throttleinput === true) {
             this.audio.volume = this.inputmaxvolume
             this.resetaudio()
@@ -27,8 +27,15 @@ export class generatedraggableaudio {
         this.throttleinput = true
         this.audio.volume = this.inputmaxvolume
         let playstate = this.audio.play()
-        this.volumescurrentmode = volumestate.decreasing
-        this.fadeoutaudio()
+
+        if(isnullorundefined(playinfull)) {
+            this.volumescurrentmode = volumestate.decreasing
+            this.fadeoutaudio()
+        }
+
+        else if(playinfull === true) {
+            this.volumescurrentmode = volumestate.stable
+        }
 
         playstate.catch((error) => {
             console.error(error['message'])
