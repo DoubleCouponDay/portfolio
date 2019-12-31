@@ -201,9 +201,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     }
   
     onmousereleasedbox = (event: MouseEvent) => {
-      this.held = false
+      this.held = false      
+      resetmouse()     
+      
+      if(ismobile()) {
+        return
+      }
       this.blocksoundplayer.resetaudio()
-      resetmouse()       
     }
   
     private onmousemoved = (event: MouseEvent) => {
