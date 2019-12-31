@@ -9,6 +9,8 @@ import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactor
 import { inputopacityname, inputtimename } from '../animations/animation.data';
 import { smoothtime } from '../animations/movetocursorvertically';
 import { aetherpingsoundaddress, musicvolume, effectvolume } from '../audio/audio.data';
+import { isAppledevice } from '../utility/utilities';
+import { gifball, webpball } from './loadingscreen.data';
 
 const shadowfilter = "url(#57Nu2Y3s56IqsQpTc4EMeWkbexdLrGOS)"
 const fixedloadtime = 4000
@@ -35,12 +37,20 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   private fadefactory: AnimationFactory
   private fadeanimator: AnimationPlayer
 
-  
+  public imageaddress: string
 
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.fadefactory = animationfactory.build(togglefade)    
 
     setTimeout(() => {this.onloaded(loadstate.waitingforpress)}, fixedloadtime)
+
+    if(isAppledevice()) {
+      this.imageaddress = gifball
+    }
+
+    else {
+      this.imageaddress = webpball
+    }
   }
 
   ngAfterViewInit() {

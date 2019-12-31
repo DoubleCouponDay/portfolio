@@ -1,5 +1,5 @@
 <div class="ball-container" #ballcontainer>
-    <img src="assets/bouncingball.webp" class="bouncing-ball" #circle (load)="onanimationloaded($event)" />
+    <img src="{{ imageaddress }}" class="bouncing-ball" #circle (load)="onanimationloaded($event)" />
 
     <div *ngIf="shouldpress === false" class="loading-message" @fadeout>
         <p #message>Loading...</p>
