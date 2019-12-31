@@ -35,12 +35,11 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   private fadefactory: AnimationFactory
   private fadeanimator: AnimationPlayer
 
-  private entersound: HTMLAudioElement
+  
 
   constructor(private loading: LoadingService, animationfactory: AnimationBuilder) {
     this.fadefactory = animationfactory.build(togglefade)    
-    this.entersound = new Audio(aetherpingsoundaddress)
-    this.entersound.volume = effectvolume
+
     setTimeout(() => {this.onloaded(loadstate.waitingforpress)}, fixedloadtime)
   }
 
@@ -70,8 +69,7 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   onbuttonup = (inputevent: Event) => {
     if(this.shouldpress === false) {
       return
-    }
-    this.entersound.play()
+    }    
     this.loading.emitloadedevent(loadstate.done)
     scrolldisabler.togglescrolling(true)    
   }
