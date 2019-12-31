@@ -10,7 +10,7 @@ import { inputtimename } from 'src/app/animations/animation.data';
 
 const delay = 600
 const flaglength = 18
-const segmentoffset = 3
+const segmentoffset = 2
 const flagclass = "flag-segment"
 const leftspacing = 20
 
@@ -53,7 +53,7 @@ export class FlagComponent implements OnInit, OnDestroy {
       let [newincrement, newdirection] = this.decidefutureoffset(verticalincrement, shouldoffsetdown)
       verticalincrement = newincrement
       shouldoffsetdown = newdirection
-      let newelement = this.createflagpart(this.castcloth, leftincrement, verticalincrement)
+      let newelement = this.createflagpart(i, this.castcloth, leftincrement, verticalincrement)
 
       let newitem: flagsegment = {
         expression: shouldoffsetdown,
@@ -86,11 +86,12 @@ export class FlagComponent implements OnInit, OnDestroy {
     return [futureincrement, direction]
   }
 
-  private createflagpart = (parent: HTMLElement, leftpositioning: number, verticalpositioning: number): HTMLElement => {
+  private createflagpart = (id: number, parent: HTMLElement, leftpositioning: number, verticalpositioning: number): HTMLElement => {
     let output = document.createElement("div")
     output.style.left = `${leftpositioning}px`
     output.style.transform = `translate(0px, ${verticalpositioning}px)`
     output.classList.add(flagclass)
+    output.id = `${id}`
     parent.appendChild(output)
     return output
   }
@@ -108,27 +109,29 @@ export class FlagComponent implements OnInit, OnDestroy {
     let initialstate = isnullorundefined(subject.animator)
     let istop = subject.expression === slidestate.translatingtop
 
-    let distancetotravel = istop 
-        ? currentposition
-        : slidedistance - currentposition
-
     if(initialstate) {
       currentposition = subject.startingoffset
-      
     }
 
     else {      
       subject.animator.destroy()
-      
-      chosenfactory = istop ? this.playtop : this.playbot
       currentposition = istop ? 0 : slidedistance
+      subject.expression = istop ? slidestate.translatingbot : slidestate.translatingtop
     }
+    let distancedifference = slidedistance - currentposition
+
+    let distancetotravel = istop 
+        ? currentposition
+        : distancedifference
+
+    chosenfactory = istop ? this.playtop : this.playbot
     let time = animatetime / slidedistance * distancetotravel
     let inputparams: any = {}
     inputparams[inputtimename] = time
     subject.animator = chosenfactory.create(subject.element, { params: inputparams})      
     subject.animator.onDone(() => { this.animatesegment(subject)})    
     subject.animator.play()
+    console.log("segment animated:. id: " + subject.element.id + ". direction: " + subject.expression)
   }
 
   ngOnDestroy() {
