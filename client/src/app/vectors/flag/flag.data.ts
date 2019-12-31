@@ -1,6 +1,9 @@
 import { slidestate } from 'src/app/animations/slide';
+import { AnimationPlayer } from '@angular/animations';
 
 export interface flagsegment {
-    intervalid: number,
-    expression: slidestate
+    element: HTMLElement,
+    expression: slidestate,
+    animator: AnimationPlayer,
+    startingoffset: number
 }

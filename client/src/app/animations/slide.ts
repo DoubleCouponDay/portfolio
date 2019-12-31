@@ -1,16 +1,17 @@
 import { animation, animate, style, stagger, transition, state, trigger, query } from '@angular/animations';
+import { inputtimename } from './animation.data';
 
-const slidedistance = 15
+export const slidedistance = 15
 export const topstatename = 'translatedtop'
 export const botstatename = 'translatedbot'
-const topstatevalue = `translate(0px, 0px)`
-const botstatevalue = `translate(0px, ${slidedistance}px)`
+export const topstatevalue = `translate(0px, 0px)`
+export const botstatevalue = `translate(0px, ${slidedistance}px)`
 export const animatetime = 2000
 export const swaptime = 100
 
 export function gettransformstyle(statevalue: string) {
     return animate(
-        `${animatetime}ms`,
+        `{{ ${inputtimename} }}ms`,
         style({
             transform: statevalue
         })
@@ -18,20 +19,7 @@ export function gettransformstyle(statevalue: string) {
 }
 
 export enum slidestate {
-    translatedbot = '1',
-    translatedtop = '2'
+    translatingbot = 'bot',
+    translatingtop = 'top'
 }
-
-export const slideinfinite = trigger(
-    'slideinfinite', [        
-        state(slidestate.translatedtop, style({transform: topstatevalue})),
-        state(slidestate.translatedbot, style({transform: botstatevalue})),
-        transition(`${slidestate.translatedtop} => ${slidestate.translatedbot}`,   
-            gettransformstyle(botstatevalue)           
-        ),
-        transition(`${slidestate.translatedbot} => ${slidestate.translatedtop}`, 
-            gettransformstyle(topstatevalue)
-        )
-    ]
-)
 

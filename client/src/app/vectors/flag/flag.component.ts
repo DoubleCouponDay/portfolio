@@ -1,19 +1,25 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, ChangeDetectorRef, Output } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef, Output, OnInit } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
-import { slideinfinite, topstatename, swaptime, botstatename, slidestate, animatetime } from 'src/app/animations/slide';
+import { slidestate, animatetime, gettransformstyle, botstatevalue, topstatevalue, slidedistance } 
+  from 'src/app/animations/slide';
 import { flagsegment } from './flag.data';
-import { AnimationBuilder, AnimationFactory } from '@angular/animations';
+import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/animations';
+import { isNgTemplate } from '@angular/compiler';
+import { isnullorundefined } from 'src/app/utility/utilities';
+import { inputtimename } from 'src/app/animations/animation.data';
 
 const delay = 600
 const flaglength = 18
+const segmentoffset = 3
+const flagclass = "flag-segment"
+const leftspacing = 20
 
 @Component({
   selector: 'g[app-flag]',
   templateUrl: './flag.component.html',
-  styleUrls: ['./flag.component.css'],
-  animations: [slideinfinite]
+  styleUrls: ['./flag.component.css']
 })
-export class FlagComponent implements AfterViewInit, OnDestroy {
+export class FlagComponent implements OnInit, OnDestroy {
 
   @ViewChild('cloth', elementrefargs)
   cloth: ElementRef
@@ -22,51 +28,117 @@ export class FlagComponent implements AfterViewInit, OnDestroy {
   @Output()
   segmentdata: flagsegment[]
 
-  constructor() {    
-    this.segmentdata = new Array<flagsegment>(flaglength) 
+  private playtop: AnimationFactory
+  private playbot: AnimationFactory
 
-    for(let i = 0; i < flaglength; i++) {
+  constructor(private builder: AnimationBuilder, private changer: ChangeDetectorRef) {    
+    this.segmentdata = new Array<flagsegment>(flaglength) 
+    this.playbot = builder.build(gettransformstyle(botstatevalue))
+    this.playtop = builder.build(gettransformstyle(topstatevalue))
+  }
+
+  ngOnInit() {
+    this.initialisesegments()
+    this.startanimation()
+  }
+
+  private initialisesegments = () => {
+    this.changer.detach()
+    this.castcloth = <HTMLElement>this.cloth.nativeElement  
+    let leftincrement = 0
+    let verticalincrement = 0
+    let shouldoffsetdown = slidestate.translatingbot
+
+    for(let i = 0; i < this.segmentdata.length; i++) {
+      let [newincrement, newdirection] = this.decidefutureoffset(verticalincrement, shouldoffsetdown)
+      verticalincrement = newincrement
+      shouldoffsetdown = newdirection
+      let newelement = this.createflagpart(this.castcloth, leftincrement, verticalincrement)
+
       let newitem: flagsegment = {
-        expression: slidestate.translatedtop,
-        intervalid: 0
+        expression: shouldoffsetdown,
+        element: newelement,
+        animator: null,
+        startingoffset: verticalincrement
       }
       this.segmentdata[i] = newitem
+      leftincrement += leftspacing      
+    }
+    this.changer.reattach()
+  }  
+
+  private decidefutureoffset = (currentoffset: number, direction: slidestate): [number, slidestate] => {
+    let futureincrement = direction === slidestate.translatingbot 
+      ? (currentoffset + segmentoffset) 
+      : (currentoffset - segmentoffset)
+    
+    if(futureincrement > slidedistance) {
+      direction = slidestate.translatingtop  
+      let remainder = futureincrement - slidedistance
+      futureincrement = slidedistance - remainder              
+    }
+
+    else if(futureincrement < 0) {
+      direction = slidestate.translatingbot
+      let remainder = Math.abs(futureincrement)
+      futureincrement = remainder  
+    }
+    return [futureincrement, direction]
+  }
+
+  private createflagpart = (parent: HTMLElement, leftpositioning: number, verticalpositioning: number): HTMLElement => {
+    let output = document.createElement("div")
+    output.style.left = `${leftpositioning}px`
+    output.style.transform = `translate(0px, ${verticalpositioning}px)`
+    output.classList.add(flagclass)
+    parent.appendChild(output)
+    return output
+  }
+
+  private startanimation = () => {
+    for(let i = 0; i < this.segmentdata.length; i++) {
+      let item = this.segmentdata[i]
+      this.animatesegment(item)
     }
   }
 
-  ngAfterViewInit() {
-    this.delayanimationsteps()
-  }
+  private animatesegment = (subject: flagsegment) => {
+    let chosenfactory: AnimationFactory
+    let currentposition : number        
+    let initialstate = isnullorundefined(subject.animator)
+    let istop = subject.expression === slidestate.translatingtop
 
-  private delayanimationsteps = () => {
-    this.castcloth = <HTMLElement>this.cloth.nativeElement                
-    let inputdelay = 0
+    let distancetotravel = istop 
+        ? currentposition
+        : slidedistance - currentposition
 
-    for(let i = 0; i < this.castcloth.children.length; i++) {
-      let currentsegment = this.segmentdata[i]  
+    if(initialstate) {
+      currentposition = subject.startingoffset
+      
+    }
 
-      setTimeout(() => {      
-          this.intervalsegmentactivation(currentsegment)
-      }, inputdelay)
-
-      inputdelay += delay
-    }    
-  }
-
-  private intervalsegmentactivation = (currentsegment: flagsegment) => {
-    currentsegment.intervalid = window.setInterval(() => {
-      currentsegment.expression = this.getcurrentsegmentexpression(currentsegment)
-    }, animatetime)
-  }
-
-  private getcurrentsegmentexpression(currentsegment: flagsegment) {
-    return currentsegment.expression === slidestate.translatedbot ? slidestate.translatedtop : slidestate.translatedbot
+    else {      
+      subject.animator.destroy()
+      
+      chosenfactory = istop ? this.playtop : this.playbot
+      currentposition = istop ? 0 : slidedistance
+    }
+    let time = animatetime / slidedistance * distancetotravel
+    let inputparams: any = {}
+    inputparams[inputtimename] = time
+    subject.animator = chosenfactory.create(subject.element, { params: inputparams})      
+    subject.animator.onDone(() => { this.animatesegment(subject)})    
+    subject.animator.play()
   }
 
   ngOnDestroy() {
     for(let i = 0; i < this.segmentdata.length; i++) {
-      let currentsegment = this.segmentdata[i]
-      window.clearInterval(currentsegment.intervalid)
+      let item = this.segmentdata[i]
+
+      if(isnullorundefined(item.animator)) {
+        return
+      }
+      item.animator.destroy()
     }
   }
 }
