@@ -8,9 +8,8 @@ import { isNgTemplate } from '@angular/compiler';
 import { isnullorundefined } from 'src/app/utility/utilities';
 import { inputtimename } from 'src/app/animations/animation.data';
 
-const delay = 600
 const flaglength = 18
-const segmentoffset = 2
+const segmentoffset = 4
 const flagclass = "flag-segment"
 const leftspacing = 20
 
@@ -107,23 +106,23 @@ export class FlagComponent implements OnInit, OnDestroy {
     let chosenfactory: AnimationFactory
     let currentposition : number        
     let initialstate = isnullorundefined(subject.animator)
-    let istop = subject.expression === slidestate.translatingtop
+    let willmovetop = subject.expression === slidestate.translatingtop
+    let distancetotravel: number
 
     if(initialstate) {
       currentposition = subject.startingoffset
+      distancetotravel = willmovetop
+        ? subject.startingoffset
+        : slidedistance - currentposition
     }
 
     else {            
-      currentposition = istop ? 0 : slidedistance
-      subject.expression = istop ? slidestate.translatingbot : slidestate.translatingtop
+      currentposition = willmovetop ? slidedistance : 0
+      subject.expression = willmovetop ? slidestate.translatingbot : slidestate.translatingtop
+      distancetotravel = slidedistance
     }
-    let distancedifference = slidedistance - currentposition
 
-    let distancetotravel = istop 
-        ? currentposition
-        : distancedifference
-
-    chosenfactory = istop ? this.playtop : this.playbot
+    chosenfactory = willmovetop ? this.playtop : this.playbot
     let time = animatetime / slidedistance * distancetotravel
     let inputparams: any = {}
     inputparams[inputtimename] = time
