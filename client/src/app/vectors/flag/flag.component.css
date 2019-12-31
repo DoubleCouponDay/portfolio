@@ -30,14 +30,6 @@
     position: absolute;
 }
 
-.flag-segment {
-    padding: 2em 0.8em 1em 0;
-    background-color: #bf0c00;
-    margin-left: 2px;
-    position: absolute;
-    bottom: -62px;
-}
-
 .cloth {
     position: relative;
 }

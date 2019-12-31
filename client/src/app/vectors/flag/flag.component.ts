@@ -113,8 +113,7 @@ export class FlagComponent implements OnInit, OnDestroy {
       currentposition = subject.startingoffset
     }
 
-    else {      
-      subject.animator.destroy()
+    else {            
       currentposition = istop ? 0 : slidedistance
       subject.expression = istop ? slidestate.translatingbot : slidestate.translatingtop
     }
@@ -131,7 +130,6 @@ export class FlagComponent implements OnInit, OnDestroy {
     subject.animator = chosenfactory.create(subject.element, { params: inputparams})      
     subject.animator.onDone(() => { this.animatesegment(subject)})    
     subject.animator.play()
-    console.log("segment animated:. id: " + subject.element.id + ". direction: " + subject.expression)
   }
 
   ngOnDestroy() {
