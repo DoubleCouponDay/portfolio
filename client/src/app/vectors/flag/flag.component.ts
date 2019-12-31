@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef, Output, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef, Output, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
 import { slidestate, animatetime, gettransformstyle, botstatevalue, topstatevalue, slidedistance } 
   from 'src/app/animations/slide';
@@ -37,6 +37,11 @@ export class FlagComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.onanimationinit()
+    document.addEventListener("visibilitychange", this.onvisiblitychange)
+  }
+
+  private onanimationinit = () => {
     this.initialisesegments()
     this.startanimation()
   }
@@ -126,19 +131,49 @@ export class FlagComponent implements OnInit, OnDestroy {
     let time = animatetime / slidedistance * distancetotravel
     let inputparams: any = {}
     inputparams[inputtimename] = time
-    subject.animator = chosenfactory.create(subject.element, { params: inputparams})      
-    subject.animator.onDone(() => { this.animatesegment(subject)})    
-    subject.animator.play()
+    subject.animator = chosenfactory.create(subject.element, { params: inputparams })      
+    
+    subject.animator.onDone(() => {
+      this.animatesegment(subject)
+    })
+    try {
+      subject.animator.play()
+    }
+    
+    catch(error) {
+      
+    }
   }
 
-  ngOnDestroy() {
+  private onvisiblitychange = () => {
+    if(document.hidden === false) {
+      this.onanimationdestroy()
+      this.onanimationinit()
+    }
+  }
+
+  private onanimationdestroy = () => {
+    this.changer.detach()
+
     for(let i = 0; i < this.segmentdata.length; i++) {
       let item = this.segmentdata[i]
 
-      if(isnullorundefined(item.animator)) {
-        return
+      if(isnullorundefined(item.animator) === false) {
+        try {
+          item.animator.destroy()
+        }      
+        
+        catch(error) {
+
+        }
       }
-      item.animator.destroy()
+      this.castcloth.removeChild(item.element)
     }
+    this.changer.reattach()
+  }
+
+  ngOnDestroy() {
+    this.onanimationdestroy()
+    document.removeEventListener("visibilitychange", this.onvisiblitychange)
   }
 }
