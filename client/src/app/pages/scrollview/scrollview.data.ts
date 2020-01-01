@@ -9,9 +9,9 @@ export const nomovementtimer = 1000
 export const buttonidentifier = 'scrollbutton'
 
 export enum volumestate {
-    stable,
-    increasing,
-    decreasing
+    stable = 1,
+    increasing = 2,
+    decreasing = 3
 }
 
 export type movementcalculation = {

@@ -17,10 +17,9 @@ export class generatedraggableaudio {
         this.audio = new Audio(pathtoaudio)    
     }
 
-    playaudio(playinfull?: boolean) {   
+    public playaudio = (playinfull?: boolean) => {   
         if(this.throttleinput === true) {
-            this.audio.volume = this.inputmaxvolume
-            this.resetaudio()
+            this.maintainaudio(this.resetaudio)
             return            
         }  
         this.audio.currentTime = 0
@@ -30,7 +29,7 @@ export class generatedraggableaudio {
 
         if(isnullorundefined(playinfull)) {
             this.volumescurrentmode = volumestate.decreasing
-            this.fadeoutaudio()
+            this.resetaudio()
         }
 
         else if(playinfull === true) {
@@ -42,16 +41,16 @@ export class generatedraggableaudio {
         })         
     }
 
-    private maintainaudio() {
+    private maintainaudio = (onmax: () => void) => {
         if(this.volumescurrentmode === volumestate.increasing) {
             return
         }
         this.volumescurrentmode = volumestate.increasing  
-        this.fadeupaudio()        
+        this.fadeupaudio(onmax)        
     }
 
-    resetaudio() {
-        if(this.volumescurrentmode === volumestate.decreasing) {
+    public resetaudio = () => {
+        if(this.volumescurrentmode == volumestate.decreasing) {
             return
         }
         this.volumescurrentmode = volumestate.decreasing  
@@ -68,13 +67,13 @@ export class generatedraggableaudio {
     }
 
     /** invoke after movement detection */
-    private fadeoutaudio(onfaded?: () => void) {  
+    private fadeoutaudio = (onfaded: () => void) => {  
         let id = setTimeout(() => {
             if(this.audio.volume >= volumedecrement) {        
                 this.audio.volume -= volumedecrement
 
                 if(this.volumescurrentmode === volumestate.decreasing) {
-                    this.fadeoutaudio()  
+                    this.fadeoutaudio(onfaded)  
                 }        
             }
 
@@ -93,19 +92,20 @@ export class generatedraggableaudio {
         this.timeoutIDs.push(id)    
     }
 
-    private fadeupaudio() {
+    private fadeupaudio = (onmax: () => void) => {
         let id = setTimeout(() => {
             if(this.audio.volume <= this.inputmaxvolume - volumeincrement) { //prevents out of bounds exc
                 this.audio.volume += volumeincrement
 
                 if(this.volumescurrentmode === volumestate.increasing) {
-                    this.fadeupaudio()
+                    this.fadeupaudio(onmax)
                 }
             }
 
             else {
                 this.audio.volume = this.inputmaxvolume
                 this.volumescurrentmode = volumestate.stable
+                onmax()
             }      
         })
         this.timeoutIDs.push(id)    
