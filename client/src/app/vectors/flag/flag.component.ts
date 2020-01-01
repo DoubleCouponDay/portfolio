@@ -109,26 +109,22 @@ export class FlagComponent implements OnInit, OnDestroy {
 
   private animatesegment = (subject: flagsegment) => {
     let chosenfactory: AnimationFactory
-    let currentposition : number        
     let initialstate = isnullorundefined(subject.animator)
     let willmovetop = subject.expression === slidestate.translatingtop
     let distancetotravel: number
 
     if(initialstate) {
-      currentposition = subject.startingoffset
       distancetotravel = willmovetop
         ? subject.startingoffset
-        : slidedistance - currentposition
+        : slidedistance - subject.startingoffset
     }
 
     else {            
-      currentposition = willmovetop ? slidedistance : 0
       subject.expression = willmovetop ? slidestate.translatingbot : slidestate.translatingtop
-      distancetotravel = slidedistance
+      distancetotravel = slidedistance      
     }
-
-    chosenfactory = willmovetop ? this.playtop : this.playbot
     let time = animatetime / slidedistance * distancetotravel
+    chosenfactory = willmovetop ? this.playtop : this.playbot
     let inputparams: any = {}
     inputparams[inputtimename] = time
     subject.animator = chosenfactory.create(subject.element, { params: inputparams })      
@@ -166,6 +162,7 @@ export class FlagComponent implements OnInit, OnDestroy {
         catch(error) {
 
         }
+        item.animator = null
       }
       this.castcloth.removeChild(item.element)
     }
