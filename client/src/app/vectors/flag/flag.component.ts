@@ -51,16 +51,16 @@ export class FlagComponent implements OnInit, OnDestroy {
     this.castcloth = <HTMLElement>this.cloth.nativeElement  
     let leftincrement = 0
     let verticalincrement = 0
-    let shouldoffsetdown = slidestate.translatingbot
+    let direction = slidestate.translatingtop
 
     for(let i = 0; i < this.segmentdata.length; i++) {
-      let [newincrement, newdirection] = this.decidefutureoffset(verticalincrement, shouldoffsetdown)
+      let [newincrement, newdirection] = this.decidefutureoffset(verticalincrement, direction)
       verticalincrement = newincrement
-      shouldoffsetdown = newdirection
+      direction = newdirection
       let newelement = this.createflagpart(i, this.castcloth, leftincrement, verticalincrement)
 
       let newitem: flagsegment = {
-        expression: shouldoffsetdown,
+        expression: direction,
         element: newelement,
         animator: null,
         startingoffset: verticalincrement
@@ -71,23 +71,23 @@ export class FlagComponent implements OnInit, OnDestroy {
     this.changer.reattach()
   }  
 
-  private decidefutureoffset = (currentoffset: number, direction: slidestate): [number, slidestate] => {
-    let futureincrement = direction === slidestate.translatingbot 
+  private decidefutureoffset = (currentoffset: number, futuredirection: slidestate): [number, slidestate] => {
+    let futureincrement = futuredirection === slidestate.translatingtop 
       ? (currentoffset + segmentoffset) 
       : (currentoffset - segmentoffset)
     
     if(futureincrement > slidedistance) {
-      direction = slidestate.translatingtop  
+      futuredirection = slidestate.translatingbot 
       let remainder = futureincrement - slidedistance
       futureincrement = slidedistance - remainder              
     }
 
     else if(futureincrement < 0) {
-      direction = slidestate.translatingbot
+      futuredirection = slidestate.translatingtop
       let remainder = Math.abs(futureincrement)
       futureincrement = remainder  
     }
-    return [futureincrement, direction]
+    return [futureincrement, futuredirection]
   }
 
   private createflagpart = (id: number, parent: HTMLElement, leftpositioning: number, verticalpositioning: number): HTMLElement => {
@@ -123,6 +123,10 @@ export class FlagComponent implements OnInit, OnDestroy {
       subject.expression = willmovetop ? slidestate.translatingbot : slidestate.translatingtop
       distancetotravel = slidedistance      
     }
+
+    if(subject.element.id === "0") {
+      console.log(subject.expression)
+    }    
     let time = animatetime / slidedistance * distancetotravel
     chosenfactory = willmovetop ? this.playtop : this.playbot
     let inputparams: any = {}
