@@ -61,7 +61,7 @@ export class musicplayer {
         this.playbacksEnd += buffer.duration
         this._buffers[this._bufferindex] = null      
         let currentindex = this._bufferindex
-        this._bufferindex++      
+        this._bufferindex++    
 
         source.onended = () => {
             let notstarved = (this._buffers.length - 1) > currentindex
@@ -84,7 +84,14 @@ export class musicplayer {
 
     public toggleplayback(input: boolean) {
         this.autoplaycondition = input
-        this.decidetypeofplayback()
+
+        if(this.autoplaycondition === false) {
+            // for(let i = 0; i < this.)
+        }
+
+        else {
+            this.decidetypeofplayback()
+        }        
     }
 
     private decidetypeofplayback() {

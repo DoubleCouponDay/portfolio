@@ -36,6 +36,12 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   playicon: ElementRef
   private castplay: SVGElement
 
+  @ViewChild("iframe1", elementrefargs)
+  iframe1: ElementRef
+
+  @ViewChild("iframe2", elementrefargs)
+  iframe2: ElementRef
+
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
@@ -56,6 +62,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   ngAfterViewInit() {
+    window.addEventListener('blur', this.onfocuschange)
+
     this.changer.detach()
     this.contentsvg = <SVGElement>this.content.nativeElement
     this.contentsvg.style.opacity = invisible
@@ -101,7 +109,26 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.streamer.playrandomdeserttrack()
   }
 
+  public ontoggle = () => {
+    if(this.castpause.style.opacity === invisible) {
+      this.onplay()
+    }
+
+    else {
+      this.onpause()
+    }
+  }
+
+  public onfocuschange = () => {
+    if (document.activeElement === this.iframe1.nativeElement ||
+      document.activeElement === this.iframe2.nativeElement) {
+      this.onpause()
+      console.log("iframe click")
+    }    
+  }
+
   ngOnDestroy() {
-    this.sink.unsubscribe()    
+    this.sink.unsubscribe()   
+    window.removeEventListener("blur", this.onfocuschange) 
   }
 }
