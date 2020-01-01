@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef, Output, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { elementrefargs } from 'src/app/utility/utility.data';
-import { slidestate, animatetime, gettransformstyle, botstatevalue, topstatevalue, slidedistance } 
+import { slidestate, animatetime, gettransformstyle, topstatevalue, topstatevalue, slidedistance, botstatevalue } 
   from 'src/app/animations/slide';
 import { flagsegment } from './flag.data';
 import { AnimationBuilder, AnimationFactory, AnimationPlayer } from '@angular/animations';
@@ -65,6 +65,9 @@ export class FlagComponent implements OnInit, OnDestroy {
         animator: null,
         startingoffset: verticalincrement
       }
+      if(i === 0) {
+        console.log("1: " + newitem.expression)
+      }   
       this.segmentdata[i] = newitem
       leftincrement += leftspacing      
     }
@@ -120,12 +123,11 @@ export class FlagComponent implements OnInit, OnDestroy {
     }
 
     else {            
-      subject.expression = willmovetop ? slidestate.translatingbot : slidestate.translatingtop
       distancetotravel = slidedistance      
     }
-
+    subject.expression = willmovetop ? slidestate.translatingbot : slidestate.translatingtop
     if(subject.element.id === "0") {
-      console.log(subject.expression)
+      console.log("2: " + subject.expression)
     }    
     let time = animatetime / slidedistance * distancetotravel
     chosenfactory = willmovetop ? this.playtop : this.playbot
