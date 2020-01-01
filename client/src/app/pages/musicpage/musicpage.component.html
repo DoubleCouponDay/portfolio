@@ -13,7 +13,7 @@
                     </filter>
                 </defs>
                 <g filter="url(#HYThNMNrWHbnc5sv6uG0pF3NqPL9LT4P)">
-                    <rect x="64.190226" y="78.865179" width="691.34152" height="179.05248" transform="matrix(1,0,0,1,0,0)" id="Rectangle" fill="rgb(223,220,220)" />
+                    <rect x="64.190226" y="78.865179" width="735" height="179.05248" transform="matrix(1,0,0,1,0,0)" id="Rectangle" fill="rgb(223,220,220)" />
                 </g>
                 <defs>
                     <filter id="suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc" x="-200%" y="-200%" width="400%" height="400%" filterUnits="objectBoundingBox" color-interpolation-filters="sRGB">
@@ -24,11 +24,12 @@
                         <feBlend xmlns="http://www.w3.org/2000/svg" in="SourceGraphic" in2="pf_100_dropShadow" mode="normal" />
                     </filter>
                 </defs>
-                <g filter="url(#suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc)">
+                <g class="button-filter" >
                     <circle vector-effect="non-scaling-stroke" cx="157.95454545454618" cy="169.68181818181824" r="73.5" id="Ellipse" fill="rgb(208,208,208)" />
                 </g>
-                <path d=" M 142.955 125.682 Q 142.455 212.182 142.955 212.182 L 186.455 168.682 C 186.455 168.682 143.455 126.682 142.955 125.682 Z " id="play-icon" fill="rgb(116,116,116)" />
-                <g id="pause-icon">
+                <path d=" M 142.955 125.682 Q 142.455 212.182 142.955 212.182 L 186.455 168.682 C 186.455 168.682 143.455 126.682 142.955 125.682 Z " 
+                    id="play-icon" fill="rgb(116,116,116)" #playicon (click)="onplay($event)" />
+                <g id="pause-icon" #pauseicon (click)="onpause($event)">
                     <rect x="133.954545" y="126.681818" width="15.5" height="85" transform="matrix(1,0,0,1,0,0)" id="Rectangle" fill="rgb(116,116,116)" />
                     <rect x="166.454545" y="126.681818" width="15.5" height="85" transform="matrix(1,0,0,1,0,0)" id="Rectangle" fill="rgb(116,116,116)" />
                 </g>
@@ -36,17 +37,19 @@
             </g>
         </g>
 
+
         <g class="scroll-item">
-            <foreignObject class="iframe-container" y="130px">
-                <xhtml:iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/732541240&color=%23a3a3a3&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+            <foreignObject class="iframe-container" y="110px">
+                <xhtml:iframe width="100%" height="120" scrolling="no" frameborder="no" 
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/732541240&color=%235c8197&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true">
                 </xhtml:iframe>
             </foreignObject>                
         </g>
 
         <g class="scroll-item">
-            <foreignObject class="iframe-container" y="260px">
-                <xhtml:iframe width="100%" height="166" scrolling="no" frameborder="no"
-                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/689387281&color=%23a3a3a3&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+            <foreignObject class="iframe-container" y="250px">
+                <xhtml:iframe width="100%" height="120" scrolling="no" frameborder="no" 
+                    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/689387281&color=%235c8197&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=true&visual=true">
                 </xhtml:iframe>
             </foreignObject>
         </g>

@@ -5,12 +5,16 @@
 }
 
 .iframe-container {
-    width: 400px;
-    height: 100px;
+    width: 366px;
+    height: 120px;
     transform: scale(2) translate(10px);
     max-width: 100%;
 }
 
 .music-button {
-    transform: translate(-10px, -80px);
+    transform: translate(-45px, -80px);
+}
+
+.button-filter {
+    filter: "url(#suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc)";
 }

@@ -66,10 +66,12 @@ export class musicplayer {
         source.onended = () => {
             let notstarved = (this._buffers.length - 1) > currentindex
 
-            if(notstarved) {
+            if(notstarved && 
+                this.musicisreadytostart() === false) {
                 return
             }
             this._musicisplaying = false
+            console.log("music not playing")
         }
     }
 

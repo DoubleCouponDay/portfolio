@@ -14,7 +14,8 @@ import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
 import { MusicService } from 'src/app/services/music.service';
 
-const playerclass = ".iframe-player"
+const invisible = "0"
+const visible = "1"
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -25,15 +26,22 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   @ViewChild(contentidentifier, elementrefargs)
   content: ElementRef
+  private contentsvg: SVGElement
 
-  private castcontent2: SVGElement
+  @ViewChild("pauseicon", elementrefargs)
+  pauseicon: ElementRef
+  private castpause: SVGElement
+
+  @ViewChild("playicon", elementrefargs)
+  playicon: ElementRef
+  private castplay: SVGElement
 
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
   contentlength = 10
 
-  constructor(paging: PagingService, private streamer: MusicService) {
+  constructor(paging: PagingService, private streamer: MusicService, private changer: ChangeDetectorRef) {
     super()
     let sub = paging.subscribepagechange(this.onpagechange)
     let sub2 = paging.subscribepagecompletedmove(this.onpagechangecomplete)
@@ -48,8 +56,15 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   ngAfterViewInit() {
-    this.castcontent2 = <SVGElement>this.content.nativeElement
-    this.castcontent2.style.opacity = '0'
+    this.changer.detach()
+    this.contentsvg = <SVGElement>this.content.nativeElement
+    this.contentsvg.style.opacity = invisible
+
+    this.castplay = <SVGElement>this.playicon.nativeElement
+    this.castplay.style.opacity = invisible
+
+    this.castpause = <SVGElement>this.pauseicon.nativeElement
+    this.changer.reattach()
     super.ngAfterViewInit()
   }
 
@@ -58,7 +73,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = false
-    this.castcontent2.style.opacity = '0'
+    this.contentsvg.style.opacity = invisible
   }
 
   private onpagechangecomplete = (pagenumber: number) => {
@@ -67,7 +82,23 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       return
     }
     this.pagealreadydisplaying = true
-    this.castcontent2.style.opacity = '1'
+    this.contentsvg.style.opacity = visible
+  }
+
+  public onpause = () => {
+    this.changer.detach()
+    this.castpause.style.opacity = invisible
+    this.castplay.style.opacity = visible
+    this.changer.reattach()
+    this.streamer.pause()
+  }
+
+  public onplay = () => {
+    this.changer.detach()
+    this.castplay.style.opacity = invisible
+    this.castpause.style.opacity = visible    
+    this.changer.reattach()
+    this.streamer.playrandomdeserttrack()
   }
 
   ngOnDestroy() {

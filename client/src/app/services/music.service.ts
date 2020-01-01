@@ -54,12 +54,17 @@ export class MusicService implements OnDestroy {
     await this._connection.start()
   }
   
-  public async playrandomdeserttrack(customsubscriber?: IStreamSubscriber<streamresponse>) {
+  public async playrandomdeserttrack(overridesubscriber?: IStreamSubscriber<streamresponse>) {
     if(this._connection.state === HubConnectionState.Disconnected) {
       await this.startconnection()
     }
+
+    if(this._musicplayer.musicisplaying) {
+      this._musicplayer.toggleplayback(true)
+      return
+    }
     let stream = this._connection.stream<streamresponse>(randomdeserttrackroute)        
-    let chosensubscriber = isnullorundefined(customsubscriber) ?  this.defaultsubscriber : customsubscriber
+    let chosensubscriber = isnullorundefined(overridesubscriber) ?  this.defaultsubscriber : overridesubscriber
     this.weirdsubscription = stream.subscribe(chosensubscriber)
   }
 
