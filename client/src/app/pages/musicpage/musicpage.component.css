@@ -5,8 +5,12 @@
 }
 
 .iframe-container {
-    width: 770px;
+    width: 400px;
     height: 100px;
-    transform: scale(2) translate(-120px);
+    transform: scale(2) translate(10px);
     max-width: 100%;
+}
+
+.music-button {
+    transform: translate(-10px, -80px);
 }

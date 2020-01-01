@@ -11,7 +11,7 @@
 .content-page {
     transform: translate(1330px, 670px);
     width: 790px;
-    clip-path: url('#overflow-container');
+    /* clip-path: url('#overflow-container'); */
     height: 1000px;
     user-select: none;
 }
