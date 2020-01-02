@@ -67,5 +67,6 @@ type streamhub() =
         
     member private this.cleanup() =
         channel.Writer.TryComplete() |> ignore
+        canceller.Cancel()
         canceller.Dispose()
         GC.Collect()

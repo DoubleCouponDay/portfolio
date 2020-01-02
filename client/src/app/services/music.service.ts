@@ -73,7 +73,6 @@ export class MusicService implements OnDestroy {
   }
 
   private onstreamcomplete = () => {
-    this.weirdsubscription.dispose()
     this._musicplayer.onfullydownloaded()
   }
 
