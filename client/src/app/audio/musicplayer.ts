@@ -25,27 +25,12 @@ export class musicplayer {
         let integers = new Uint8Array(response.chunk)
         let newbuffer = await this._context.decodeAudioData(integers.buffer)            
         this.queuebuffer(newbuffer)
-        let plentifulbuffers = this._musicisplaying === true
-        
-        if(plentifulbuffers === false) {
-            this.decidetypeofplayback()
-        }
-
-        else if(this.autoplaycondition === false) {
-            this.stop()
-        }
+        this.decidetypeofplayback()
     }
 
     public toggleplayback = (input: boolean) => {
         this.autoplaycondition = input
-
-        if(input === false) {
-            this.stop()
-        }
-
-        else {
-            this.decidetypeofplayback()
-        }        
+        this.decidetypeofplayback()
     }
 
     public onfullydownloaded = () => {
@@ -94,11 +79,13 @@ export class musicplayer {
     }
 
     private decidetypeofplayback = () => {
-        let readytostart = this.musicisreadytostart() === true
-
-        if(readytostart) { 
+        if(this.musicisreadytostart()) { 
             this.play()
         } 
+
+        else if(this.autoplaycondition === false) {
+            this.stop()
+        }
         
         else { //scarce buffers
             this.waittostart()
