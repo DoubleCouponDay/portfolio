@@ -1,27 +1,19 @@
-import { playablebuffercount, millisecond, streamresponse } from '../services/streaming.data'
+import { playablebuffercount, millisecond, streamresponse, playablechunk } from '../services/streaming.data'
 import { isnullorundefined } from '../utility/utilities'
 import { musicvolume } from './audio.data'
 
-
 export class musicplayer {
-    private _buffers = new Array<AudioBuffer>()
-    public get buffers() { return this._buffers }
-
-    private _bufferindex = 0
-    public get bufferindex() { return this._bufferindex }
+    private queue: Array<playablechunk> = []
+    private currentplayingindex = 0
 
     private _musicisplaying = false
     public get musicisplaying() { return this._musicisplaying }
 
     private _context: AudioContext
-    
     private playbacksEnd = 0.0
-
     private fullydownloaded = false
-
     private tryplayagain_intervalid = 0    
     private waiting = false
-
     private autoplaycondition = false
 
     constructor() {
@@ -29,64 +21,26 @@ export class musicplayer {
         this._context.suspend()    
     }
 
-    public onnewbuffer = (response: streamresponse) => {
+    public onresponse = async (response: streamresponse) => {
         let integers = new Uint8Array(response.chunk)
-        this._context.decodeAudioData(integers.buffer, this.ondecoded)    
-    }
-
-    private ondecoded = (audiobuffer: AudioBuffer) => {
-        this.buffers.push(audiobuffer)
+        let newbuffer = await this._context.decodeAudioData(integers.buffer)            
+        this.queuebuffer(newbuffer)
         let plentifulbuffers = this._musicisplaying === true
         
-        if(plentifulbuffers) {
-            this.queuebuffer(audiobuffer)
-        }
-
-        else {
+        if(plentifulbuffers === false) {
             this.decidetypeofplayback()
         }
-    }
 
-    public onfullydownloaded: () => void = () => {
-        this.fullydownloaded = true
-    }
-
-    private queuebuffer(buffer: AudioBuffer) {
-        let source = this._context.createBufferSource()
-        source.buffer = buffer
-        let volume = this.normalizevolume(source)
-        volume.connect(this._context.destination)
-        source.start(this.playbacksEnd)                
-
-        this.playbacksEnd += buffer.duration
-        this._buffers[this._bufferindex] = null      
-        let currentindex = this._bufferindex
-        this._bufferindex++    
-
-        source.onended = () => {
-            let notstarved = (this._buffers.length - 1) > currentindex
-
-            if(notstarved && 
-                this.musicisreadytostart() === false) {
-                return
-            }
-            this._musicisplaying = false
-            console.log("music not playing")
+        else if(this.autoplaycondition === false) {
+            this.stop()
         }
     }
 
-    private normalizevolume(buffer: AudioBufferSourceNode): GainNode {
-        let newvolume = this._context.createGain()
-        newvolume.gain.value = musicvolume
-        buffer.connect(newvolume)
-        return newvolume        
-    }
-
-    public toggleplayback(input: boolean) {
+    public toggleplayback = (input: boolean) => {
         this.autoplaycondition = input
 
-        if(this.autoplaycondition === false) {
-            // for(let i = 0; i < this.)
+        if(input === false) {
+            this.stop()
         }
 
         else {
@@ -94,11 +48,56 @@ export class musicplayer {
         }        
     }
 
-    private decidetypeofplayback() {
+    public onfullydownloaded = () => {
+        this.fullydownloaded = true
+    }    
+
+    private queuebuffer = (buffer: AudioBuffer) => {
+        let source = this._context.createBufferSource()
+        source.buffer = buffer
+        let volume = this.normalizevolume(source)
+        volume.connect(this._context.destination)
+
+        let newplayable = {
+            chunk: source,
+            time: this.playbacksEnd,
+            volume: volume
+        }
+        this.queue.push(newplayable)
+        this.playbacksEnd += buffer.duration  
+        source.onended = this.checkstarvation
+    }
+
+    private checkstarvation = () => {
+        this.currentplayingindex++
+        let notstarved = (this.queue.length - 1) > this.currentplayingindex 
+
+        if(notstarved && 
+            this.musicisreadytostart() === false) {
+            return
+        }
+        this._musicisplaying = false
+    }
+
+    private normalizevolume = (buffer: AudioBufferSourceNode): GainNode => {
+        let newvolume = this._context.createGain()
+        newvolume.gain.value = musicvolume
+        buffer.connect(newvolume)
+        return newvolume        
+    }
+
+    private stop = () => {
+        for(let i = 0; i < this.queue.length; i++) {
+            let item = this.queue[i]
+            item.chunk.stop()
+        }
+    }
+
+    private decidetypeofplayback = () => {
         let readytostart = this.musicisreadytostart() === true
 
         if(readytostart) { 
-            this.beginplayback()
+            this.play()
         } 
         
         else { //scarce buffers
@@ -122,29 +121,30 @@ export class musicplayer {
             }            
             window.clearInterval(this.tryplayagain_intervalid)
             this.waiting = false
-            this.beginplayback()      
+            this.play()      
         }, 500)
       }
     
-    private hasenoughbuffers = () => {
-        let buffersleft = this._buffers.length - (this._bufferindex  + 1)   
+    private hasenough = (): boolean => {
+        let buffersleft = this.queue.length - this.currentplayingindex + 1
         return buffersleft >= playablebuffercount
     }
 
-    private beginplayback = () => {       
+    private play = () => {       
         this._musicisplaying = true  
-        this._context.resume()   
-        for(let i = this.bufferindex; i < this._buffers.length; i++) {
-            let currentbuffer = this._buffers[i]
-            this.queuebuffer(currentbuffer)
+        this._context.resume()  
+
+        for(let i = this.currentplayingindex; i < this.queue.length; i++) {
+            let item = this.queue[i]
+            item.chunk.start(item.time)
         }
     }
     
-    private musicisreadytostart(): boolean {
+    private musicisreadytostart = (): boolean => {
         let musicisnotplaying = this.musicisplaying === false    
 
         return musicisnotplaying &&
             this.autoplaycondition &&
-            (this.hasenoughbuffers() || this.fullydownloaded)    
+            (this.hasenough() || this.fullydownloaded)    
     }
 }

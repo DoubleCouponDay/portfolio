@@ -17,7 +17,7 @@ export class generatedraggableaudio {
         this.audio = new Audio(pathtoaudio)    
     }
 
-    public playaudio = (playinfull?: boolean) => {   
+    public playaudio = (playinfull = false) => {   
         if(this.throttleinput === true) {
             this.maintainaudio(this.resetaudio)
             return            
@@ -27,12 +27,12 @@ export class generatedraggableaudio {
         this.audio.volume = this.inputmaxvolume
         let playstate = this.audio.play()
 
-        if(isnullorundefined(playinfull)) {
+        if(playinfull = false) {
             this.volumescurrentmode = volumestate.decreasing
             this.resetaudio()
         }
 
-        else if(playinfull === true) {
+        else {
             this.volumescurrentmode = volumestate.stable
         }
 
