@@ -36,12 +36,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   playicon: ElementRef
   private castplay: SVGElement
 
-  @ViewChild("iframe1", elementrefargs)
-  iframe1: ElementRef
-
-  @ViewChild("iframe2", elementrefargs)
-  iframe2: ElementRef
-
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
@@ -120,10 +114,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   public onfocuschange = () => {
-    if (document.activeElement === this.iframe1.nativeElement ||
-      document.activeElement === this.iframe2.nativeElement) {
+    if (document.activeElement.tagName === "IFRAME") {
       this.onpause()
-      console.log("iframe click")
     }    
   }
 
