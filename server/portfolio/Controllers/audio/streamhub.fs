@@ -35,6 +35,7 @@ type streamhub() =
 
         if usedmemory >= availablememory then
             let message = "hit simultaneous stream count: " + string(streamhub.clientcount)
+            this.cleanup()
             raise (InsufficientMemoryException(message))
 
         this.fillchannel(channel) |> ignore
