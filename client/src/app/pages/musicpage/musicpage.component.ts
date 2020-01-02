@@ -87,7 +87,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.contentsvg.style.opacity = visible
   }
 
-  public onpause = () => {
+  private onpause = () => {
     this.changer.detach()
     this.castpause.style.opacity = invisible
     this.castplay.style.opacity = visible
@@ -95,7 +95,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.streamer.pause()
   }
 
-  public onplay = () => {
+  private onplay = () => {
     this.changer.detach()
     this.castplay.style.opacity = invisible
     this.castpause.style.opacity = visible    
