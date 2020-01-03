@@ -70,6 +70,9 @@ export class musicplayer {
     }
 
     private onnodeended = () => {
+        if(this.shouldplay === false) {
+            return
+        }
         this.currentplayingindex++  
         console.log("nodeended. new node: " + this.currentplayingindex)
         
