@@ -74,12 +74,10 @@ export class musicplayer {
             return
         }
         this.currentplayingindex++  
-        console.log("nodeended. new node: " + this.currentplayingindex)
         
         if(this.currentplayingindex >= this.queue.length &&
             this.fullydownloaded === true) {
             this.currentplayingindex = 0
-            console.log("song finished. new node: " + this.currentplayingindex)
         }
     }
 
@@ -98,10 +96,9 @@ export class musicplayer {
         if(this._musicisplaying === true) {
             return
         }
-        console.log("playing")
         this._musicisplaying = true
         this._context.resume()
-        let relativetimesum = 0
+        let relativetimesum = this._context.currentTime
 
         for(let i = this.currentplayingindex; i < this.queue.length; i++) {
             this.queue[i] = this.processbuffer(this.queue[i].chunk.buffer)                
