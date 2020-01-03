@@ -87,7 +87,7 @@ type Startup private () =
             routing.MapHub<streamhub>("/stream", fun options ->
                 options.Transports <- Connections.HttpTransportType.LongPolling //azure has a cap on web socket connections. edge doesnt support server sent events
                 options.TransportMaxBufferSize <- int64(0)
-                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(120.0)
+                options.LongPolling.PollTimeout <- TimeSpan.FromSeconds(10.0)
                 ()
             ) |> ignore
             routing.MapControllers() |> ignore
