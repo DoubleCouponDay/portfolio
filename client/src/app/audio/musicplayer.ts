@@ -109,24 +109,27 @@ export class musicplayer {
             item.timetoplay = relativetimesum            
             item.chunk.start(item.timetoplay)            
             relativetimesum += item.chunk.buffer.duration
+            console.log("played at: " + item.timetoplay + "    duration: " + item.chunk.buffer.duration)
         }
         this.currentplayingindex = 1
     }
 
-    private playnewchunk = (chunk: playablechunk) => {
+    private playnewchunk = (item: playablechunk) => {
         if(this._musicisplaying === false) {
             return
         }
         console.log("playnewchunk")
-        let lastchunk = this.queue[this.queue.length - 1]
-        let newtimetoplay = lastchunk.timetoplay + lastchunk.chunk.buffer.duration
-        chunk.timetoplay = newtimetoplay
+        console.log("queue length: " + this.queue.length)
+        let previouschunk = this.queue[this.queue.length - 2]
+        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration
+        item.timetoplay = newtimetoplay
 
         try {
-            chunk.chunk.start(chunk.timetoplay)
+            item.chunk.start(item.timetoplay)
         }
         
         catch(e) {}
+        console.log("played at: " + item.timetoplay + "    duration: " + item.chunk.buffer.duration)
     }
 
     private stop = () => {
@@ -146,6 +149,5 @@ export class musicplayer {
             catch(e) {}
             item.timetoplay = dontplay
         }        
-    }
-    
+    }    
 }
