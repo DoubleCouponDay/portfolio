@@ -35,7 +35,7 @@ export class MusicService implements OnDestroy {
     this.defaultsubscriber = {
       next: this._musicplayer.onresponse,
       error: this.onerror,
-      complete: this.onstreamcomplete
+      complete: this.onwriterfinished
     }
 
     this.subs.add(
@@ -50,7 +50,6 @@ export class MusicService implements OnDestroy {
         transport: HttpTransportType.LongPolling,
       })
       .build()
-
     await this._connection.start()
   }
   
@@ -68,12 +67,16 @@ export class MusicService implements OnDestroy {
     this.weirdsubscription = stream.subscribe(chosensubscriber)
   }
 
-  public pause() {
+  public restart = () => {
+    this._musicplayer.toggleplayback(true)
+  }
+
+  public pause = () => {
     this._musicplayer.toggleplayback(false)
   }
 
-  private onstreamcomplete = () => {
-    this._musicplayer.onfullydownloaded()
+  private onwriterfinished = () => {
+    this._musicplayer.onwriterfinished()
   }
 
   private onapploaded = (state: loadstate) => {

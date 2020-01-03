@@ -100,7 +100,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.castplay.style.opacity = invisible
     this.castpause.style.opacity = visible    
     this.changer.reattach()
-    this.streamer.playrandomdeserttrack()
+    this.streamer.restart()
   }
 
   public ontoggle = () => {
