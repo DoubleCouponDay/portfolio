@@ -19,6 +19,7 @@ import { throttleTime } from 'rxjs/operators';
 const invisible = "0"
 const visible = "1"
 const onesecond = 1000
+const buttonshadow = "url(#suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc)"
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -39,14 +40,17 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   playicon: ElementRef
   private castplay: SVGElement
 
+  @ViewChild("buttonfilter", elementrefargs)
+  buttonfilter: ElementRef
+  private castfilter: SVGElement
+
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
   contentlength = 10
 
   private toggledsubject = new Subject<void>()
-  private wastoggled = this.toggledsubject.asObservable()
-  
+  private wastoggled = this.toggledsubject.asObservable()  
 
   constructor(paging: PagingService, private streamer: MusicService, private changer: ChangeDetectorRef) {
     super()
@@ -77,6 +81,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.castplay.style.opacity = invisible
 
     this.castpause = <SVGElement>this.pauseicon.nativeElement
+    this.castfilter = <SVGElement>this.buttonfilter.nativeElement
+    this.castfilter.style.filter = buttonshadow
     this.changer.reattach()
     super.ngAfterViewInit()
   }
@@ -98,6 +104,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.contentsvg.style.opacity = visible
   }
 
+  public ontoggle = () => this.toggledsubject.next()
+
   private onpause = () => {
     this.changer.detach()
     this.castpause.style.opacity = invisible
@@ -115,6 +123,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   }
 
   private throttledtoggle = () => {
+    this.castfilter.style.filter = ""
+
     if(this.castpause.style.opacity === invisible) {
       this.onplay()
     }
@@ -122,9 +132,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     else {
       this.onpause()
     }
+    setTimeout(() => this.castfilter.style.filter = buttonshadow, onesecond)
   }
-
-  public ontoggle = () => this.toggledsubject.next()
 
   public onfocuschange = () => {
     if (document.activeElement.tagName === "IFRAME") {
