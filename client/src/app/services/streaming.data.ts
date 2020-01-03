@@ -10,14 +10,10 @@ export interface streamresponse {
 export const playablebuffercount = 5
 export const millisecond = 1000
 
-export enum processedstate {
-    initial,
-    reprocessed
+export interface playablechunk {
+    chunk: AudioBufferSourceNode    
+    volume: GainNode
+    timetoplay: number
 }
 
-export interface playablechunk {
-    hasbeenprocessed: processedstate
-    chunk: AudioBufferSourceNode
-    time: number
-    volume: GainNode
-}
+export const dontplay = -1

@@ -31,7 +31,7 @@ export class MusicService implements OnDestroy {
     this.defaultsubscriber = {
       next: this._musicplayer.onresponse,
       error: this.onerror,
-      complete: this.onwriterfinished
+      complete: this.onfullydownloaded
     }
 
     this.subs.add(
@@ -71,10 +71,6 @@ export class MusicService implements OnDestroy {
     this._musicplayer.toggleplayback(false)
   }
 
-  private onwriterfinished = () => {
-    this._musicplayer.onwriterfinished()
-  }
-
   private onapploaded = (state: loadstate) => {
     if(state !== loadstate.done) {
       return
@@ -85,6 +81,10 @@ export class MusicService implements OnDestroy {
   private onerror = (problem: Error) => {
     console.error(problem)
     this.ngOnDestroy()
+  }
+
+  private onfullydownloaded = () => {
+    this._musicplayer.ondownloadcomplete()
   }
     
   ngOnDestroy = () => {    
