@@ -13,9 +13,12 @@ import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/
 import { api } from 'src/environments/api';
 import { isnullorundefined } from 'src/app/utility/utilities';
 import { MusicService } from 'src/app/services/music.service';
+import { Observable, Subject } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 const invisible = "0"
 const visible = "1"
+const onesecond = 1000
 
 @Component({
   selector: 'svg:svg[app-musicpage]',
@@ -41,18 +44,26 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   contentlength = 10
 
+  private toggledsubject = new Subject<void>()
+  private wastoggled = this.toggledsubject.asObservable()
+  
+
   constructor(paging: PagingService, private streamer: MusicService, private changer: ChangeDetectorRef) {
     super()
     let sub = paging.subscribepagechange(this.onpagechange)
     let sub2 = paging.subscribepagecompletedmove(this.onpagechangecomplete)
+
+    let sub3 = this.wastoggled.pipe(throttleTime(onesecond))
+      .subscribe(this.ontoggle)
     
     this.sink.add(sub)
     this.sink.add(sub2)
+    this.sink.add(sub3)
 
     streamer.startconnection()
       .then(() => {
         streamer.playrandomdeserttrack()
-      })
+      })    
   }
 
   ngAfterViewInit() {
