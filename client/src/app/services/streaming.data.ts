@@ -7,7 +7,7 @@ export interface streamresponse {
     channels: number
 }
 
-export const playablebuffercount = 5
+export const playablebuffercount = 2
 export const bufferdelay = 5
 export const millisecond = 1000
 
