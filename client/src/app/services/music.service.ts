@@ -1,16 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpRequest, HttpEvent, HttpUserEvent, HttpEventType } from '@angular/common/http';
-import { api, baseroute } from '../../environments/api'
-import { HubConnection, HubConnectionBuilder, JsonHubProtocol, LogLevel, IStreamResult, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
+import { baseroute } from '../../environments/api'
+import { HubConnection, HubConnectionBuilder, LogLevel, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
 import { loadstate, LoadingService } from './loading.service';
 import { SubSink } from 'subsink';
 import { isnullorundefined } from '../utility/utilities';
-import { playablebuffercount, streamresponse, bufferdelay, millisecond } from './streaming.data';
-import { musicvolume } from '../audio/audio.data';
+import { streamresponse, } from './streaming.data';
 import { musicplayer } from '../audio/musicplayer';
-const crossfade = require("crossfade")
 
 @Injectable({
   providedIn: 'root'
