@@ -1,4 +1,4 @@
-import { playablebuffercount, millisecond, streamresponse, playablechunk } from '../services/streaming.data'
+import { playablebuffercount, streamresponse, playablechunk, processedstate } from '../services/streaming.data'
 import { isnullorundefined } from '../utility/utilities'
 import { musicvolume } from './audio.data'
 
@@ -17,6 +17,7 @@ export class musicplayer {
     private tryplayagain_intervalid = 0    
     private waiting = false
     private autoplaycondition = false
+    private nolongerautoplaying = false
 
     constructor() {
         this._context = new AudioContext()    
@@ -33,15 +34,14 @@ export class musicplayer {
 
     public toggleplayback = (input: boolean) => {
         this.autoplaycondition = input
-        console.log("toggle received: " + this.autoplaycondition)
-        this.waiting = false
+        this.waiting = false        
 
         if(input) {
             this.decidetypeofplayback()
-            
         }
         
         else {
+            this.nolongerautoplaying = true
             this.stop()
         }
     }
@@ -57,7 +57,8 @@ export class musicplayer {
         let volume = this.normalizevolume(source)
         volume.connect(this._context.destination)
 
-        let newplayable = {
+        let newplayable: playablechunk = {
+            hasbeenprocessed: processedstate.initial,
             chunk: source,
             time: this.playbacksEnd,
             volume: volume
@@ -69,14 +70,13 @@ export class musicplayer {
     }
 
     private checkstarvation = () => {
-        this.currentplayingindex++
+        this.currentplayingindex++        
         let notstarved = (this.queue.length - 1) > this.currentplayingindex 
 
         if(notstarved && 
             this.musicisreadytostart() === false) {
             return
-        }
-        this._musicisplaying = false
+        }        
         this.stop()
     }
 
@@ -88,6 +88,9 @@ export class musicplayer {
     }
 
     private stop = () => {
+        if(this._musicisplaying === false) {
+            return
+        }
         console.log("stopping")
 
         for(let i = 0; i < this.queue.length; i++) {
@@ -107,17 +110,19 @@ export class musicplayer {
             this.play()            
         } 
         
-        else if(this.waiting === false) { 
+        else { 
             this.waittostart()            
         } 
     }
 
     private waittostart = () => {
+        if(this.waiting === true) {
+            return
+        }
         this.waiting = true
         console.log("waiting")
 
         this.tryplayagain_intervalid = window.setInterval(() => {
-            console.log("still waiting")
             if(this.musicisreadytostart() === false) {                
                 return
             }            
@@ -129,21 +134,32 @@ export class musicplayer {
       }
     
     private hasenough = (): boolean => {
-        let normalizedtoindex = this.queue.length > 0 ? (this.queue.length - 1) : 0
-        let buffersleft = normalizedtoindex - this.currentplayingindex
+        let buffersleft = this.queue.length - this.currentplayingindex
         return buffersleft >= playablebuffercount
     }
 
-    private play = () => {       
+    private play = () => {      
+        if(this._musicisplaying === true) {
+            return
+        } 
         console.log("playing")
         this._musicisplaying = true  
         this._context.resume()  
+        
 
         for(let i = this.currentplayingindex; i < this.queue.length; i++) {
-            let reprocessed = this.processbuffer(this.queue[i].chunk.buffer)
-            this.queue[i] = reprocessed
-            // let newstart = i === this.currentplayingindex ? i : this.queue[i].time
+            if(this.nolongerautoplaying) {
+                if(i === this.currentplayingindex) {
+                    this.playbacksEnd = 0
+                }
+                let reprocessed = this.processbuffer(this.queue[i].chunk.buffer)
+                this.queue[i] = reprocessed
+            }            
             this.queue[i].chunk.start(this.queue[i].time)
+
+            if(i === this.currentplayingindex) {
+                this.currentplayingindex++
+            }
         }
     }
     
