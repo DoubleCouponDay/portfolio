@@ -12,6 +12,7 @@ export class musicplayer {
     public get musicisplaying() { return this._musicisplaying }
 
     private fullydownloaded = false
+    private shouldplay = false
     
     constructor() {
         this._context = new AudioContext()    
@@ -25,6 +26,10 @@ export class musicplayer {
         this.queue.push(newplayable)
         console.log("downloaded" + this.queue.length)
 
+        if(this.shouldplay === false) {
+            return
+        }
+
         if(this._musicisplaying === true) {
             this.playnewchunk(newplayable)
         }
@@ -36,8 +41,9 @@ export class musicplayer {
 
     public toggleplayback = (input: boolean) => {
         console.log("toggle received:" + input)
+        this.shouldplay = input
 
-        if(input === true) {            
+        if(this.shouldplay === true) {            
             this.playexistingchunks()
         }
         
@@ -81,6 +87,48 @@ export class musicplayer {
         return newvolume        
     }
 
+    private playexistingchunks = () => {
+        if(this.queue.length === 0) {
+            return
+        }
+
+        if(this._musicisplaying === true) {
+            return
+        }
+        this._musicisplaying = true
+        this._context.resume()
+        console.log("playexistingchunks")
+        let shouldrequeue = this.currentplayingindex === 0 ? false : true
+        let relativetimesum = 0
+
+        for(let i = this.currentplayingindex; i < this.queue.length; i++) {
+            if(shouldrequeue === true) {
+                this.queue[i] = this.processbuffer(this.queue[i].chunk.buffer)                
+            }
+            let item = this.queue[i]
+            item.timetoplay = relativetimesum            
+            item.chunk.start(item.timetoplay)            
+            relativetimesum += item.chunk.buffer.duration
+        }
+        this.currentplayingindex = 1
+    }
+
+    private playnewchunk = (chunk: playablechunk) => {
+        if(this._musicisplaying === false) {
+            return
+        }
+        console.log("playnewchunk")
+        let lastchunk = this.queue[this.queue.length - 1]
+        let newtimetoplay = lastchunk.timetoplay + lastchunk.chunk.buffer.duration
+        chunk.timetoplay = newtimetoplay
+
+        try {
+            chunk.chunk.start(chunk.timetoplay)
+        }
+        
+        catch(e) {}
+    }
+
     private stop = () => {
         if(this._musicisplaying === false) {
             return
@@ -100,39 +148,4 @@ export class musicplayer {
         }        
     }
     
-    private playexistingchunks = () => {
-        if(this._musicisplaying === true) {
-            return
-        }
-        this._musicisplaying = true
-        console.log("playexistingchunks")
-        let shouldrequeue = this.currentplayingindex === 0 ? false : true
-        let relativetimesum = 0
-
-        for(let i = this.currentplayingindex; i < this.queue.length; i++) {
-            if(shouldrequeue === true) {
-                this.queue[i] = this.processbuffer(this.queue[i].chunk.buffer)                
-            }
-            let item = this.queue[i]
-            item.timetoplay = relativetimesum            
-            item.chunk.start(item.timetoplay)            
-            relativetimesum += item.chunk.buffer.duration
-        }
-    }
-
-    private playnewchunk = (chunk: playablechunk) => {
-        if(this._musicisplaying === false) {
-            return
-        }
-        console.log("playnewchunk")
-        let lastchunk = this.queue[this.queue.length - 1]
-        let newtimetoplay = lastchunk.timetoplay + lastchunk.chunk.buffer.duration
-        chunk.timetoplay = newtimetoplay
-
-        try {
-            chunk.chunk.start(chunk.timetoplay)
-        }
-        
-        catch(e) {}
-    }
 }
