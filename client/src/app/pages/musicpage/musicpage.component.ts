@@ -54,7 +54,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     let sub2 = paging.subscribepagecompletedmove(this.onpagechangecomplete)
 
     let sub3 = this.wastoggled.pipe(throttleTime(onesecond))
-      .subscribe(this.ontoggle)
+      .subscribe(this.throttledtoggle)
     
     this.sink.add(sub)
     this.sink.add(sub2)
@@ -114,7 +114,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.streamer.restart()
   }
 
-  public ontoggle = () => {
+  private throttledtoggle = () => {
     if(this.castpause.style.opacity === invisible) {
       this.onplay()
     }
@@ -123,6 +123,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
       this.onpause()
     }
   }
+
+  public ontoggle = () => this.toggledsubject.next()
 
   public onfocuschange = () => {
     if (document.activeElement.tagName === "IFRAME") {
