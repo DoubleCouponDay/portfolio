@@ -2,6 +2,8 @@ import { playablebuffercount, millisecond, streamresponse, playablechunk } from 
 import { isnullorundefined } from '../utility/utilities'
 import { musicvolume } from './audio.data'
 
+const checkplaytime = 1000
+
 export class musicplayer {
     private queue: Array<playablechunk> = []
     private currentplayingindex = 0
@@ -24,20 +26,32 @@ export class musicplayer {
     public onresponse = async (response: streamresponse) => {
         let integers = new Uint8Array(response.chunk)
         let newbuffer = await this._context.decodeAudioData(integers.buffer)            
-        this.queuebuffer(newbuffer)
+        let newplayable = this.processbuffer(newbuffer)
+        this.queue.push(newplayable)
         this.decidetypeofplayback()
     }
 
     public toggleplayback = (input: boolean) => {
         this.autoplaycondition = input
-        this.decidetypeofplayback()
+        console.log("toggle received: " + this.autoplaycondition)
+        this.waiting = false
+
+        if(input) {
+            this.decidetypeofplayback()
+            
+        }
+        
+        else {
+            this.stop()
+        }
     }
 
-    public onfullydownloaded = () => {
+    public onwriterfinished = () => {
         this.fullydownloaded = true
+        console.log("music fully downloaded")
     }    
 
-    private queuebuffer = (buffer: AudioBuffer) => {
+    private processbuffer = (buffer: AudioBuffer): playablechunk => {
         let source = this._context.createBufferSource()
         source.buffer = buffer
         let volume = this.normalizevolume(source)
@@ -47,10 +61,11 @@ export class musicplayer {
             chunk: source,
             time: this.playbacksEnd,
             volume: volume
-        }
-        this.queue.push(newplayable)
+        }        
+        console.log("downloaded: " + this.queue.length)
         this.playbacksEnd += buffer.duration  
         source.onended = this.checkstarvation
+        return newplayable
     }
 
     private checkstarvation = () => {
@@ -62,6 +77,7 @@ export class musicplayer {
             return
         }
         this._musicisplaying = false
+        this.stop()
     }
 
     private normalizevolume = (buffer: AudioBufferSourceNode): GainNode => {
@@ -72,63 +88,67 @@ export class musicplayer {
     }
 
     private stop = () => {
+        console.log("stopping")
+
         for(let i = 0; i < this.queue.length; i++) {
             let item = this.queue[i]
-            item.chunk.stop()
+
+            try {
+                item.chunk.stop()
+            }
+
+            catch(e) {}
         }
+        this._musicisplaying = false
     }
 
     private decidetypeofplayback = () => {
         if(this.musicisreadytostart()) { 
-            this.play()
+            this.play()            
         } 
-
-        else if(this.autoplaycondition === false) {
-            this.stop()
-        }
         
-        else { //scarce buffers
-            this.waittostart()
-        }
+        else if(this.waiting === false) { 
+            this.waittostart()            
+        } 
     }
 
     private waittostart = () => {
-        if(this.waiting === true)  {
-            return
-        }
         this.waiting = true
-
-        if(this.tryplayagain_intervalid != 0) {
-            return
-        }
+        console.log("waiting")
 
         this.tryplayagain_intervalid = window.setInterval(() => {
+            console.log("still waiting")
             if(this.musicisreadytostart() === false) {                
-            return
+                return
             }            
-            window.clearInterval(this.tryplayagain_intervalid)
             this.waiting = false
-            this.play()      
-        }, 500)
+            window.clearInterval(this.tryplayagain_intervalid)            
+            console.log("cleared wait")  
+            this.play()    
+        }, checkplaytime)
       }
     
     private hasenough = (): boolean => {
-        let buffersleft = this.queue.length - this.currentplayingindex + 1
+        let normalizedtoindex = this.queue.length > 0 ? (this.queue.length - 1) : 0
+        let buffersleft = normalizedtoindex - this.currentplayingindex
         return buffersleft >= playablebuffercount
     }
 
     private play = () => {       
+        console.log("playing")
         this._musicisplaying = true  
         this._context.resume()  
 
         for(let i = this.currentplayingindex; i < this.queue.length; i++) {
-            let item = this.queue[i]
-            item.chunk.start(item.time)
+            let reprocessed = this.processbuffer(this.queue[i].chunk.buffer)
+            this.queue[i] = reprocessed
+            // let newstart = i === this.currentplayingindex ? i : this.queue[i].time
+            this.queue[i].chunk.start(this.queue[i].time)
         }
     }
     
     private musicisreadytostart = (): boolean => {
-        let musicisnotplaying = this.musicisplaying === false    
+        let musicisnotplaying = this.musicisplaying === false   
 
         return musicisnotplaying &&
             this.autoplaycondition &&
