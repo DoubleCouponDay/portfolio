@@ -106,8 +106,13 @@ export class musicplayer {
                 this.queue[i] = this.processbuffer(this.queue[i].chunk.buffer)                
             }
             let item = this.queue[i]
-            item.timetoplay = relativetimesum            
-            item.chunk.start(item.timetoplay)            
+            item.timetoplay = relativetimesum   
+            
+            try {
+                item.chunk.start(item.timetoplay)            
+            }
+            
+            catch(e) {}
             relativetimesum += item.chunk.buffer.duration
             console.log("played at: " + item.timetoplay + "    duration: " + item.chunk.buffer.duration)
         }
