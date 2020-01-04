@@ -10,9 +10,6 @@
 
   <ItemGroup>
     <Compile Include="testserver.fs" />
-    <Content Include="portfolio.deps.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="stressing.data.fs" />
     <Compile Include="stressing.fs" />
     <Compile Include="decoding.data.fs" />
@@ -48,6 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="NAudio" Version="1.9.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
