@@ -17,3 +17,4 @@ export interface playablechunk {
 }
 
 export const dontplay = -1
+export const audiocontextlatency = 0.020

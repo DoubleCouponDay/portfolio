@@ -1,4 +1,4 @@
-import { playablebuffercount, streamresponse, playablechunk, dontplay } from '../services/streaming.data'
+import { playablebuffercount, streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
 import { isnullorundefined } from '../utility/utilities'
 import { musicvolume } from './audio.data'
 import { EventEmitter } from '@angular/core'
@@ -15,7 +15,7 @@ export class musicplayer {
     private fullydownloaded = false
     private shouldplay = false
 
-    public songfinished = new EventEmitter<void>()
+    public songfinished = new EventEmitter<void>(true)
     
     constructor() {
         this._context = new AudioContext()    
@@ -81,6 +81,7 @@ export class musicplayer {
         if(this.currentplayingindex >= this.queue.length &&
             this.fullydownloaded === true) {
             this.currentplayingindex = 0
+            this.stop()
             this.songfinished.emit()
         }
     }
@@ -123,7 +124,7 @@ export class musicplayer {
             return
         }
         let previouschunk = this.queue[this.queue.length - 2]
-        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration
+        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration - audiocontextlatency
         item.timetoplay = newtimetoplay
 
         try {
