@@ -96,7 +96,7 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
     this.castbutton = <SVGElement>this.button.nativeElement
     this.highlighter = new mousehighlighter(this.castbutton.style.fill)
-    this.streamer.songfinished.subscribe(this.onpause())
+    this.streamer.songfinished.subscribe(this.onpause)
 
     this.changer.reattach()
     super.ngAfterViewInit()
