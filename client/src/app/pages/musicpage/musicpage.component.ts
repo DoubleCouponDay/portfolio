@@ -89,25 +89,26 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.castplay.style.opacity = invisible
 
     this.castpause = <SVGElement>this.pauseicon.nativeElement
+    this.castpause.style.opacity = visible
 
     this.castfilter = <SVGElement>this.buttonfilter.nativeElement
     this.castfilter.style.filter = buttonshadow
 
     this.castbutton = <SVGElement>this.button.nativeElement
-
     this.highlighter = new mousehighlighter(this.castbutton.style.fill)
+    this.streamer.songfinished.subscribe(this.onpause())
 
     this.changer.reattach()
     super.ngAfterViewInit()
+    console.log("playicon's opacity: " + this.castplay.style.opacity)
+    console.log("pauseicons's opacity: " + this.castpause.style.opacity)
   }
 
   public onmouseover = () => {
-    console.log("highlighted")
     this.highlighter.applyhighlight(this.castbutton)
   }
 
   public onmouseleave = () => {
-    console.log("not highlighted")
     this.highlighter.resethighlight()
   }
 
@@ -126,6 +127,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     }
     this.pagealreadydisplaying = true
     this.contentsvg.style.opacity = visible
+    console.log("playicon's opacity: " + this.castplay.style.opacity)
+    console.log("pauseicons's opacity: " + this.castpause.style.opacity)
   }
 
   public ontoggle = () => this.toggledsubject.next()
@@ -140,8 +143,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   private onplay = () => {
     this.changer.detach()
-    this.castplay.style.opacity = invisible
-    this.castpause.style.opacity = visible    
+    this.castpause.style.opacity = visible   
+    this.castplay.style.opacity = invisible     
     this.changer.reattach()
     this.streamer.restart()
   }

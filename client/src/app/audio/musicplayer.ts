@@ -1,6 +1,7 @@
 import { playablebuffercount, streamresponse, playablechunk, dontplay } from '../services/streaming.data'
 import { isnullorundefined } from '../utility/utilities'
 import { musicvolume } from './audio.data'
+import { EventEmitter } from '@angular/core'
 
 export class musicplayer {
     private _context: AudioContext
@@ -13,6 +14,8 @@ export class musicplayer {
 
     private fullydownloaded = false
     private shouldplay = false
+
+    public songfinished = new EventEmitter<void>()
     
     constructor() {
         this._context = new AudioContext()    
@@ -78,6 +81,7 @@ export class musicplayer {
         if(this.currentplayingindex >= this.queue.length &&
             this.fullydownloaded === true) {
             this.currentplayingindex = 0
+            this.songfinished.emit()
         }
     }
 

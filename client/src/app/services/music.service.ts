@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, EventEmitter } from '@angular/core';
 import { baseroute } from '../../environments/api'
 import { HubConnection, HubConnectionBuilder, LogLevel, IStreamSubscriber, HttpTransportType, ISubscription, HubConnectionState } from '@aspnet/signalr'
 import { streamhublabel, randomdeserttrackroute } from 'src/environments/environment.data';
@@ -25,7 +25,8 @@ export class MusicService implements OnDestroy {
 
   /*audio */
   private _musicplayer = new musicplayer()
-  public get musicplayer() { return this._musicplayer }
+
+  public songfinished = this._musicplayer.songfinished
 
   constructor(loading: LoadingService) {
     this.defaultsubscriber = {
