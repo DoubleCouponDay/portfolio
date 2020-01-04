@@ -100,8 +100,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
     this.changer.reattach()
     super.ngAfterViewInit()
-    console.log("playicon's opacity: " + this.castplay.style.opacity)
-    console.log("pauseicons's opacity: " + this.castpause.style.opacity)
   }
 
   public onmouseover = () => {
@@ -127,8 +125,6 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     }
     this.pagealreadydisplaying = true
     this.contentsvg.style.opacity = visible
-    console.log("playicon's opacity: " + this.castplay.style.opacity)
-    console.log("pauseicons's opacity: " + this.castpause.style.opacity)
   }
 
   public ontoggle = () => this.toggledsubject.next()
