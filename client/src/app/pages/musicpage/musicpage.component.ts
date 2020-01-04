@@ -15,6 +15,8 @@ import { isnullorundefined } from 'src/app/utility/utilities';
 import { MusicService } from 'src/app/services/music.service';
 import { Observable, Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
+import { mouseservice } from 'src/app/services/mouse.service';
+import { mousehighlighter } from 'src/app/animations/mousehighlighter';
 
 const invisible = "0"
 const visible = "1"
@@ -44,6 +46,10 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
   buttonfilter: ElementRef
   private castfilter: SVGElement
 
+  @ViewChild("button", elementrefargs)
+  button: ElementRef  
+  private castbutton: SVGElement
+
   private pagealreadydisplaying = false
   private sink = new SubSink()
 
@@ -51,6 +57,8 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
 
   private toggledsubject = new Subject<void>()
   private wastoggled = this.toggledsubject.asObservable()  
+
+  private highlighter: mousehighlighter
 
   constructor(paging: PagingService, private streamer: MusicService, private changer: ChangeDetectorRef) {
     super()
@@ -81,10 +89,26 @@ export class MusicpageComponent extends pagecomponent implements AfterViewInit, 
     this.castplay.style.opacity = invisible
 
     this.castpause = <SVGElement>this.pauseicon.nativeElement
+
     this.castfilter = <SVGElement>this.buttonfilter.nativeElement
     this.castfilter.style.filter = buttonshadow
+
+    this.castbutton = <SVGElement>this.button.nativeElement
+
+    this.highlighter = new mousehighlighter(this.castbutton.style.fill)
+
     this.changer.reattach()
     super.ngAfterViewInit()
+  }
+
+  public onmouseover = () => {
+    console.log("highlighted")
+    this.highlighter.applyhighlight(this.castbutton)
+  }
+
+  public onmouseleave = () => {
+    console.log("not highlighted")
+    this.highlighter.resethighlight()
   }
 
   private onpagechange = (pagenumber: number) => {
