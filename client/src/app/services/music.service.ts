@@ -81,6 +81,7 @@ export class MusicService implements OnDestroy {
 
   private onerror = (problem: Error) => {
     console.error(problem)
+    this.songfinished.emit()
     this.ngOnDestroy()
   }
 
