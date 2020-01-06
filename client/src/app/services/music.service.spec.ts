@@ -29,8 +29,7 @@ describe('musicservice', () => {
     });
 
     it('should create a service', () => {        
-        expect(service).toBeTruthy()
-        return service
+        expect(service).toBeTruthy()        
     })
 
     it('should negotiate a transport', async (done: DoneFn) => {

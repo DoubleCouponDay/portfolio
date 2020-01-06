@@ -1,7 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = function (config: any) {
   config.set({    
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -28,6 +28,11 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ["Chrome"],
     singleRun: false,
-    restartOnFileChange: true
+    restartOnFileChange: true,
+    files: [
+      "./src/assets/sample1.mp3",
+      "./src/assets/sample2.mp3",
+      "./src/assets/sample3.mp3"
+    ]
   });
 };

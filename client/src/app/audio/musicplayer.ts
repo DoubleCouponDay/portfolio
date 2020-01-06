@@ -11,7 +11,9 @@ export class musicplayer implements OnDestroy {
     private _context: AudioContext
 
     private queue: Array<playablechunk> = []
+
     private currentplayingindex = 0
+    public get playindex() { return this.currentplayingindex }
 
     private _musicisplaying = false
     public get musicisplaying() { return this._musicisplaying }
