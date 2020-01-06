@@ -30,7 +30,7 @@ export class MusicService implements OnDestroy {
 
   constructor(loading: LoadingService) {
     this.defaultsubscriber = {
-      next: this._musicplayer.onresponse,
+      next: this._musicplayer.onchunk,
       error: this.onerror,
       complete: this.onfullydownloaded
     }
