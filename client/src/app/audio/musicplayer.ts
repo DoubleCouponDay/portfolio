@@ -1,9 +1,13 @@
-import { playablebuffercount, streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
-import { isnullorundefined } from '../utility/utilities'
+import { streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
 import { musicvolume } from './audio.data'
-import { EventEmitter } from '@angular/core'
+import { EventEmitter, OnDestroy } from '@angular/core'
 
-export class musicplayer {
+export class musicplayer implements OnDestroy {
+    
+    ngOnDestroy(): void {
+        this.songfinished.unsubscribe()
+    }
+
     private _context: AudioContext
 
     private queue: Array<playablechunk> = []
@@ -22,8 +26,8 @@ export class musicplayer {
         this._context.suspend()    
     }
 
-    public onresponse = async (response: streamresponse) => {
-        let integers = new Uint8Array(response.chunk)
+    public onchunk = async (response: streamresponse) => {
+        let integers = new Uint8Array( response.chunk)
         let newbuffer = await this._context.decodeAudioData(integers.buffer)            
         let newplayable = this.processbuffer(newbuffer)
         this.queue.push(newplayable)
