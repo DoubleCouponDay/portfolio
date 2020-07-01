@@ -12,9 +12,8 @@ export const millisecond = 1000
 
 export interface playablechunk {
     chunk: AudioBufferSourceNode    
-    volume: GainNode
     timetoplay: number
 }
 
 export const dontplay = -1
-export const audiocontextlatency = 0.020
+export const audiocontextlatency = 0.02

@@ -1,4 +1,6 @@
 
+export const rampuptime = 0.02
+export const rampdowntime = 0.02
 
 export const volumedecrement = 0.01
 export const volumeincrement = volumedecrement * 2

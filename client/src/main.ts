@@ -1,16 +1,16 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from '@angular/core'
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
-import { ismobile } from './app/utility/utilities';
+import { AppModule } from './app/app.module'
+import { environment } from './environments/environment'
+import { ismobile } from './app/utility/utilities'
 
 if (environment.production) {
-  enableProdMode();
+  enableProdMode()
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+  .catch(err => console.error(err))
 
 if(ismobile() === true) {
   let newstyle = document.createElement('style')
@@ -19,8 +19,8 @@ if(ismobile() === true) {
 
   stylesheet.insertRule(`
     html, body {
-      overflow-y: auto;
-      overflow-x: visible;
+      overflow-y: auto
+      overflow-x: visible
     }
   `)  
 }

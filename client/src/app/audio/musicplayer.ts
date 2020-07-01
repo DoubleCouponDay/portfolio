@@ -1,5 +1,5 @@
 import { streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
-import { musicvolume } from './audio.data'
+import { musicvolume, rampuptime, rampdowntime } from './audio.data'
 import { EventEmitter, OnDestroy } from '@angular/core'
 
 export class musicplayer implements OnDestroy {
@@ -9,6 +9,7 @@ export class musicplayer implements OnDestroy {
     }
 
     private _context: AudioContext
+    private _gainnode: GainNode
 
     private queue: Array<playablechunk> = []
 
@@ -25,7 +26,9 @@ export class musicplayer implements OnDestroy {
     
     constructor() {
         this._context = new AudioContext()    
-        this._context.suspend()    
+        this._context.suspend()
+        this._gainnode = this._context.createGain()
+        this._gainnode.gain.value = 0
     }
 
     public onchunk = async (response: streamresponse) => {
@@ -50,10 +53,10 @@ export class musicplayer implements OnDestroy {
     public toggleplayback = (input: boolean) => {
         this.shouldplay = input
 
-        if(this.shouldplay === true) {            
+        if(this.shouldplay === true) {
             this.playexistingchunks()
         }
-        
+
         else {            
             this.stop()
         }
@@ -66,14 +69,11 @@ export class musicplayer implements OnDestroy {
     private processbuffer = (buffer: AudioBuffer): playablechunk => {
         let source = this._context.createBufferSource()
         source.buffer = buffer
-        let volume = this.normalizevolume(source)
-        volume.connect(this._context.destination)
 
         let newplayable: playablechunk = {
             chunk: source,
-            timetoplay: dontplay,
-            volume: volume
-        }        
+            timetoplay: dontplay
+        }
         source.onended = this.onnodeended
         return newplayable
     }
@@ -92,11 +92,15 @@ export class musicplayer implements OnDestroy {
         }
     }
 
-    private normalizevolume = (buffer: AudioBufferSourceNode): GainNode => {
-        let newvolume = this._context.createGain()
-        newvolume.gain.value = musicvolume
-        buffer.connect(newvolume)
-        return newvolume        
+    private fadeinandout = (chunk: AudioBufferSourceNode, bufferstarttime: number, bufferendtime: number): void => {        
+        this._gainnode.gain.setValueAtTime(0, bufferstarttime)
+        let volumeuptime = bufferstarttime + rampuptime
+        this._gainnode.gain.linearRampToValueAtTime(musicvolume, volumeuptime)
+        let volumedowntime = bufferendtime - rampdowntime
+        this._gainnode.gain.linearRampToValueAtTime(musicvolume, volumedowntime)
+        this._gainnode.gain.linearRampToValueAtTime(0, bufferendtime)
+        let faded = chunk.connect(this._gainnode)
+        faded.connect(this._context.destination)
     }
 
     private playexistingchunks = () => {
@@ -111,17 +115,18 @@ export class musicplayer implements OnDestroy {
         this._context.resume()
         let relativetimesum = this._context.currentTime
 
-        for(let i = this.currentplayingindex; i < this.queue.length; i++) {
-            this.queue[i] = this.processbuffer(this.queue[i].chunk.buffer)                
-            let item = this.queue[i]
-            item.timetoplay = relativetimesum   
+        for(let index = this.currentplayingindex; index < this.queue.length; index++) {
+            this.queue[index] = this.processbuffer(this.queue[index].chunk.buffer)                
+            let nextchunk = this.queue[index]
+            nextchunk.timetoplay = relativetimesum
+            this.fadeinandout(nextchunk.chunk, nextchunk.timetoplay, nextchunk.timetoplay + nextchunk.chunk.buffer.duration)
             
             try {
-                item.chunk.start(item.timetoplay)            
+                nextchunk.chunk.start(nextchunk.timetoplay)            
             }
             
             catch(e) {}
-            relativetimesum += item.chunk.buffer.duration
+            relativetimesum += nextchunk.chunk.buffer.duration
         }        
     }
 
@@ -130,8 +135,9 @@ export class musicplayer implements OnDestroy {
             return
         }
         let previouschunk = this.queue[this.queue.length - 2]
-        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration - audiocontextlatency
+        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration
         item.timetoplay = newtimetoplay
+        this.fadeinandout(item.chunk, item.timetoplay, item.timetoplay + item.chunk.buffer.duration)
 
         try {
             item.chunk.start(item.timetoplay)
