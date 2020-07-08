@@ -94,6 +94,6 @@ export class MusicService implements OnDestroy {
     this.weirdsubscription.dispose()
     this._connection.stop()
     this.subs.unsubscribe()    
-    this._musicplayer.ngOnDestroy()
+    this._musicplayer.dispose()
   }
 }

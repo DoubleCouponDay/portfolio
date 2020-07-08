@@ -18,7 +18,7 @@ import { PagingService } from 'src/app/services/paging.service';
 import { touchevents } from 'src/app/touch/touchevents';
 import { fadeout, togglefade } from 'src/app/animations/fade';
 import { gratingsoundaddress, effectvolume } from 'src/app/audio/audio.data';
-import { elementrefargs } from 'src/app/utility/utility.data';
+
 
 const shadowcheckinterval = smoothtime / 5 
 const shadowfadetime = 300
@@ -28,13 +28,13 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
     box: ElementRef
 
-    @ViewChild(boxgroupname, elementrefargs) 
+    @ViewChild(boxgroupname, {static: true}) 
     boxgroup: ElementRef
 
-    @ViewChild(topsidename, elementrefargs)
+    @ViewChild(topsidename, {static: true})
     boxtopside: ElementRef
 
-    @ViewChild(`${boxname}${wordname}`, elementrefargs)
+    @ViewChild(`${boxname}${wordname}`, {static: true})
     boxword: ElementRef
     
     private castbox: SVGElement 
@@ -327,6 +327,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
   
     ngOnDestroy() {
       this.sink.unsubscribe()
-      this.touches.ngOnDestroy()
+      this.touches.dispose()
     }    
 }

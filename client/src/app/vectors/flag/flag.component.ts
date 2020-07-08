@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef, Output, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { elementrefargs } from 'src/app/utility/utility.data';
+
 import { slidestate, animatetime, gettransformstyle, topstatevalue, slidedistance, botstatevalue } 
   from 'src/app/animations/slide';
 import { flagsegment } from './flag.data';
@@ -20,7 +20,7 @@ const leftspacing = 20
 })
 export class FlagComponent implements OnInit, OnDestroy {
 
-  @ViewChild('cloth', elementrefargs)
+  @ViewChild('cloth', {static: true})
   cloth: ElementRef
   private castcloth: HTMLElement
 

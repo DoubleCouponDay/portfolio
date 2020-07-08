@@ -7,7 +7,7 @@ import { AnimationBuilder, AnimationFactory } from '@angular/animations';
 import { togglefade } from 'src/app/animations/fade';
 import { resetmouse } from 'src/app/animations/mousechanger';
 import { contentidentifier } from '../page.data'
-import { elementrefargs } from 'src/app/utility/utility.data';
+
 import { LoadingService, loadstate } from 'src/app/services/loading.service';
 import { HttpEvent, HttpEventType, HttpUserEvent, HttpResponse } from '@angular/common/http';
 import { api } from 'src/environments/api';
@@ -30,23 +30,23 @@ const buttonshadow = "url(#suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc)"
 })
 export class MusicpageComponent extends pagecomponent implements AfterViewInit, OnDestroy, page {
 
-  @ViewChild(contentidentifier, elementrefargs)
+  @ViewChild(contentidentifier, {static: true})
   content: ElementRef
   private contentsvg: SVGElement
 
-  @ViewChild("pauseicon", elementrefargs)
+  @ViewChild("pauseicon", {static: true})
   pauseicon: ElementRef
   private castpause: SVGElement
 
-  @ViewChild("playicon", elementrefargs)
+  @ViewChild("playicon", {static: true})
   playicon: ElementRef
   private castplay: SVGElement
 
-  @ViewChild("buttonfilter", elementrefargs)
+  @ViewChild("buttonfilter", {static: true})
   buttonfilter: ElementRef
   private castfilter: SVGElement
 
-  @ViewChild("button", elementrefargs)
+  @ViewChild("button", {static: true})
   button: ElementRef  
   private castbutton: SVGElement
 

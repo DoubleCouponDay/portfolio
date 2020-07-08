@@ -9,5 +9,5 @@ server
         nuget package manager extension
 
 client
-    angular watch?
+    ng serve
 

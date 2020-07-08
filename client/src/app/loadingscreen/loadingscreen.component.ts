@@ -3,7 +3,7 @@ import { touchevents } from '../touch/touchevents';
 import { LoadingService, loadstate } from '../services/loading.service';
 import { Subscription } from 'rxjs';
 import { scrolldisabler } from '../utility/scrolldisabler';
-import { elementrefargs } from '../utility/utility.data';
+
 import { fadein, fadeout, togglefade } from '../animations/fade';
 import { AnimationBuilder, NoopAnimationPlayer, AnimationPlayer, AnimationFactory } from '@angular/animations';
 import { inputopacityname, inputtimename } from '../animations/animation.data';
@@ -24,7 +24,7 @@ const fixedloadtime = 4000
 export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   private touches: touchevents
 
-  @ViewChild('ballcontainer', elementrefargs) ballcontainer: ElementRef
+  @ViewChild('ballcontainer', {static: true}) ballcontainer: ElementRef
 
   @ViewChild('circle') circle: ElementRef
   private nativecircle: HTMLElement
@@ -105,5 +105,6 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.touches.dispose()
   }
 }

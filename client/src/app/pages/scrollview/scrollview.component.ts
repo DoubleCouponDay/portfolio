@@ -130,6 +130,6 @@ export class ScrollviewComponent implements OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.sink.unsubscribe()
-    this.touches.ngOnDestroy()
+    this.touches.dispose()
   }
 }

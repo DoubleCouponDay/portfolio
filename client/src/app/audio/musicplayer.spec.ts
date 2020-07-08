@@ -21,7 +21,7 @@ describe("music player", () => {
     })
 
     afterAll(() => {
-        subject.ngOnDestroy()
+        subject.dispose()
     })
 
     let setupplayer = () => {

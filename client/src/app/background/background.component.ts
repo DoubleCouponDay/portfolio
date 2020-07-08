@@ -2,7 +2,7 @@ import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit, Afte
 import { environment } from '../../environments/environment'
 import { scrolldisabler } from '../utility/scrolldisabler';
 import { LoadingService, loadstate } from '../services/loading.service';
-import { elementrefargs } from '../utility/utility.data';
+
 import { isAppledevice } from '../utility/utilities';
 import { pngbackground, webpbackground } from './background.data';
 

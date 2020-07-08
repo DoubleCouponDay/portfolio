@@ -1,10 +1,8 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
-import { OnDestroy, Injectable } from '@angular/core';
 import { passiveeventargs } from '../utility/utilities';
 
 
-@Injectable()
-export class touchevents implements OnDestroy {
+export class touchevents {
     private elements: SVGElement[]
 
     private currentY = 0
@@ -81,7 +79,7 @@ export class touchevents implements OnDestroy {
         })        
     }
 
-    ngOnDestroy(): void {
+    dispose() {
         this.elements.forEach((item) => {
             item.removeEventListener(touchstartname, this.ontouchoverride)
             item.removeEventListener(touchmovename, this.onmoveoverride)
