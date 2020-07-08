@@ -1,0 +1,11 @@
+server
+    dotnet run --project ./server/portfolio
+
+    installing packages in vscode
+        nuget gallery extension
+
+        nuget package manager extension
+
+client
+    angular watch?
+
