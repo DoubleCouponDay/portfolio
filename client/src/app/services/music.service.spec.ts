@@ -2,9 +2,6 @@ import { TestBed, tick } from '@angular/core/testing';
 import { MusicService } from './music.service';
 import { HttpClientModule } from '@angular/common/http';
 import { SubSink } from 'subsink';
-import {strictEqual, notStrictEqual} from 'assert'
-import { isnullorundefined } from '../utility/utilities';
-import { assertNotNull } from '@angular/compiler/src/output/output_ast';
 import { IStreamSubscriber, HubConnectionState } from '@aspnet/signalr';
 import { LoadingService } from './loading.service';
 import { streamresponse } from './streaming.data';
