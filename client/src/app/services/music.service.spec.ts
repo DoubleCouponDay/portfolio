@@ -32,14 +32,14 @@ describe('musicservice', () => {
         expect(service).toBeTruthy()        
     })
 
-    it('should negotiate a transport', async (done: DoneFn) => {
+    it('should negotiate a transport', async (done) => {
         await service.startconnection()
         expect(service.connection.state === HubConnectionState.Connected).toBeTruthy()
         done()
     }, streamtimeout)
 
     /** only one streaming test can succeed at a time! the server just runs out of memory. */
-    it('should stream music', async (done: DoneFn) => {
+    it('should stream music', async (done) => {
         let subscriber: IStreamSubscriber<streamresponse> = {
             next: (chunk: streamresponse) => {
                 expect(chunk.chunk.length).toBeGreaterThan(0)

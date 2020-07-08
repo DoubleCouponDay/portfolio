@@ -7,7 +7,7 @@ describe("music player", () => {
     let samples = new Array<number[]>()
     let subject: musicplayer
 
-    beforeAll(async (done: DoneFn) => {
+    beforeAll(async (done: any) => {
         for(let i = 1; i <= 3; i++) {
             let path = "assets/" + samplespath + `${i}` + ".mp3"
             let asset = await fetch(path)
@@ -49,14 +49,14 @@ describe("music player", () => {
         })
     }
 
-    it("plays multiple buffers seamlessly", async (done: DoneFn) => {
+    it("plays multiple buffers seamlessly", async (done) => {
         subject.toggleplayback(true)
         await waitasecond()
         expect(subject.musicisplaying).toBeTruthy() 
         done()
     })
 
-    it("can stop at anytime", async (done: DoneFn) => {
+    it("can stop at anytime", async (done) => {
         subject.toggleplayback(true)
         await waitasecond()
         subject.toggleplayback(false)
@@ -64,7 +64,7 @@ describe("music player", () => {
         done()
     })
 
-    it("restarts at the same position where it stopped", async (done: DoneFn) => {
+    it("restarts at the same position where it stopped", async (done) => {
         subject.toggleplayback(true)
         await waitasecond()
         let currentindex = subject.playindex
@@ -75,7 +75,7 @@ describe("music player", () => {
         done()
     })
 
-    it("notifies when song has finished", async (done: DoneFn) => {
+    it("notifies when song has finished", async (done) => {
         subject.toggleplayback(true)
 
         subject.songfinished.subscribe(() => {
@@ -84,7 +84,7 @@ describe("music player", () => {
         })
     })
 
-    it("restarts from the beginning after finishing", async (done: DoneFn) => {
+    it("restarts from the beginning after finishing", async (done) => {
         subject.toggleplayback(true)
 
         subject.songfinished.subscribe(async () => {

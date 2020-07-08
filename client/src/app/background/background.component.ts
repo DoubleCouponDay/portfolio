@@ -1,6 +1,4 @@
 import { Component, OnInit, Output, ViewChild, EventEmitter, AfterViewInit, AfterViewChecked, ElementRef } from '@angular/core';
-import { environment } from '../../environments/environment'
-import { scrolldisabler } from '../utility/scrolldisabler';
 import { LoadingService, loadstate } from '../services/loading.service';
 
 import { isAppledevice } from '../utility/utilities';
@@ -30,12 +28,14 @@ export class backgroundcomponent implements OnInit {
   ngOnInit(): void {
   }  
 
-  onimageloaded = (event: ProgressEvent) => {
+  onimageloaded = (event: Event) => {
     this.load.emitloadedevent(loadstate.waitingforpress)      
   }
 
-  onloadprogress = (event: ProgressEvent) => {
-    if(event.loaded / event.total >= halfloaded) {
+  onloadprogress = (event: Event) => {
+    let castevent = <ProgressEvent>event
+
+    if(castevent.loaded / castevent.total >= halfloaded) {
       this.load.emitloadedevent(loadstate.waitingforpress)
     }
   }
