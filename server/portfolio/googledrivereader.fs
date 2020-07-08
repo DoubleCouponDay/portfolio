@@ -141,8 +141,15 @@ type public googledrivereader private() =
             let entire = Encoding.UTF8.GetString(download.ToArray())
             download.Dispose()
 
+            let lineending:string = 
+                if entire.IndexOf("\r\n") <> -1 then 
+                    "\r\n"
+
+                else 
+                    Environment.NewLine                   
+
             let output = 
-                entire.Split(Environment.NewLine)
+                entire.Split(lineending)
                     .Where(fun currentline -> currentline <> "")
                     .Select(fun currentline -> 
                         currentline.Split(backslash)
