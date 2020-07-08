@@ -35,6 +35,9 @@ let backslash = @"\"
 [<Literal>]
 let myfields = "files(*)"
 
+[<Literal>]
+let windowsline = "\r\n"
+
 type secrets = JsonProvider<secretspath>
 let reader = secrets.Load(secretspath)
 let Scopes = [| DriveService.Scope.DriveReadonly |] 
@@ -142,8 +145,8 @@ type public googledrivereader private() =
             download.Dispose()
 
             let lineending:string = 
-                if entire.IndexOf("\r\n") <> -1 then 
-                    "\r\n"
+                if entire.IndexOf(windowsline) <> -1 then 
+                    windowsline
 
                 else 
                     Environment.NewLine                   
