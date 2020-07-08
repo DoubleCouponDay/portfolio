@@ -11,7 +11,6 @@ open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Hosting
 
 open Microsoft.AspNetCore.Cors.Infrastructure
-open Microsoft.AspNetCore.SignalR
 
 open portfolio.data
 open portfolio.controllers.audio
@@ -79,7 +78,6 @@ type Startup private () =
             .UseStaticFiles() 
             .UseCors(corspolicyname)
             .UseRouting() 
-            .UseHttpsRedirection() 
             .UseRouting() |> ignore
         
         app.UseEndpoints(fun routing ->
