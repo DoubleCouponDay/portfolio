@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
     <GenerateProgramFile>false</GenerateProgramFile>
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="testserver.fs" />
-    <Compile Include="stressing.data.fs" />
-    <Compile Include="stressing.fs" />
-    <Compile Include="decoding.data.fs" />
+    <Compile Include="testserver.fs"/>
+    <Compile Include="stressing.data.fs"/>
+    <Compile Include="stressing.fs"/>
+    <Compile Include="decoding.data.fs"/>
+    <Compile Include="drivereading.fs"/>
+    <Compile Include="decoding.fs"/>
+    <Compile Include="playing.fs"/>
     <None Include="assets\corrupted.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -22,45 +22,32 @@
     <None Include="assets\sample.m4a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="assets\sample.flac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="portfolio-ffdfea565994.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="assets\sample.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="assets\sample.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="assets\sample.flac">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Compile Include="drivereading.fs" />
-    <Compile Include="decoding.fs" />
-    <Compile Include="playing.fs" />
     <Content Include="secrets.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <None Include="portfolio-ffdfea565994.p12">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="NAudio" Version="1.9.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.5"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1"/>
+    <PackageReference Include="NAudio" Version="1.10.0"/>
+    <PackageReference Include="xunit" Version="2.4.1"/>
+    <PackageReference Include="FSharp.Core" Version="4.7.2"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\portfolio\portfolio.fsproj" />
+    <ProjectReference Include="..\portfolio\portfolio.fsproj"/>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.7.0" />
-  </ItemGroup>
-
 </Project>
