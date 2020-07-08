@@ -1,7 +1,8 @@
 import { streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
 import { musicvolume, rampuptime, rampdowntime } from './audio.data'
-import { EventEmitter, OnDestroy } from '@angular/core'
+import { EventEmitter, OnDestroy, Injectable } from '@angular/core'
 
+@Injectable()
 export class musicplayer implements OnDestroy {
     
     ngOnDestroy(): void {

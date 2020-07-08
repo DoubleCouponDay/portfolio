@@ -1,8 +1,9 @@
 import { touchstartname, touchmovename, touchendname, mousedownname, mouseovername, mouseupname } from './touch.data';
-import { OnDestroy } from '@angular/core';
+import { OnDestroy, Injectable } from '@angular/core';
 import { passiveeventargs } from '../utility/utilities';
 
 
+@Injectable()
 export class touchevents implements OnDestroy {
     private elements: SVGElement[]
 
