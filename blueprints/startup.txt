@@ -1,4 +1,6 @@
 server
+    dotnet build ./server/portfolio/portfolio.fsproj
+
     dotnet run --project ./server/portfolio
 
     installing packages in vscode
