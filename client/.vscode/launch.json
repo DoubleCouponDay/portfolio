@@ -5,13 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ng serve",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "firefox",
+            "url": "http://localhost/4200",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "start"
+        },
+        {
+            "name": "chrome",
             "type": "chrome",
             "request": "launch",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "start",
-            
+            "preLaunchTask": "start"            
         }
     ]
 }
