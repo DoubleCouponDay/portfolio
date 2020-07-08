@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy, Directive } from '@angular/core';
 import { scalename, translatename, pixelunit, inputtimename, inputopacityname } from 'src/app/animations/animation.data';
 import { nooccurrence } from 'src/app/global.data';
 import { minboxtranslation, biggestshadow, maxboxtranslation, smallestshadow, shadowname, boxname, defaultfill, wordname, pathname, boxgroupname, topsidename } from './blocks.data';
@@ -23,6 +23,7 @@ import { elementrefargs } from 'src/app/utility/utility.data';
 const shadowcheckinterval = smoothtime / 5 
 const shadowfadetime = 300
 
+@Directive()
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
     box: ElementRef

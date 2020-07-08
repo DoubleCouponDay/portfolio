@@ -26,10 +26,10 @@ export class LoadingscreenComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('ballcontainer', elementrefargs) ballcontainer: ElementRef
 
-  @ViewChild('circle', {static: false}) circle: ElementRef
+  @ViewChild('circle') circle: ElementRef
   private nativecircle: HTMLElement
 
-  @ViewChild('button', {static: false}) button: ElementRef
+  @ViewChild('button') button: ElementRef
 
   @Output()
   public shouldpress = false

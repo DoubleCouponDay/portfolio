@@ -1,6 +1,6 @@
 import { applytransformtoeachnode } from '../elementtransformer';
 import { translatename, pixelunit } from '../animations/animation.data';
-import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ViewChild, ElementRef, AfterViewInit, Directive } from '@angular/core';
 import { elementrefargs } from '../utility/utility.data';
 
 export const firstpagenumber = 1
@@ -11,6 +11,7 @@ export const pagename = 'page'
 export const scrollitemclass = '.scroll-item'
 export const contentidentifier = 'content'
 
+@Directive()
 export abstract class pagecomponent implements AfterViewInit  {
     private currentpageposition: number = 0
 
