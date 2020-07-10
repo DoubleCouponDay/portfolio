@@ -61,7 +61,7 @@ type Startup private () =
                 ()                    
             )
             .AddSignalR(fun options -> 
-                options.EnableDetailedErrors <- new Nullable<bool>(true)
+                ()
             )
             .AddNewtonsoftJsonProtocol(fun options -> 
                 options.PayloadSerializerSettings.Error <- handleserialisationproblem

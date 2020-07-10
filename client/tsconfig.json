@@ -20,11 +20,17 @@
       "dom"
     ],
     "strict": true,
-    "strictNullChecks": false
+    "strictNullChecks": false,
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictTemplates": true
-  },  
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
 }
