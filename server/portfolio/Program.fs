@@ -15,6 +15,9 @@ module Program =
 
     let CreateWebHostBuilder args =
         WebHost.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(fun options -> 
+                options.AddJsonFile("appsettings.json") |> ignore
+            )
             .UseStartup<Startup>();
 
     [<EntryPoint>]
