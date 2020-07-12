@@ -19,6 +19,7 @@ open NAudio.Vorbis
 open decoding
 open Xunit.Abstractions
 
+///only works on windows
 type public when_an_audio_file_is_played(logger: ITestOutputHelper) =
     let decodingtests = new when_an_audio_file_is_decoded(logger)
 

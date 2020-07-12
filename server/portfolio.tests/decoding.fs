@@ -21,6 +21,7 @@ open portfolio.googledrivereader
 open Google.Apis.Drive.v3
 open Xunit.Abstractions
 open NVorbis
+open NLayer.NAudioSupport
 
 type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
     let context = new audiodecoder()    
@@ -100,7 +101,10 @@ type public when_an_audio_file_is_decoded(logger: ITestOutputHelper) =
         subject
 
     member private this.onmp3chunk(stream: MemoryStream) =
-        use possiblefile = new Mp3FileReader(stream)
+        let builder = new Mp3FileReader.FrameDecompressorBuilder(fun options ->
+            new Mp3FrameDecompressor(options) :> IMp3FrameDecompressor
+        )
+        use possiblefile = new Mp3FileReader(stream, builder)
         
         if possiblefile.CanRead = false then
             failwith "the received chunk file cant be read!"

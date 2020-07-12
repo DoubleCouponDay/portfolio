@@ -3,33 +3,18 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <TypeScriptTarget>ES2019</TypeScriptTarget>
-    <TypeScriptJSXEmit>React</TypeScriptJSXEmit>
-    <TypeScriptModuleKind>None</TypeScriptModuleKind>
-    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
-    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
-    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
-    <TypeScriptOutFile/>
-    <TypeScriptOutDir/>
-    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
-    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
-    <TypeScriptSourceMap>True</TypeScriptSourceMap>
-    <TypeScriptMapRoot/>
-    <TypeScriptSourceRoot/>
-  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CUETools.Codecs" Version="1.0.2"/>
     <PackageReference Include="CUETools.Codecs.FLAKE" Version="1.0.5"/>
     <PackageReference Include="FSharp.Data" Version="3.3.3"/>
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.47.0.1995"/>
     <PackageReference Include="Microsoft.ApplicationInsights.PerfCounterCollector" Version="2.12.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.5"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.5"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0"/>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="3.1.5"/>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.1.5"/>
     <PackageReference Include="NAudio" Version="1.10.0"/>
     <PackageReference Include="NAudio.Flac" Version="1.0.5702.29018"/>
     <PackageReference Include="NAudio.Vorbis" Version="1.2.0"/>
@@ -38,6 +23,8 @@
     <PackageReference Include="System.IO" Version="4.3.0"/>
     <PackageReference Include="System.Runtime.Caching" Version="4.7.0"/>
     <PackageReference Include="FSharp.Core" Version="4.7.2"/>
+    <PackageReference Include="NLayer.NAudioSupport" Version="1.1.0"/>
+    <PackageReference Include="NLayer" Version="1.13.0"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="audio.data.fs"/>
@@ -63,13 +50,13 @@
     <Compile Include="Controllers\home.fs"/>
     <Compile Include="Startup.fs"/>
     <Compile Include="Program.fs"/>
-    <None Include="portfolio-ffdfea565994.p12">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Update="secrets.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Update="portfolio-ffdfea565994.p12">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

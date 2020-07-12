@@ -1,14 +1,17 @@
 ﻿namespace portfolio.bridgedecoders
 
-open NAudio.MediaFoundation
 open portfolio.models
 open NAudio.Wave
 open System
 open System.IO
+open NLayer.NAudioSupport
 
 type public universalmp3(track: audiofile) =
     inherit universalreader(track)
-    let reader = new Mp3FileReader(track.stream)
+    let builder = new Mp3FileReader.FrameDecompressorBuilder(fun options ->
+        new Mp3FrameDecompressor(options) :> IMp3FrameDecompressor
+    )
+    let reader = new Mp3FileReader(track.stream, builder)
 
     do
         if reader.CanRead = false then
