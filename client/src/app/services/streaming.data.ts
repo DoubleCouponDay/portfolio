@@ -13,6 +13,7 @@ export const millisecond = 1000
 export interface playablechunk {
     chunk: AudioBufferSourceNode    
     timetoplay: number
+    timetoend: number
 }
 
 export const dontplay = -1

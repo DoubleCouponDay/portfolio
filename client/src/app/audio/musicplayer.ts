@@ -1,5 +1,5 @@
 import { streamresponse, playablechunk, dontplay, audiocontextlatency } from '../services/streaming.data'
-import { musicvolume, rampuptime, rampdowntime } from './audio.data'
+import { musicvolume, faderamptime } from './audio.data'
 import { EventEmitter, OnDestroy, Injectable } from '@angular/core'
 
 export class musicplayer {
@@ -22,6 +22,8 @@ export class musicplayer {
     private fullydownloaded = false
     private shouldplay = false
 
+    private _isdownloading = false
+
     public songfinished = new EventEmitter<void>(true)
     
     constructor() {
@@ -32,6 +34,10 @@ export class musicplayer {
     }
 
     public onchunk = async (response: streamresponse) => {
+        if(this._isdownloading === false) {
+            console.log('starting download...')
+            this._isdownloading = true
+        }
         let integers = new Uint8Array( response.chunk)
         let newbuffer = await this._context.decodeAudioData(integers.buffer)            
         let newplayable = this.processbuffer(newbuffer)
@@ -72,7 +78,8 @@ export class musicplayer {
 
         let newplayable: playablechunk = {
             chunk: source,
-            timetoplay: dontplay
+            timetoplay: dontplay,
+            timetoend: dontplay
         }
         source.onended = this.onnodeended
         return newplayable
@@ -94,9 +101,9 @@ export class musicplayer {
 
     private fadeinandout = (chunk: AudioBufferSourceNode, bufferstarttime: number, bufferendtime: number): void => {        
         this._gainnode.gain.setValueAtTime(0, bufferstarttime)
-        let volumeuptime = bufferstarttime + rampuptime
+        let volumeuptime = bufferstarttime + faderamptime
         this._gainnode.gain.linearRampToValueAtTime(musicvolume, volumeuptime)
-        let volumedowntime = bufferendtime - rampdowntime
+        let volumedowntime = bufferendtime - faderamptime
         this._gainnode.gain.linearRampToValueAtTime(musicvolume, volumedowntime)
         this._gainnode.gain.linearRampToValueAtTime(0, bufferendtime)
         let faded = chunk.connect(this._gainnode)
@@ -113,34 +120,39 @@ export class musicplayer {
         }
         this._musicisplaying = true
         this._context.resume()
-        let relativetimesum = this._context.currentTime
+        let previousbuffer: null | playablechunk = null
 
         for(let index = this.currentplayingindex; index < this.queue.length; index++) {
             this.queue[index] = this.processbuffer(this.queue[index].chunk.buffer)                
-            let nextchunk = this.queue[index]
-            nextchunk.timetoplay = relativetimesum
-            this.fadeinandout(nextchunk.chunk, nextchunk.timetoplay, nextchunk.timetoplay + nextchunk.chunk.buffer.duration)
-            
-            try {
-                nextchunk.chunk.start(nextchunk.timetoplay)            
-            }
-            
-            catch(e) {}
-            relativetimesum += nextchunk.chunk.buffer.duration
-        }        
+            let nextchunk = this.queue[index] 
+            let endtime = (previousbuffer === null) ? dontplay : previousbuffer.timetoend
+            this.queueabuffer(nextchunk, endtime)
+            previousbuffer = nextchunk
+        }
     }
 
     private playnewchunk = (item: playablechunk) => {
         if(this._musicisplaying === false) {
             return
         }
-        let previouschunk = this.queue[this.queue.length - 2]
-        let newtimetoplay = previouschunk.timetoplay + previouschunk.chunk.buffer.duration
-        item.timetoplay = newtimetoplay
-        this.fadeinandout(item.chunk, item.timetoplay, item.timetoplay + item.chunk.buffer.duration)
+        let previouschunkindex = this.queue.length - 2
+        let previouschunksend = previouschunkindex < 0 ? dontplay : this.queue[previouschunkindex].timetoend        
+        this.queueabuffer(item, previouschunksend)
+    }
 
+    private queueabuffer = (buffer: playablechunk, lastbuffersendtime: number): void => {          
+        let newtimetoplay: number = this._context.currentTime
+
+        if(lastbuffersendtime === dontplay) {
+            newtimetoplay = lastbuffersendtime - faderamptime
+        }   
+        buffer.timetoplay = newtimetoplay
+        let endtime = buffer.timetoplay + buffer.chunk.buffer.duration
+        buffer.timetoend = endtime
+        this.fadeinandout(buffer.chunk, buffer.timetoplay, buffer.timetoend)
+        
         try {
-            item.chunk.start(item.timetoplay)
+            buffer.chunk.start(buffer.timetoplay)            
         }
         
         catch(e) {}

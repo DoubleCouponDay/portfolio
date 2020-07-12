@@ -48,6 +48,7 @@ export class MusicService implements OnDestroy {
       })
       .build()
     await this._connection.start()
+    console.log('web socket connected')
   }
   
   public async playrandomdeserttrack(overridesubscriber?: IStreamSubscriber<streamresponse>) {
