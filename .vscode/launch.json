@@ -7,11 +7,10 @@
         {
             "name": "chrome",
             "type": "chrome",
-            "request": "attach",
-            "url": "http://localhost",
+            "request": "launch",
+            "url": "localhost:4200",
             "webRoot": "${workspaceFolder}/client/build",
-            "port": 4200,
-            "sourceMaps": true
+            "sourceMaps": true,
         }
     ]
 }
