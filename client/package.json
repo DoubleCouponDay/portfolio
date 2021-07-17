@@ -36,8 +36,8 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.1",
-    "@angular/cli": "^10.0.1",
+    "@angular-devkit/build-angular": "^12.1.2",
+    "@angular/cli": "^12.1.2",
     "@angular/compiler-cli": "^10.0.2",
     "@angular/language-service": "~10.0.2",
     "@types/assert": "^1.5.1",
@@ -46,7 +46,7 @@
     "@types/karma": "^5.0.0",
     "@types/node": "^14.0.19",
     "@types/signalr": "^2.2.35",
-    "karma": "^5.1.0",
+    "karma": "^6.3.4",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-jasmine": "^3.3.1",
