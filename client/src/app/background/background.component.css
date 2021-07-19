@@ -4,5 +4,5 @@
     min-width: var(--window-width);
     min-height: calc(var(--window-height) / 2);
     position: absolute;
-    bottom: 52%;
+    bottom: 59%;
 }
