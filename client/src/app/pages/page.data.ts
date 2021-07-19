@@ -11,7 +11,6 @@ export const pagename = 'page'
 export const scrollitemclass = '.scroll-item'
 export const contentidentifier = 'content'
 
-@Directive()
 export abstract class pagecomponent implements AfterViewInit  {
     private currentpageposition: number = 0
 

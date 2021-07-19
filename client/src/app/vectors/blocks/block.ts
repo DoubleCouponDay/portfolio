@@ -23,7 +23,6 @@ import { gratingsoundaddress, effectvolume } from 'src/app/audio/audio.data';
 const shadowcheckinterval = smoothtime / 5 
 const shadowfadetime = 300
 
-@Directive()
 export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     @ViewChild(boxname, { static: true })
     box: ElementRef
