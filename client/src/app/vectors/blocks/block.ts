@@ -23,7 +23,11 @@ import { gratingsoundaddress, effectvolume } from 'src/app/audio/audio.data';
 const shadowcheckinterval = smoothtime / 5 
 const shadowfadetime = 300
 
-export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
+@Component({template:""})
+export class abstractblock implements AfterViewInit, OnDestroy {
+    protected translationY: number
+    protected matchingpagenumber: number
+
     @ViewChild(boxname, { static: true })
     box: ElementRef
 
@@ -41,9 +45,6 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private casttopside: SVGElement
     private castword: SVGElement
 
-    protected abstract translationY: number = 0
-    protected abstract matchingpagenumber: number = 0
-
     tabletsmoving: boolean = false
     private held = false
     protected activated = false
@@ -60,7 +61,9 @@ export abstract class Blockcomponent implements AfterViewInit, OnDestroy {
     private highlighter: mousehighlighter    
     private touches: touchevents
 
-    constructor(private animationbuilder: AnimationBuilder, private _mouseservice: mouseservice, private _pagingservice: PagingService) {
+    constructor(private animationbuilder: AnimationBuilder, 
+      private _mouseservice: mouseservice, 
+      private _pagingservice: PagingService) {
       this.boxmovefactory = animationbuilder.build(movetocursorvertically)   
       this.boxresetfactory = animationbuilder.build(resetposition)
       this.fadefactory = animationbuilder.build(togglefade)

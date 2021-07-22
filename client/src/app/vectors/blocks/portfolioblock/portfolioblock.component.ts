@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Blockcomponent } from '../block';
+import { abstractblock } from '../block';
 import { AnimationBuilder } from '@angular/animations';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { maxboxtranslation } from '../blocks.data';
@@ -11,7 +11,7 @@ import { PagingService } from 'src/app/services/paging.service';
   templateUrl: './portfolioblock.component.html',
   styleUrls: ['./portfolioblock.component.css']
 })
-export class PortfolioblockComponent extends Blockcomponent  {
+export class PortfolioblockComponent extends abstractblock  {
   translationY = maxboxtranslation
 
   matchingpagenumber = firstpagenumber

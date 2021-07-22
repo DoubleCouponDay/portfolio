@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { minboxtranslation } from '../blocks.data';
-import { Blockcomponent } from '../block';
+import { abstractblock } from '../block';
 import { AnimationBuilder } from '@angular/animations';
 import { mouseservice } from 'src/app/services/mouse.service';
 import { websitespagenumber } from 'src/app/pages/page.data';
@@ -11,7 +11,7 @@ import { PagingService } from 'src/app/services/paging.service';
   templateUrl: './websitesblock.component.html',
   styleUrls: ['./websitesblock.component.css']
 })
-export class WebsitesblockComponent extends Blockcomponent {
+export class WebsitesblockComponent extends abstractblock {
   translationY = minboxtranslation
 
   matchingpagenumber = websitespagenumber
