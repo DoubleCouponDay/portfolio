@@ -1,1 +1,6 @@
 ng build --aot --prod
+
+preload client build files individually in an Azure CDN endpoint
+    preload paths must start with forward slash
+
+    /index.html
