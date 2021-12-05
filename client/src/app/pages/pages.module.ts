@@ -6,10 +6,17 @@ import { MusicpageComponent } from './musicpage/musicpage.component';
 import { PageloaderDirective } from '../dynamic/pageloader/pageloader.directive';
 import { softwarepageComponent } from './softwarepage/softwarepage.component';
 import { ScrollviewComponent } from './scrollview/scrollview.component';
+import {abstractpage} from './page.data';
 
 @NgModule({
   declarations: [
-    PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent, PageloaderDirective, ScrollviewComponent
+    abstractpage,
+    PortfoliopageComponent, 
+    websitespageComponent, 
+    softwarepageComponent, 
+    MusicpageComponent, 
+    PageloaderDirective, 
+    ScrollviewComponent
   ],
   imports: [
     CommonModule

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import {  pagecomponent, lastpagenumber, page } from '../page.data';
+import {  abstractpage, lastpagenumber, page } from '../page.data';
 import {  inputopacityname } from 'src/app/animations/animation.data';
 import { PagingService } from 'src/app/services/paging.service';
 import { SubSink } from 'subsink';
@@ -28,7 +28,7 @@ const buttonshadow = "url(#suoiqhvPQZSdJZ3YtSW7dYzCD3zhehFc)"
   templateUrl: './musicpage.component.html',
   styleUrls: ['./musicpage.component.css', '../pages.css']
 })
-export class MusicpageComponent extends pagecomponent implements AfterViewInit, OnDestroy, page {
+export class MusicpageComponent extends abstractpage implements AfterViewInit, OnDestroy, page {
 
   @ViewChild(contentidentifier, {static: true})
   content: ElementRef
