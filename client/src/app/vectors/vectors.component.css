@@ -2,5 +2,11 @@
     min-width: var(--window-width);
     min-height: var(--window-height);
     height: 100%;
-    width: 100%
+    width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+    .vectors-container {
+        height: 100vh;
+    }
 }

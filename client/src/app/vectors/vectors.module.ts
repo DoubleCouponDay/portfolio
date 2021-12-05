@@ -10,9 +10,11 @@ import { WebsitesblockComponent } from './blocks/websitesblock/websitesblock.com
 import { SoftwareblockComponent } from './blocks/softwareblock/softwareblock.component';
 import { MusicblockComponent } from './blocks/musicblock/musicblock.component';
 import { FlagComponent } from './flag/flag.component';
+import { abstractblock } from './blocks/block';
 
 @NgModule({
   declarations: [
+    abstractblock,
     BlocksComponent,
     TabletComponent,
     vectorscomponent,
