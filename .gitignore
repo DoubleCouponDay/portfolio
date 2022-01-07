@@ -90,3 +90,5 @@ client/performanceprofile.json
 .fake
 .ionide
 server/.vs/portfolio/v16/.suo
+
+server/UpgradeLog.htm
