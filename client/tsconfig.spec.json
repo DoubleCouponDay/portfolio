@@ -9,7 +9,7 @@
     "module": "es6",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es6",
+    "target": "ES2022",
     "allowJs": true,
     "typeRoots": [
       "node_modules/@types"
@@ -24,7 +24,8 @@
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
