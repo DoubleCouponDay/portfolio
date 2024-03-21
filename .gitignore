@@ -92,3 +92,4 @@ client/performanceprofile.json
 server/.vs/portfolio/v16/.suo
 
 server/UpgradeLog.htm
+client/package-lock.json
