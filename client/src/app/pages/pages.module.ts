@@ -9,22 +9,21 @@ import { ScrollviewComponent } from './scrollview/scrollview.component';
 import {abstractpage} from './page.data';
 
 @NgModule({
-  declarations: [
-    abstractpage,
-    PortfoliopageComponent, 
-    websitespageComponent, 
-    softwarepageComponent, 
-    MusicpageComponent, 
-    PageloaderDirective, 
-    ScrollviewComponent
-  ],
-  imports: [
-    CommonModule
-  ],
-  exports: [
-    PageloaderDirective,
-    ScrollviewComponent
-  ],
-  entryComponents: [PortfoliopageComponent, websitespageComponent, softwarepageComponent, MusicpageComponent]
+    declarations: [
+        abstractpage,
+        PortfoliopageComponent,
+        websitespageComponent,
+        softwarepageComponent,
+        MusicpageComponent,
+        PageloaderDirective,
+        ScrollviewComponent
+    ],
+    imports: [
+        CommonModule
+    ],
+    exports: [
+        PageloaderDirective,
+        ScrollviewComponent
+    ]
 })
 export class PagesModule { }
