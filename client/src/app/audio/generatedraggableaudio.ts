@@ -89,7 +89,7 @@ export class generatedraggableaudio {
                 onfaded()
             }    
         })
-        this.timeoutIDs.push(id)    
+        this.timeoutIDs.push(id as unknown as number)
     }
 
     private fadeupaudio = (onmax: () => void) => {
@@ -108,6 +108,6 @@ export class generatedraggableaudio {
                 onmax()
             }      
         })
-        this.timeoutIDs.push(id)    
+        this.timeoutIDs.push(id as unknown as number)
     }
 }
